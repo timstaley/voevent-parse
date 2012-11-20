@@ -74,14 +74,15 @@ class TestIO(TestCase):
         self.assertEqual(raw, processed)
 
 
-#class TestAstroCoords(TestCase):
-#    def setUp(self):
-#        self.swift_grb_v2 = voe.build.load(datapaths.swift_bat_grb_pos_v2)
-#        self.swift_grb_posn = FK5Coordinates(ra=74.741200, dec= -9.313700,
-#                                             raerr=0.05, decerr=0.05)
-#    def test_swift_grb_v2(self):
-#        p = voe.pull_astro_coords(self.swift_grb_v2)
-#        self.assertEqual(p, self.swift_grb_posn)
+class TestAstroCoords(TestCase):
+    def test_swift_grb_v2(self):
+        swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
+        known_swift_grb_posn = voe.Coords(ra=74.741200, dec= -9.313700,
+                                             ra_err=0.05, dec_err=0.05,
+                                             units='degrees',
+                                             system='UTC-FK5-GEO')
+        p = voe.pull_astro_coords(swift_grb_v2_packet)
+        self.assertEqual(p, known_swift_grb_posn)
 
 
 

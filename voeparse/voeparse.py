@@ -3,13 +3,15 @@
 #Tim Staley, <timstaley337@gmail.com>, 2012
 
 from lxml import objectify, etree
-#from astropysics.coords.coordsys import FK5Coordinates
+from collections import namedtuple
 
 import schema
 voevent_v2_0_schema = etree.XMLSchema(
                         etree.fromstring(schema.v2_0_str))
 
-
+#Personally, I like astropysics.coords, but that's a fairly big dependency.
+#So here I'll just return a namedtuple 
+Coords = namedtuple('Coords', 'ra dec ra_err dec_err units system')
 
 def loads(s, validate=False):
     """
@@ -108,28 +110,30 @@ def validate_as_v2_0(v):
 #    return list
 #
 
-class CoordSystemIDs(object):
-    fk5 = 'UTC-FK5-GEO'
+
 #
-#def pull_astro_coords(v):
-#    """Attempts to determine coords system and convert to corresponding
-#       astropysics class.
-#    """
-#    ac = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
-#    ac_sys = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
-#
-#    if ac_sys.attrib['id'] != CoordSystemIDs.fk5:
-#        raise ValueError("Cannot extract astro_coords, unrecognised coord system")
-#
-#    try:
-#        assert ac.Position2D.Name1 == 'RA'
-#        ra_deg = ac.Position2D.Value2.C1
-#        dec_deg = ac.Position2D.Value2.C2
-#        err_deg = ac.Position2D.Error2Radius
-#    except AttributeError:
-#        raise ValueError("Unrecognised AstroCoords type")
-#    return FK5Coordinates(ra=ra_deg, dec=dec_deg,
-#                          raerror=err_deg, decerror=err_deg)
+def pull_astro_coords(v):
+    """Returns a Coords namedtuple.
+
+        For now, only tested / compatible with NASA GCN style coords format.
+    """
+    ac = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
+    ac_sys = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
+
+    sys = ac_sys.attrib['id']
+
+    try:
+        assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
+        ra_deg = ac.Position2D.Value2.C1
+        dec_deg = ac.Position2D.Value2.C2
+        err_deg = ac.Position2D.Error2Radius
+    except AttributeError:
+        raise ValueError("Unrecognised AstroCoords type")
+    return Coords(ra=ra_deg, dec=dec_deg,
+                  ra_err=err_deg, dec_err=err_deg,
+                  units='degrees',
+                  system=sys
+                  )
 
 
 #def get_isotime(v):
