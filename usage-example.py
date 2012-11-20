@@ -38,7 +38,7 @@ v_copy.attrib['role'] = 'flying circus'
 print "How about now? ", voeparse.validate_as_v2_0(v_copy)
 print "But the original is ok, because we copied? ", voeparse.validate_as_v2_0(v)
 
-#
-#v.Who.BadPath = "This certainly won't conform with the schema."
-#s0 = v.Who.Author.shortName
-#s1 = v_copy.Who.Author.shortName
+v.Who.BadPath = "This new child certainly won't conform with the schema."
+assert voeparse.validate_as_v2_0(v) == False
+del v.Who.BadPath
+assert voeparse.validate_as_v2_0(v) == True

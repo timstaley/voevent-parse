@@ -19,8 +19,9 @@ def loads(s, validate=False):
     homogenise or at least identify different VOEvent versions, etc.
 
     NB The namespace is removed from the root element tag to make
-    objectify access work as expected, so we must re-add it with
-    <output function to be determined> when we want to conform to schema.
+    objectify access work as expected,
+    (see docstring for ``_remove_root_tag_prefix``)
+    so we must re-insert it when we want to conform to schema.
     """
     v = objectify.fromstring(s)
     _remove_root_tag_prefix(v)
@@ -69,7 +70,9 @@ def dumps(v, validate=False, pretty_print=True, xml_declaration=True):
     Declaring the encoding can cause diffs with the original loaded VOEvent,
     but I think it's probably the right thing to .
     """
+    #Remove lxml.objectify DataType namespace prefixes:
     objectify.deannotate(v)
+    #Put the default namespace back:
     _reinsert_root_tag_prefix(v)
     s = etree.tostring(v, pretty_print=pretty_print,
                        xml_declaration=xml_declaration,
