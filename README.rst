@@ -13,7 +13,7 @@ attribute-style access to data stored in XML packets.
 However, dealing with the vagaries of its namespace handling requires some careful reading of the documentation. 
 This library takes care of the details for you, so that accessing those vital data elements is as simple as:: 
 
-  v = voeparse.build.from_file(xml_filename)
+  v = voeparse.load(xml_filename)
   print "AuthorIVORN:", v.Who.AuthorIVORN   #Prints ivo://nasa.gsfc.tan/gcn
   v.Who.AuthorIVORN = 'ivo://i.heart.python/lxml' #Alters the XML value.
 
