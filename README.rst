@@ -6,7 +6,7 @@ A bare-bones, lightweight library for parsing, manipulating, and generating
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets.
 
 
-Rationale:
+Rationale
 ---------------
 The python library `lxml.objectify <http://lxml.de/objectify.html>`_ provides very elegant, 
 attribute-style access to data stored in XML packets. 
@@ -22,10 +22,19 @@ saving you the hassle of typing out very long attribute chains and dealing
 with varying formats of VOEvent.
 
 
-Prerequisites:
+Prerequisites
 ---------------
 
 - `lxml <http://lxml.de/>`_ (version >= 2.3).  
   For recent Ubuntu versions this is as simple as ``sudo apt-get install python-lxml`` - 
   check the version number though! 
   Otherwise, you might try ``pip install lxml --upgrade`` or something similar.
+
+Installation
+-------------
+At this stage, I'm assuming that only developers will want to install the 
+package. In which case, I recommend ``python setup.py develop --user``,
+which effectively adds the checked out copy of the code to your python path
+via symlinks. 
+To uninstall after using this method, simply:
+``rm ~/.local/lib/python2.7/site-packages/voevent-parse.egg-link``.
