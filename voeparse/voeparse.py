@@ -9,85 +9,81 @@ import schema
 voevent_v2_0_schema = etree.XMLSchema(
                         etree.fromstring(schema.v2_0_str))
 
-#NB this is not really used as a class but a namespace, 
-# so we use lowercase_with_underscores name convention.
-class build(object):
-    @staticmethod
-    def from_string(s, validate=False):
-        """
-        Wrapper to parse a VOEvent tree, taking care of some subtleties.
-        
-        Currently pretty basic, but we can imagine using this function to 
-        homogenise or at least identify different VOEvent versions, etc.
-        
-        NB The namespace is removed from the root element tag to make 
-        objectify access work as expected, so we must re-add it with 
-        <output function to be determined> when we want to conform to schema.  
-        """
-        v = objectify.fromstring(s)
-        build._remove_root_tag_prefix(v)
-        return v
 
-    @staticmethod
-    def from_file(path):
-        s = open(path, 'rb').read()
-        return build.from_string(s)
 
-    @staticmethod
-    def _remove_root_tag_prefix(v):
-        """
-        Removes 'voe' namespace prefix from root tag.
-        
-        When we load in a VOEvent, the root element has a tag prefixed by
-         the VOE namespace, e.g. {http://www.ivoa.net/xml/VOEvent/v2.0}VOEvent
-        Because objectify expects child elements to have the same namespace as 
-        their parent, this breaks the python-attribute style access mechanism.
-        We can get around it without altering root, via e.g
-         who = v['{}Who']
-        
-        Alternatively, we can temporarily ditch the namespace altogether.
-        This makes access to elements easier, but requires care to reinsert 
-        the namespace upon output. 
-        
-        I've gone for the latter option. 
-        """
-        v.tag = v.tag.replace(''.join(('{', v.nsmap['voe'], '}')), '')
-        # Now v.tag = '{}VOEvent'
-        return
+def loads(s, validate=False):
+    """
+    Wrapper to parse a VOEvent tree, taking care of some subtleties.
 
-    @staticmethod
-    def _reinsert_root_tag_prefix(v):
-        """
-        Returns 'voe' namespace prefix to root tag.
-        """
-        v.tag = ''.join(('{', v.nsmap['voe'], '}VOEvent'))
-        return
+    Currently pretty basic, but we can imagine using this function to
+    homogenise or at least identify different VOEvent versions, etc.
 
-class output(object):
-    @staticmethod
-    def to_string(v, validate=False, pretty_print=True, xml_declaration=True):
-        """Converts voevent 'v' to string.
-        
-        NB Encoding is UTF-8, in line with V2 schema.
-        Declaring the encoding can cause diffs with the original loaded VOEvent,
-        but I think it's probably the right thing to .
-        """
-        objectify.deannotate(v)
-        build._reinsert_root_tag_prefix(v)
-        s = etree.tostring(v, pretty_print=pretty_print,
-                           xml_declaration=xml_declaration,
-                           encoding='UTF-8')
-        build._remove_root_tag_prefix(v)
-        return s
+    NB The namespace is removed from the root element tag to make
+    objectify access work as expected, so we must re-add it with
+    <output function to be determined> when we want to conform to schema.
+    """
+    v = objectify.fromstring(s)
+    _remove_root_tag_prefix(v)
+    return v
 
-class validate(object):
-    @staticmethod
-    def as_v2_0(v):
-        objectify.deannotate(v)
-        build._reinsert_root_tag_prefix(v)
-        valid_bool = voevent_v2_0_schema.validate(v)
-        build._remove_root_tag_prefix(v)
-        return valid_bool
+
+def load(path):
+    s = open(path, 'rb').read()
+    return loads(s)
+
+
+def _remove_root_tag_prefix(v):
+    """
+    Removes 'voe' namespace prefix from root tag.
+
+    When we load in a VOEvent, the root element has a tag prefixed by
+     the VOE namespace, e.g. {http://www.ivoa.net/xml/VOEvent/v2.0}VOEvent
+    Because objectify expects child elements to have the same namespace as
+    their parent, this breaks the python-attribute style access mechanism.
+    We can get around it without altering root, via e.g
+     who = v['{}Who']
+
+    Alternatively, we can temporarily ditch the namespace altogether.
+    This makes access to elements easier, but requires care to reinsert
+    the namespace upon output.
+
+    I've gone for the latter option.
+    """
+    v.tag = v.tag.replace(''.join(('{', v.nsmap['voe'], '}')), '')
+    # Now v.tag = '{}VOEvent'
+    return
+
+
+def _reinsert_root_tag_prefix(v):
+    """
+    Returns 'voe' namespace prefix to root tag.
+    """
+    v.tag = ''.join(('{', v.nsmap['voe'], '}VOEvent'))
+    return
+
+
+def dumps(v, validate=False, pretty_print=True, xml_declaration=True):
+    """Converts voevent 'v' to string.
+
+    NB Encoding is UTF-8, in line with V2 schema.
+    Declaring the encoding can cause diffs with the original loaded VOEvent,
+    but I think it's probably the right thing to .
+    """
+    objectify.deannotate(v)
+    _reinsert_root_tag_prefix(v)
+    s = etree.tostring(v, pretty_print=pretty_print,
+                       xml_declaration=xml_declaration,
+                       encoding='UTF-8')
+    _remove_root_tag_prefix(v)
+    return s
+
+
+def validate_as_v2_0(v):
+    objectify.deannotate(v)
+    _reinsert_root_tag_prefix(v)
+    valid_bool = voevent_v2_0_schema.validate(v)
+    _remove_root_tag_prefix(v)
+    return valid_bool
 
 
 #

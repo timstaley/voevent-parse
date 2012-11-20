@@ -36,9 +36,9 @@ class TestValidation(TestCase):
 
 class TestBuilders(TestCase):
     def test_builders_on_voe_v2(self):
-        vff = voe.build.from_file(datapaths.swift_bat_grb_pos_v2)
+        vff = voe.load(datapaths.swift_bat_grb_pos_v2)
         with open(datapaths.swift_bat_grb_pos_v2) as f:
-            vfs = voe.build.from_string(f.read())
+            vfs = voe.loads(f.read())
         self.assertEqual(objectify.dump(vff), objectify.dump(vfs))
         self.assertEqual(vfs.tag, 'VOEvent')
         self.assertEqual(vfs.attrib['ivorn'],
@@ -48,15 +48,15 @@ class TestOutput(TestCase):
     def setUp(self):
         self.swift_grb_v2_raw = objectify.parse(
                                       datapaths.swift_bat_grb_pos_v2).getroot()
-        self.swift_grb_v2_trimmed = voe.build.from_file(
+        self.swift_grb_v2_trimmed = voe.load(
                                         datapaths.swift_bat_grb_pos_v2)
-
+  
     def test_conversion_to_string(self):
         raw = etree.tostring(self.swift_grb_v2_raw,
                              pretty_print=True,
                              xml_declaration=True,
                              encoding='UTF-8')
-        processed = voe.output.to_string(self.swift_grb_v2_trimmed)
+        processed = voe.dumps(self.swift_grb_v2_trimmed)
 #        print
 #        print "-------------------------------"
 #        print "RAW"
@@ -72,7 +72,7 @@ class TestOutput(TestCase):
 #
 #class TestAstroCoords(TestCase):
 #    def setUp(self):
-#        self.swift_grb_v2 = voe.build.from_file(datapaths.swift_bat_grb_pos_v2)
+#        self.swift_grb_v2 = voe.build.load(datapaths.swift_bat_grb_pos_v2)
 #        self.swift_grb_posn = FK5Coordinates(ra=74.741200, dec= -9.313700,
 #                                             raerr=0.05, decerr=0.05)
 #    def test_swift_grb_v2(self):
