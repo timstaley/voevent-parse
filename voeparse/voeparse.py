@@ -13,6 +13,14 @@ voevent_v2_0_schema = etree.XMLSchema(
 #So here I'll just return a namedtuple 
 Coords = namedtuple('Coords', 'ra dec ra_err dec_err units system')
 
+class CoordSystemIDs(object):
+    """Handy tags listing common coordinate system identifiers"""
+    fk5 = 'UTC-FK5-GEO'
+
+class CoordUnits(object):
+    """Handy tags listing the unit names used by voeparse."""
+    degrees = 'degrees'
+
 def loads(s, validate=False):
     """
     Wrapper to parse a VOEvent tree, taking care of some subtleties.
@@ -131,7 +139,7 @@ def pull_astro_coords(v):
         raise ValueError("Unrecognised AstroCoords type")
     return Coords(ra=ra_deg, dec=dec_deg,
                   ra_err=err_deg, dec_err=err_deg,
-                  units='degrees',
+                  units=CoordUnits.degrees,
                   system=sys
                   )
 
