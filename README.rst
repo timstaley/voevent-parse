@@ -18,7 +18,8 @@ This library takes care of the details for you, so that accessing those vital da
   v.Who.AuthorIVORN = 'ivo://i.heart.python/lxml' #Alters the XML value.
 
 It also provides convenience routines for common data access tasks, 
-saving you the hassle of typing out very long attribute chains.
+saving you the hassle of typing out very long attribute chains and dealing 
+with varying formats of VOEvent.
 
 
 Prerequisites:
