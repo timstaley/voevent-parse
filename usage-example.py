@@ -25,20 +25,25 @@ print "Short name:", v.Who.Author.shortName
 print "Contact:", v.Who.Author.contactEmail
 
 #Copying by value, and validation:
-print "Original valid as v2.0? ", voeparse.validate_as_v2_0(v)
+print "Original valid as v2.0? ", voeparse.valid_as_v2_0(v)
 v_copy = copy.copy(v)
-print "Copy valid? ", voeparse.validate_as_v2_0(v_copy)
+print "Copy valid? ", voeparse.valid_as_v2_0(v_copy)
 
 #Changing values:
 v_copy.Who.Author.shortName = 'BillyBob'
 v_copy.attrib['role'] = 'test'
-print "Changes valid? ", voeparse.validate_as_v2_0(v_copy)
+print "Changes valid? ", voeparse.valid_as_v2_0(v_copy)
 
 v_copy.attrib['role'] = 'flying circus'
-print "How about now? ", voeparse.validate_as_v2_0(v_copy)
-print "But the original is ok, because we copied? ", voeparse.validate_as_v2_0(v)
+print "How about now? ", voeparse.valid_as_v2_0(v_copy)
+print "But the original is ok, because we copied? ", voeparse.valid_as_v2_0(v)
 
 v.Who.BadPath = "This new child certainly won't conform with the schema."
-assert voeparse.validate_as_v2_0(v) == False
+assert voeparse.valid_as_v2_0(v) == False
 del v.Who.BadPath
-assert voeparse.validate_as_v2_0(v) == True
+assert voeparse.valid_as_v2_0(v) == True
+#######################################################
+# And now, SCIENCE
+#######################################################
+c = voeparse.pull_astro_coords(v)
+print "Coords:", c
