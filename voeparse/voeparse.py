@@ -5,9 +5,9 @@
 from lxml import objectify, etree
 from collections import namedtuple
 
-import schema
+import definitions
 voevent_v2_0_schema = etree.XMLSchema(
-                        etree.fromstring(schema.v2_0_str))
+                        etree.fromstring(definitions.v2_0_schema_str))
 
 #Personally, I like astropysics.coords, but that's a fairly big dependency.
 #So here I'll just return a namedtuple 
@@ -72,33 +72,64 @@ def _reinsert_root_tag_prefix(v):
     v.tag = ''.join(('{', v.nsmap['voe'], '}VOEvent'))
     return
 
+def _return_to_standard_xml(v):
+    #Remove lxml.objectify DataType namespace prefixes:
+    objectify.deannotate(v)
+    #Put the default namespace back:
+    _reinsert_root_tag_prefix(v)
+#    etree.cleanup_namespaces(v)
 
 def dumps(v, validate=False, pretty_print=True, xml_declaration=True):
     """Converts voevent 'v' to string.
 
     NB Encoding is UTF-8, in line with V2 schema.
     Declaring the encoding can cause diffs with the original loaded VOEvent,
-    but I think it's probably the right thing to .
+    but I think it's probably the right thing to do.
     """
-    #Remove lxml.objectify DataType namespace prefixes:
-    objectify.deannotate(v)
-    #Put the default namespace back:
-    _reinsert_root_tag_prefix(v)
+    _return_to_standard_xml(v)
     s = etree.tostring(v, pretty_print=pretty_print,
                        xml_declaration=xml_declaration,
                        encoding='UTF-8')
     _remove_root_tag_prefix(v)
     return s
 
+def dump(v, file, validate=False, pretty_print=True, xml_declaration=True):
+    """Dumps voevent 'v' to file"""
+    file.write(dumps(v, validate, pretty_print, xml_declaration))
 
-def validate_as_v2_0(v):
-    objectify.deannotate(v)
-    _reinsert_root_tag_prefix(v)
+def valid_as_v2_0(v):
+    _return_to_standard_xml(v)
     valid_bool = voevent_v2_0_schema.validate(v)
     _remove_root_tag_prefix(v)
     return valid_bool
 
+def assert_valid_as_v2_0(v):
+    """Raises an lxml.etree.DocumentInvalid if v is bad.
 
+      Especially useful since the stack trace contains a reason for the
+      invalidation.
+    """
+    _return_to_standard_xml(v)
+    valid_bool = voevent_v2_0_schema.assertValid(v)
+    _remove_root_tag_prefix(v)
+    return valid_bool
+
+def make_voevent(ivorn, role,
+                 validate=True):
+    """Make a VOEvent conforming to schema.
+
+      Note ivorn should be supplied *without* prefix,
+      e.g. ``ivorn = "voevent.soton.ac.uk/EXAMPLE#Test_packet_1" ``
+   """
+    v = objectify.fromstring(definitions.v2_0_skeleton_str)
+    _remove_root_tag_prefix(v)
+    v.attrib['ivorn'] = ''.join(('ivo://', ivorn))
+    v.attrib['role'] = role
+    #For a moment I considering implementing various checks
+    #But all the hard work is already done for us!
+    if validate:
+        assert_valid_as_v2_0(v)
+    return v
 #
 #def get_param_names(v):
 #    '''
@@ -127,7 +158,6 @@ def pull_astro_coords(v):
     """
     ac = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
     ac_sys = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
-
     sys = ac_sys.attrib['id']
 
     try:

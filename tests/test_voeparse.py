@@ -37,11 +37,17 @@ class TestValidation(TestCase):
         convenience functions.
         """
         v = voe.load(datapaths.swift_bat_grb_pos_v2)
-        self.assertTrue(voe.validate_as_v2_0(v))
+        self.assertTrue(voe.valid_as_v2_0(v))
         v.Who.BadChild = 42
-        self.assertFalse(voe.validate_as_v2_0(v))
+        self.assertFalse(voe.valid_as_v2_0(v))
         del v.Who.BadChild
-        self.assertTrue(voe.validate_as_v2_0(v))
+        self.assertTrue(voe.valid_as_v2_0(v))
+
+    def test_invalid_error_reporting(self):
+        with self.assertRaises(etree.DocumentInvalid):
+            voe.make_voevent(ivorn='voevent.soton.ac.uk/EXAMPLE#Test_100',
+                                 role='DeadParrot')
+
 
 
 class TestIO(TestCase):
@@ -72,6 +78,14 @@ class TestIO(TestCase):
                              encoding='UTF-8')
         processed = voe.dumps(swift_grb_v2_voeparsed)
         self.assertEqual(raw, processed)
+
+
+class TestMake(TestCase):
+    def test_make_minimal_voevent(self):
+        v = voe.make_voevent(ivorn='voevent.soton.ac.uk/EXAMPLE#Test_100',
+                             role='test')
+        self.assertTrue(voe.valid_as_v2_0(v))
+
 
 
 class TestAstroCoords(TestCase):

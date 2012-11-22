@@ -1,6 +1,17 @@
 #Downloaded from:
 #http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
-v2_0_str = """<?xml version="1.0" encoding="UTF-8"?>
+
+v2_0_skeleton_str = """<?xml version="1.0" ?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0"
+    xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd"
+    version="2.0" 
+    role="test" 
+    ivorn="ivo://undefined">
+</voe:VOEvent>
+"""
+
+v2_0_schema_str = """<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.ivoa.net/xml/VOEvent/v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   targetNamespace="http://www.ivoa.net/xml/VOEvent/v2.0" elementFormDefault="unqualified">
 
