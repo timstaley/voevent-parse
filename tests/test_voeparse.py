@@ -9,9 +9,10 @@ from copy import copy
 import voeparse as voe
 
 class TestValidation(TestCase):
+    def shortDescription(self):
+        return None
     def test_schema_valid_for_test_data(self):
         """
-        test_schema_valid_for_test_data:
         First, let's check everything is in order with the test data
         and the schema.
 
@@ -31,8 +32,7 @@ class TestValidation(TestCase):
         self.assertFalse(voe.voevent_v2_0_schema.validate(v))
 
     def test_validation_routine(self):
-        """test_validation_routine
-
+        """
         Now we perform the same validation tests, but applied via the
         convenience functions.
         """
@@ -51,6 +51,8 @@ class TestValidation(TestCase):
 
 
 class TestIO(TestCase):
+    def shortDescription(self):
+        return None
     def test_load_of_voe_v2(self):
         vff = voe.load(datapaths.swift_bat_grb_pos_v2)
         with open(datapaths.swift_bat_grb_pos_v2) as f:
@@ -62,8 +64,6 @@ class TestIO(TestCase):
 
     def test_dumps(self):
         """
-        test_dumps:
-
         Note, the processed output does not match the raw input -
         because I have added the UTF-8 encoding declaration.
         So we match the convenience routines against an
