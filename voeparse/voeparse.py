@@ -162,7 +162,11 @@ def set_author(v, title=None, shortName=None, logoURL=None, contactName=None,
             c = v
 
 
-def simpleParam(name=None, value=None, unit=None, ucd=None, dataType=None, utype=None):
+def simpleParam(name, value=None, unit=None, ucd=None, dataType=None, utype=None):
+    """Creates an element representing a Param
+
+      NB name is not mandated by schema, but *is* mandated in full spec.
+    """
     atts = locals()
     for k in atts.keys():
         if atts[k] is None:

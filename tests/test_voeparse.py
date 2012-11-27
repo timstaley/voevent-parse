@@ -123,7 +123,7 @@ class TestWhat(TestCase):
                              role='test')
     def test_simple_params(self):
         self.v.What.append(voe.simpleParam(name='Dead Parrot'))
-        self.v.What.append(voe.simpleParam(value='42'))
+        self.v.What.append(voe.simpleParam(name='The Answer', value='42'))
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
 
