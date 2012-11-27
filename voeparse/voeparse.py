@@ -126,6 +126,10 @@ def make_voevent(stream, stream_id, role):
     _remove_root_tag_prefix(v)
     v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
+    #Presumably we'll always want the following children:
+    #(NB, valid to then leave them empty)
+    etree.SubElement(v, 'Who')
+    etree.SubElement(v, 'What')
     return v
 
 def set_who(v, date=None, author_stream=None, description=None, reference=None):
@@ -138,40 +142,33 @@ def set_who(v, date=None, author_stream=None, description=None, reference=None):
                 as per the VOEvent spec.
         author_ivorn, description, reference: Should be strings.
     """
-    if not v.xpath('Who'):
-        v.Who = etree.Element('Who')
     if author_stream is not None:
         v.Who.AuthorIVORN = ''.join(('ivo://', author_stream))
     if date is not None:
         v.Who.Date = date.replace(microsecond=0).isoformat()
 
-def set_author(v, title=None, short_name=None, logo_url=None, contact_name=None,
-               contact_email=None, contact_phone=None, contributor=None):
+def set_author(v, title=None, shortName=None, logoURL=None, contactName=None,
+               contactEmail=None, contactPhone=None, contributor=None):
     """For adding author details.
-
-    NB``set_who`` must be run first.
     """
+    vals = locals()
+    vals.pop('v')
     if not v.xpath('Who/Author'):
-        v.Who.Author = etree.Element('Author')
-
+        etree.SubElement(v.Who, 'Author')
     a = v.Who.Author
-    if title is not None:
-        a.title = title
-    if short_name is not None:
-        a.shortName = short_name
-    if logo_url is not None:
-        a.logoURL = logo_url
-    if contact_name is not None:
-        a.contactName = contact_name
-    if contact_email is not None:
-        a.contactEmail = contact_email
-    if contact_phone is not None:
-        a.contactPhone = contact_phone
-    if contributor is not None:
-        a.contributor = contributor
+    for k, v in vals.iteritems():
+        if v is not None:
+            c = etree.SubElement(a, k)
+            c = v
 
 
-#
+def simpleParam(name=None, value=None, unit=None, ucd=None, dataType=None, utype=None):
+    atts = locals()
+    for k in atts.keys():
+        if atts[k] is None:
+            del atts[k]
+    return etree.Element('Param', attrib=atts)
+
 #def get_param_names(v):
 #    '''
 #    Grabs the "what" section of a voevent, and produces a list of tuples of group name and param name.

@@ -83,15 +83,21 @@ class TestIO(TestCase):
         self.assertEqual(raw, processed)
 
 
-class TestMake(TestCase):
+class TestMinimalVOEvent(TestCase):
+    def test_make_minimal_voevent(self):
+        v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
+        self.assertTrue(voe.valid_as_v2_0(v))
+
+class TestWho(TestCase):
     def setUp(self):
         self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
         self.date = datetime.datetime.now()
 
-    def test_make_minimal_voevent(self):
-        self.assertTrue(voe.valid_as_v2_0(self.v))
+
 
     def test_set_who_date(self):
         voe.set_who(self.v, self.date)
@@ -101,15 +107,25 @@ class TestMake(TestCase):
         voe.set_who(self.v, self.date, author_stream='voevent.soton.ac.uk/TEST')
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
-    def test_add_author(self):
-        voe.set_who(self.v, self.date)
+    def test_set_author(self):
         voe.set_author(self.v, title='4 Pi Sky Project',
-                       short_name='4PiSky',
-                       contact_name='Tim Staley',
-                       contact_email='tim.staley@soton.ac.uk',
-                       contact_phone='123456789',
+                       shortName='4PiSky',
+                       contactName='Tim Staley',
+                       contactEmail='tim.staley@soton.ac.uk',
+                       contactPhone='123456789',
                        contributor='Bob')
         self.assertTrue(voe.valid_as_v2_0(self.v))
+
+class TestWhat(TestCase):
+    def setUp(self):
+        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
+    def test_simple_params(self):
+        self.v.What.append(voe.simpleParam(name='Dead Parrot'))
+        self.v.What.append(voe.simpleParam(value='42'))
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+
 
 class TestAstroCoords(TestCase):
     def test_swift_grb_v2(self):
