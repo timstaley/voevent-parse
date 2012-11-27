@@ -77,7 +77,7 @@ def _return_to_standard_xml(v):
     objectify.deannotate(v)
     #Put the default namespace back:
     _reinsert_root_tag_prefix(v)
-#    etree.cleanup_namespaces(v)
+    etree.cleanup_namespaces(v)
 
 def dumps(v, validate=False, pretty_print=True, xml_declaration=True):
     """Converts voevent 'v' to string.
@@ -114,22 +114,68 @@ def assert_valid_as_v2_0(v):
     _remove_root_tag_prefix(v)
     return valid_bool
 
-def make_voevent(ivorn, role,
+def make_voevent(stream, stream_id, role,
                  validate=True):
     """Make a VOEvent conforming to schema.
 
-      Note ivorn should be supplied *without* prefix,
-      e.g. ``ivorn = "voevent.soton.ac.uk/EXAMPLE#Test_packet_1" ``
+      Note stream and stream_id are used to construct the IVORN;
+      i.e. ivorn = 'ivo://' + stream + '#' + stream_id
+      Stream_id should be a string-
+      this mandates that the client specifies e.g., fill width.
    """
     v = objectify.fromstring(definitions.v2_0_skeleton_str)
     _remove_root_tag_prefix(v)
-    v.attrib['ivorn'] = ''.join(('ivo://', ivorn))
+    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
     #For a moment I considering implementing various checks
     #But all the hard work is already done for us!
     if validate:
         assert_valid_as_v2_0(v)
     return v
+
+def set_who(v, date=None, author_stream=None, description=None, reference=None):
+    """For setting the basics of the Who component.
+
+    Args:
+        v: Voevent object to update.
+        date: should be a datetime object. Can be None if the voevent already
+                has a date set. Microseconds are ignored,
+                as per the VOEvent spec.
+        author_ivorn, description, reference: Should be strings.
+    """
+    if not v.xpath('Who'):
+        v.Who = etree.Element('Who')
+    if author_stream is not None:
+        v.Who.AuthorIVORN = ''.join(('ivo://', author_stream))
+    if date is not None:
+        v.Who.Date = date.replace(microsecond=0).isoformat()
+
+def set_author(v, title=None, short_name=None, logo_url=None, contact_name=None,
+               contact_email=None, contact_phone=None, contributor=None):
+    """For adding author details.
+
+    NB``set_who`` must be run first.
+    """
+    if not v.xpath('Who/Author'):
+        v.Who.Author = etree.Element('Author')
+
+    a = v.Who.Author
+    if title is not None:
+        a.title = title
+    if short_name is not None:
+        a.shortName = short_name
+    if logo_url is not None:
+        a.logoURL = logo_url
+    if contact_name is not None:
+        a.contactName = contact_name
+    if contact_email is not None:
+        a.contactEmail = contact_email
+    if contact_phone is not None:
+        a.contactPhone = contact_phone
+    if contributor is not None:
+        a.contributor = contributor
+
+
 #
 #def get_param_names(v):
 #    '''

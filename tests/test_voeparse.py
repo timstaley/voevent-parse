@@ -5,6 +5,7 @@ from resources import datapaths
 from lxml import objectify, etree
 #from astropysics.coords.coordsys import FK5Coordinates
 from copy import copy
+import datetime
 
 import voeparse as voe
 
@@ -45,8 +46,9 @@ class TestValidation(TestCase):
 
     def test_invalid_error_reporting(self):
         with self.assertRaises(etree.DocumentInvalid):
-            voe.make_voevent(ivorn='voevent.soton.ac.uk/EXAMPLE#Test_100',
-                                 role='DeadParrot')
+            voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='001',
+                             role='DeadParrot')
 
 
 
@@ -81,12 +83,32 @@ class TestIO(TestCase):
 
 
 class TestMake(TestCase):
-    def test_make_minimal_voevent(self):
-        v = voe.make_voevent(ivorn='voevent.soton.ac.uk/EXAMPLE#Test_100',
+    def setUp(self):
+        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
                              role='test')
-        self.assertTrue(voe.valid_as_v2_0(v))
+        self.date = datetime.datetime.now()
 
+    def test_make_minimal_voevent(self):
+        self.assertTrue(voe.valid_as_v2_0(self.v))
 
+    def test_set_who_date(self):
+        voe.set_who(self.v, self.date)
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+
+    def test_set_who_minimal(self):
+        voe.set_who(self.v, self.date, author_stream='voevent.soton.ac.uk/TEST')
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+
+    def test_add_author(self):
+        voe.set_who(self.v, self.date)
+        voe.set_author(self.v, title='4 Pi Sky Project',
+                       short_name='4PiSky',
+                       contact_name='Tim Staley',
+                       contact_email='tim.staley@soton.ac.uk',
+                       contact_phone='123456789',
+                       contributor='Bob')
+        self.assertTrue(voe.valid_as_v2_0(self.v))
 
 class TestAstroCoords(TestCase):
     def test_swift_grb_v2(self):
