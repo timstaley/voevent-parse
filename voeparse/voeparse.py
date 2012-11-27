@@ -114,8 +114,7 @@ def assert_valid_as_v2_0(v):
     _remove_root_tag_prefix(v)
     return valid_bool
 
-def make_voevent(stream, stream_id, role,
-                 validate=True):
+def make_voevent(stream, stream_id, role):
     """Make a VOEvent conforming to schema.
 
       Note stream and stream_id are used to construct the IVORN;
@@ -127,10 +126,6 @@ def make_voevent(stream, stream_id, role,
     _remove_root_tag_prefix(v)
     v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
-    #For a moment I considering implementing various checks
-    #But all the hard work is already done for us!
-    if validate:
-        assert_valid_as_v2_0(v)
     return v
 
 def set_who(v, date=None, author_stream=None, description=None, reference=None):

@@ -46,9 +46,10 @@ class TestValidation(TestCase):
 
     def test_invalid_error_reporting(self):
         with self.assertRaises(etree.DocumentInvalid):
-            voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+            v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='001',
                              role='DeadParrot')
+            voe.assert_valid_as_v2_0(v)
 
 
 
