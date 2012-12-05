@@ -11,11 +11,13 @@ voevent_v2_0_schema = etree.XMLSchema(
 
 #Personally, I like astropysics.coords, but that's a fairly big dependency.
 #So here I'll just return a namedtuple 
-Coords = namedtuple('Coords', 'ra dec ra_err dec_err units system')
+Position2D = namedtuple('Position2D', 'ra dec err units system')
 
 class CoordSystemIDs(object):
     """Handy tags listing common coordinate system identifiers"""
     fk5 = 'UTC-FK5-GEO'
+    geosurface = 'GEOSURFACE'
+    geolunar = 'GEOLUN'
 
 class CoordUnits(object):
     """Handy tags listing the unit names used by voeparse."""
@@ -130,6 +132,7 @@ def make_voevent(stream, stream_id, role):
     #(NB, valid to then leave them empty)
     etree.SubElement(v, 'Who')
     etree.SubElement(v, 'What')
+    etree.SubElement(v, 'WhereWhen')
     return v
 
 def set_who(v, date=None, author_stream=None, description=None, reference=None):
@@ -147,22 +150,22 @@ def set_who(v, date=None, author_stream=None, description=None, reference=None):
     if date is not None:
         v.Who.Date = date.replace(microsecond=0).isoformat()
 
-def set_author(v, title=None, shortName=None, logoURL=None, contactName=None,
+def set_author(voevent, title=None, shortName=None, logoURL=None, contactName=None,
                contactEmail=None, contactPhone=None, contributor=None):
     """For adding author details.
     """
-    vals = locals()
-    vals.pop('v')
-    if not v.xpath('Who/Author'):
-        etree.SubElement(v.Who, 'Author')
-    a = v.Who.Author
-    for k, v in vals.iteritems():
+    attribs = locals()
+    attribs.pop('voevent')
+    if not voevent.xpath('Who/Author'):
+        etree.SubElement(voevent.Who, 'Author')
+    for k, v in attribs.iteritems():
         if v is not None:
-            c = etree.SubElement(a, k)
+            c = etree.SubElement(voevent.Who.Author, k)
             c = v
 
 
-def simpleParam(name, value=None, unit=None, ucd=None, dataType=None, utype=None):
+def simpleParam(name, value=None, unit=None, ucd=None, dataType=None,
+                utype=None):
     """Creates an element representing a Param
 
       NB name is not mandated by schema, but *is* mandated in full spec.
@@ -172,6 +175,46 @@ def simpleParam(name, value=None, unit=None, ucd=None, dataType=None, utype=None
         if atts[k] is None:
             del atts[k]
     return etree.Element('Param', attrib=atts)
+
+def set_where_when(voevent, coords, obs_time,
+                   observatory_location):
+    """Set up a basic WhereWhen for an observed sky position.
+
+        Args:
+         - voevent
+         - coords: Should be instance of voeparse.Position2D
+         - obs_time: Nominal DateTime of the observation.
+         - observatory_location: Telescope locale, see VOEvent spec.
+
+        TODO: Implement TimeError using datetime.timedelta
+    """
+
+    obs_data = etree.SubElement(voevent.WhereWhen, 'ObsDataLocation')
+    etree.SubElement(obs_data, 'ObservatoryLocation', id=observatory_location)
+    ol = etree.SubElement(obs_data, 'ObservationLocation')
+    etree.SubElement(ol, 'AstroCoordSystem', id=coords.system)
+    ac = etree.SubElement(ol, 'AstroCoords',
+                          coord_system_id=coords.system)
+    time = etree.SubElement(ac, 'Time', unit='s')
+    instant = etree.SubElement(time, 'TimeInstant')
+    instant.ISOTime = obs_time.isoformat()
+#    iso_time = etree.SubElement(instant, 'ISOTime') = obs_time.isoformat()
+
+    pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
+    pos2d.Name1 = 'RA'
+    pos2d.Name2 = 'Dec'
+#    etree.SubElement(pos2d, 'Name1') = 'RA'
+#    etree.SubElement(pos2d, 'Name2') = 'Dec'
+    pos2d_val = etree.SubElement(pos2d, 'Value2')
+    pos2d_val.C1 = coords.ra
+    pos2d_val.C2 = coords.dec
+    pos2d.Error2Radius = coords.err
+#    etree.SubElement(pos2d_val, 'C1') = coords.ra
+#    etree.SubElement(pos2d_val, 'C2') = coords.dec
+#    etree.SubElement(pos2d, 'Error2Radius') = coords.ra_err
+
+
+
 
 #def get_param_names(v):
 #    '''
@@ -194,9 +237,8 @@ def simpleParam(name, value=None, unit=None, ucd=None, dataType=None, utype=None
 
 #
 def pull_astro_coords(v):
-    """Returns a Coords namedtuple.
+    """Returns a Position2D namedtuple.
 
-        For now, only tested / compatible with NASA GCN style coords format.
     """
     ac = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
     ac_sys = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
@@ -204,16 +246,13 @@ def pull_astro_coords(v):
 
     try:
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-        ra_deg = ac.Position2D.Value2.C1
-        dec_deg = ac.Position2D.Value2.C2
-        err_deg = ac.Position2D.Error2Radius
+        posn = Position2D(ra=ac.Position2D.Value2.C1, dec=ac.Position2D.Value2.C2,
+                       err=ac.Position2D.Error2Radius,
+                       units=ac.Position2D.attrib['unit'],
+                       system=sys)
     except AttributeError:
         raise ValueError("Unrecognised AstroCoords type")
-    return Coords(ra=ra_deg, dec=dec_deg,
-                  ra_err=err_deg, dec_err=err_deg,
-                  units=CoordUnits.degrees,
-                  system=sys
-                  )
+    return posn
 
 
 #def get_isotime(v):

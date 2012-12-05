@@ -126,16 +126,31 @@ class TestWhat(TestCase):
         self.v.What.append(voe.simpleParam(name='The Answer', value='42'))
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
-
-class TestAstroCoords(TestCase):
+class TestPullAstroCoords(TestCase):
     def test_swift_grb_v2(self):
         swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
-        known_swift_grb_posn = voe.Coords(ra=74.741200, dec= -9.313700,
-                                             ra_err=0.05, dec_err=0.05,
-                                             units='degrees',
+        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
+                                             err=0.05,
+                                             units='deg',
                                              system='UTC-FK5-GEO')
         p = voe.pull_astro_coords(swift_grb_v2_packet)
         self.assertEqual(p, known_swift_grb_posn)
+
+class TestWhereWhen(TestCase):
+    def setUp(self):
+        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
+    def test_set_wherewhen(self):
+        c = voe.Position2D(ra=123.456, dec=45.678,
+                       err=0.1,
+                       units='deg', system='UTC-FK5-GEO'
+                       )
+        voe.set_where_when(self.v, coords=c,
+                           obs_time=datetime.datetime.now(),
+                           observatory_location=voe.CoordSystemIDs.geosurface)
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+        self.assertEqual(c, voe.pull_astro_coords(self.v))
 
 
 
