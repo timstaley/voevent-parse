@@ -1,31 +1,83 @@
 #pysovo VOEvent Tools
 #Convenience functions allowing easy access to information in VOEvent packets. 
 #Tim Staley, <timstaley337@gmail.com>, 2012
-
+from __future__ import absolute_import
+import lxml
 from lxml import objectify, etree
 from collections import namedtuple
+from collections import Iterable
+import types
 
-import definitions
+import voeparse.definitions
 voevent_v2_0_schema = etree.XMLSchema(
-                        etree.fromstring(definitions.v2_0_schema_str))
+                        etree.fromstring(voeparse.definitions.v2_0_schema_str))
 
-#Personally, I like astropysics.coords, but that's a fairly big dependency.
-#So here I'll just return a namedtuple 
-Position2D = namedtuple('Position2D', 'ra dec err units system')
-
-class CoordSystemIDs(object):
+#############################
+# Some useful string defs namespaced via a class container:
+class coord_system(object):
     """Handy tags listing common coordinate system identifiers"""
     fk5 = 'UTC-FK5-GEO'
     geosurface = 'GEOSURFACE'
     geolunar = 'GEOLUN'
 
-class CoordUnits(object):
+class coord_units(object):
     """Handy tags listing the unit names used by voeparse."""
     degrees = 'degrees'
+####################################
+
+#A namedtuple for simple representation of a 2D position as described 
+# by the VOEvent spec.
+Position2D = namedtuple('Position2D', 'ra dec err units system')
+
+####################################
+#A few small 'classes' - really just wrapper functions about
+# element creation routines.
+def SimpleParam(name, value=None, unit=None, ucd=None, dataType=None,
+                utype=None):
+    """Creates an element representing a Param
+
+      NB name is not mandated by schema, but *is* mandated in full spec.
+    """
+    #Again we use locals() to allow concise looping over the arguments.
+    atts = locals()
+    for k in atts.keys():
+        if atts[k] is None:
+            del atts[k]
+    return etree.Element('Param', attrib=atts)
+
+def Reference(uri, meaning=None):
+    """Foolproof wrapper function to create a 'Reference' element"""
+    attrib = {'uri': uri}
+    if meaning is not None:
+        attrib['meaning'] = meaning
+    return objectify.Element('Reference', attrib)
+
+def Voevent(stream, stream_id, role):
+    """Create an empty VOEvent packet with specified identifying properties.
+
+      Note stream and stream_id are used to construct the IVORN;
+      i.e. ivorn = 'ivo://' + stream + '#' + stream_id
+      Stream_id should be a string-
+      this mandates that the client specifies e.g., fill width.
+   """
+    v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str)
+    _remove_root_tag_prefix(v)
+    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
+    v.attrib['role'] = role
+    #Presumably we'll always want the following children:
+    #(NB, valid to then leave them empty)
+    etree.SubElement(v, 'Who')
+    etree.SubElement(v, 'What')
+    etree.SubElement(v, 'WhereWhen')
+    return v
+####################################################
+# And finally, lots of utility functions...
 
 def loads(s, validate=False):
     """
-    Wrapper to parse a VOEvent tree, taking care of some subtleties.
+    Load from string.
+
+    This parses a VOEvent XML packet string, taking care of some subtleties.
 
     Currently pretty basic, but we can imagine using this function to
     homogenise or at least identify different VOEvent versions, etc.
@@ -41,6 +93,10 @@ def loads(s, validate=False):
 
 
 def load(path):
+    """Load from file.
+
+    See also: loads(s)
+    """
     s = open(path, 'rb').read()
     return loads(s)
 
@@ -116,27 +172,10 @@ def assert_valid_as_v2_0(v):
     _remove_root_tag_prefix(v)
     return valid_bool
 
-def make_voevent(stream, stream_id, role):
-    """Make a VOEvent conforming to schema.
 
-      Note stream and stream_id are used to construct the IVORN;
-      i.e. ivorn = 'ivo://' + stream + '#' + stream_id
-      Stream_id should be a string-
-      this mandates that the client specifies e.g., fill width.
-   """
-    v = objectify.fromstring(definitions.v2_0_skeleton_str)
-    _remove_root_tag_prefix(v)
-    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
-    v.attrib['role'] = role
-    #Presumably we'll always want the following children:
-    #(NB, valid to then leave them empty)
-    etree.SubElement(v, 'Who')
-    etree.SubElement(v, 'What')
-    etree.SubElement(v, 'WhereWhen')
-    return v
 
 def set_who(v, date=None, author_stream=None, description=None, reference=None):
-    """For setting the basics of the Who component.
+    """For setting the basics of the Who component, e.g. AuthorIVORN.
 
     Args:
         v: Voevent object to update.
@@ -144,16 +183,21 @@ def set_who(v, date=None, author_stream=None, description=None, reference=None):
                 has a date set. Microseconds are ignored,
                 as per the VOEvent spec.
         author_ivorn, description, reference: Should be strings.
+
+        TODO: Implement description & reference parameters.
     """
     if author_stream is not None:
         v.Who.AuthorIVORN = ''.join(('ivo://', author_stream))
     if date is not None:
         v.Who.Date = date.replace(microsecond=0).isoformat()
 
-def set_author(voevent, title=None, shortName=None, logoURL=None, contactName=None,
-               contactEmail=None, contactPhone=None, contributor=None):
-    """For adding author details.
-    """
+def set_author(voevent, title=None, shortName=None, logoURL=None,
+               contactName=None, contactEmail=None, contactPhone=None,
+               contributor=None):
+    """For adding author details."""
+    #Here we use a little python magic: locals()
+    # We inspect all local variables except the voevent packet,
+    # Cycling through and assigning them on the Who.Author element.
     attribs = locals()
     attribs.pop('voevent')
     if not voevent.xpath('Who/Author'):
@@ -164,17 +208,6 @@ def set_author(voevent, title=None, shortName=None, logoURL=None, contactName=No
             c = v
 
 
-def simpleParam(name, value=None, unit=None, ucd=None, dataType=None,
-                utype=None):
-    """Creates an element representing a Param
-
-      NB name is not mandated by schema, but *is* mandated in full spec.
-    """
-    atts = locals()
-    for k in atts.keys():
-        if atts[k] is None:
-            del atts[k]
-    return etree.Element('Param', attrib=atts)
 
 def set_where_when(voevent, coords, obs_time,
                    observatory_location):
@@ -203,17 +236,28 @@ def set_where_when(voevent, coords, obs_time,
     pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
     pos2d.Name1 = 'RA'
     pos2d.Name2 = 'Dec'
-#    etree.SubElement(pos2d, 'Name1') = 'RA'
-#    etree.SubElement(pos2d, 'Name2') = 'Dec'
     pos2d_val = etree.SubElement(pos2d, 'Value2')
     pos2d_val.C1 = coords.ra
     pos2d_val.C2 = coords.dec
     pos2d.Error2Radius = coords.err
-#    etree.SubElement(pos2d_val, 'C1') = coords.ra
-#    etree.SubElement(pos2d_val, 'C2') = coords.dec
-#    etree.SubElement(pos2d, 'Error2Radius') = coords.ra_err
 
 
+
+def add_how(voevent, descriptions=None, references=None):
+    """Add entries to the How section.
+
+        args: list of description entries,
+              list of Reference elements.
+    """
+    if not voevent.xpath('How'):
+        etree.SubElement(voevent, 'How')
+    if descriptions is not None:
+        for desc in descriptions:
+            d = etree.SubElement(voevent.How, 'Description')
+            voevent.How.Description[voevent.How.index(d)] = desc
+    if references is not None:
+        for ref in references:
+            voevent.How.append(ref)
 
 
 #def get_param_names(v):

@@ -122,8 +122,8 @@ class TestWhat(TestCase):
                              stream_id='100',
                              role='test')
     def test_simple_params(self):
-        self.v.What.append(voe.simpleParam(name='Dead Parrot'))
-        self.v.What.append(voe.simpleParam(name='The Answer', value='42'))
+        self.v.What.append(voe.SimpleParam(name='Dead Parrot'))
+        self.v.What.append(voe.SimpleParam(name='The Answer', value='42'))
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
 class TestPullAstroCoords(TestCase):
@@ -148,9 +148,22 @@ class TestWhereWhen(TestCase):
                        )
         voe.set_where_when(self.v, coords=c,
                            obs_time=datetime.datetime.now(),
-                           observatory_location=voe.CoordSystemIDs.geosurface)
+                           observatory_location=voe.coord_system.geosurface)
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(c, voe.pull_astro_coords(self.v))
+
+class TestHow(TestCase):
+    def setUp(self):
+        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
+    def test_add_How(self):
+        descriptions = ['One sentence.', 'Another.']
+        voe.add_how(self.v, descriptions)
+        self.assertEqual(len(self.v.How.Description), 2)
+        self.assertEqual(descriptions,
+                         [self.v.How.Description[0], self.v.How.Description[1]])
+
 
 
 
