@@ -82,6 +82,15 @@ class TestIO(TestCase):
         processed = voe.dumps(swift_grb_v2_voeparsed)
         self.assertEqual(raw, processed)
 
+class TestPullAstroCoords(TestCase):
+    def test_swift_grb_v2(self):
+        swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
+        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
+                                             err=0.05,
+                                             units='deg',
+                                             system='UTC-FK5-GEO')
+        p = voe.pull_astro_coords(swift_grb_v2_packet)
+        self.assertEqual(p, known_swift_grb_posn)
 
 class TestMinimalVOEvent(TestCase):
     def test_make_minimal_voevent(self):
@@ -115,6 +124,7 @@ class TestWho(TestCase):
                        contactPhone='123456789',
                        contributor='Bob')
         self.assertTrue(voe.valid_as_v2_0(self.v))
+        self.assertEqual(self.v.Who.Author.shortName, '4PiSky')
 
 class TestWhat(TestCase):
     def setUp(self):
@@ -125,16 +135,6 @@ class TestWhat(TestCase):
         self.v.What.append(voe.SimpleParam(name='Dead Parrot'))
         self.v.What.append(voe.SimpleParam(name='The Answer', value='42'))
         self.assertTrue(voe.valid_as_v2_0(self.v))
-
-class TestPullAstroCoords(TestCase):
-    def test_swift_grb_v2(self):
-        swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
-        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
-                                             err=0.05,
-                                             units='deg',
-                                             system='UTC-FK5-GEO')
-        p = voe.pull_astro_coords(swift_grb_v2_packet)
-        self.assertEqual(p, known_swift_grb_posn)
 
 class TestWhereWhen(TestCase):
     def setUp(self):
@@ -168,9 +168,24 @@ class TestHow(TestCase):
                 voe.Reference('http://github.com/timstaley/voevent-parse')]
         voe.add_how(self.v, references=refs)
         self.assertEqual(len(self.v.How.Reference), len(refs))
+        self.assertEqual([r.attrib['uri'] for r in refs],
+                         [r.attrib['uri'] for r in self.v.How.Reference])
 
+        self.assertTrue(voe.valid_as_v2_0(self.v))
 
+class TestWhy(TestCase):
+    def setUp(self):
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
 
-
-
-
+    def test_add_why(self):
+        inferences = [voe.Inference(probability=0.5, relation=None,
+                                    name='Toin Coss', concept='Probability')]
+        voe.add_why(self.v, importance=0.6,
+                    expires=datetime.datetime(2013, 1, 1),
+                    inferences=inferences)
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+        self.assertEqual(self.v.Why.attrib['importance'], str(0.6))
+        self.assertEqual(self.v.Why.Inference[0].attrib['probability'], str(0.5))
+        self.assertEqual(self.v.Why.Inference[0].Name, 'Toin Coss')

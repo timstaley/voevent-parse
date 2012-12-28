@@ -52,6 +52,25 @@ def Reference(uri, meaning=None):
         attrib['meaning'] = meaning
     return objectify.Element('Reference', attrib)
 
+def Inference(probability=None, relation=None, name=None, concept=None):
+    """Create an inference element.
+
+    NB VOEvent spec allows for multiple name / concepts per Inference,
+    but I have implemented the simpler case of one each for now -
+    I expect this will be sufficient for most purposes.
+    """
+    atts = {}
+    if probability is not None:
+        atts['probability'] = str(probability)
+    if relation is not None:
+        atts['relation'] = relation
+    inf = objectify.Element('Inference', attrib=atts)
+    if name is not None:
+        inf.Name = name
+    if concept is not None:
+        inf.Concept = concept
+    return inf
+
 def Voevent(stream, stream_id, role):
     """Create an empty VOEvent packet with specified identifying properties.
 
@@ -198,14 +217,14 @@ def set_author(voevent, title=None, shortName=None, logoURL=None,
     #Here we use a little python magic: locals()
     # We inspect all local variables except the voevent packet,
     # Cycling through and assigning them on the Who.Author element.
-    attribs = locals()
-    attribs.pop('voevent')
+    AuthChildren = locals()
+    AuthChildren.pop('voevent')
     if not voevent.xpath('Who/Author'):
         etree.SubElement(voevent.Who, 'Author')
-    for k, v in attribs.iteritems():
+    for k, v in AuthChildren.iteritems():
         if v is not None:
-            c = etree.SubElement(voevent.Who.Author, k)
-            c = v
+            voevent.Who.Author[k] = v
+
 
 
 
@@ -253,11 +272,31 @@ def add_how(voevent, descriptions=None, references=None):
         etree.SubElement(voevent, 'How')
     if descriptions is not None:
         for desc in descriptions:
-            d = etree.SubElement(voevent.How, 'Description')
-            voevent.How.Description[voevent.How.index(d)] = desc
+            #d = etree.SubElement(voevent.How, 'Description')
+            #voevent.How.Description[voevent.How.index(d)] = desc
+            ##Simpler:
+            etree.SubElement(voevent.How, 'Description')
+            voevent.How.Description[-1] = desc
     if references is not None:
         voevent.How.extend(references)
 
+def add_why(voevent, importance=None, expires=None, inferences=None):
+    """NB. importance / expires overwrite previous values.
+    Whereas inferences are appended to any pre-existing list.
+
+    Args:
+        importance: Float from 0.0 to 1.0
+        expires: Datetime. (See voevent spec).
+        inferences: list of Inference elements.
+    """
+    if not voevent.xpath('Why'):
+        etree.SubElement(voevent, 'Why')
+    if importance is not None:
+        voevent.Why.attrib['importance'] = str(importance)
+    if expires is not None:
+        voevent.Why.attrib['expires'] = expires.replace(microsecond=0).isoformat()
+    if inferences is not None:
+        voevent.Why.extend(inferences)
 
 #def get_param_names(v):
 #    '''
