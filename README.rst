@@ -6,7 +6,9 @@ A bare-bones, lightweight library for parsing, manipulating, and generating
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets.
 
 (Note: Still under active development. The current feature set is limited,
-but growing - and easy to add to if, you'd like to get involved.)
+but growing - and easy to add to if, you'd like to get involved.
+Update: As of 28/12/12 subroutines for easy creation of all major elements 
+are in place.)
 
 Rationale
 ---------------

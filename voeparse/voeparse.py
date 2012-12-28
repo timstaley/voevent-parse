@@ -23,6 +23,12 @@ class coord_system(object):
 class coord_units(object):
     """Handy tags listing the unit names used by voeparse."""
     degrees = 'degrees'
+
+class cite_values(object):
+    followup = 'followup'
+    supersedes = 'supersedes'
+    retraction = 'retraction'
+
 ####################################
 
 #A namedtuple for simple representation of a 2D position as described 
@@ -85,9 +91,9 @@ def Voevent(stream, stream_id, role):
     v.attrib['role'] = role
     #Presumably we'll always want the following children:
     #(NB, valid to then leave them empty)
-    etree.SubElement(v, 'Who')
-    etree.SubElement(v, 'What')
-    etree.SubElement(v, 'WhereWhen')
+    objectify.SubElement(v, 'Who')
+    objectify.SubElement(v, 'What')
+    objectify.SubElement(v, 'WhereWhen')
     return v
 ####################################################
 # And finally, lots of utility functions...
@@ -220,7 +226,7 @@ def set_author(voevent, title=None, shortName=None, logoURL=None,
     AuthChildren = locals()
     AuthChildren.pop('voevent')
     if not voevent.xpath('Who/Author'):
-        etree.SubElement(voevent.Who, 'Author')
+        objectify.SubElement(voevent.Who, 'Author')
     for k, v in AuthChildren.iteritems():
         if v is not None:
             voevent.Who.Author[k] = v
@@ -241,21 +247,21 @@ def set_where_when(voevent, coords, obs_time,
         TODO: Implement TimeError using datetime.timedelta
     """
 
-    obs_data = etree.SubElement(voevent.WhereWhen, 'ObsDataLocation')
-    etree.SubElement(obs_data, 'ObservatoryLocation', id=observatory_location)
-    ol = etree.SubElement(obs_data, 'ObservationLocation')
-    etree.SubElement(ol, 'AstroCoordSystem', id=coords.system)
-    ac = etree.SubElement(ol, 'AstroCoords',
+    obs_data = objectify.SubElement(voevent.WhereWhen, 'ObsDataLocation')
+    objectify.SubElement(obs_data, 'ObservatoryLocation', id=observatory_location)
+    ol = objectify.SubElement(obs_data, 'ObservationLocation')
+    objectify.SubElement(ol, 'AstroCoordSystem', id=coords.system)
+    ac = objectify.SubElement(ol, 'AstroCoords',
                           coord_system_id=coords.system)
-    time = etree.SubElement(ac, 'Time', unit='s')
-    instant = etree.SubElement(time, 'TimeInstant')
+    time = objectify.SubElement(ac, 'Time', unit='s')
+    instant = objectify.SubElement(time, 'TimeInstant')
     instant.ISOTime = obs_time.isoformat()
-#    iso_time = etree.SubElement(instant, 'ISOTime') = obs_time.isoformat()
+#    iso_time = objectify.SubElement(instant, 'ISOTime') = obs_time.isoformat()
 
-    pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
+    pos2d = objectify.SubElement(ac, 'Position2D', unit=coords.units)
     pos2d.Name1 = 'RA'
     pos2d.Name2 = 'Dec'
-    pos2d_val = etree.SubElement(pos2d, 'Value2')
+    pos2d_val = objectify.SubElement(pos2d, 'Value2')
     pos2d_val.C1 = coords.ra
     pos2d_val.C2 = coords.dec
     pos2d.Error2Radius = coords.err
@@ -269,20 +275,22 @@ def add_how(voevent, descriptions=None, references=None):
               list of Reference elements.
     """
     if not voevent.xpath('How'):
-        etree.SubElement(voevent, 'How')
+        objectify.SubElement(voevent, 'How')
     if descriptions is not None:
         for desc in descriptions:
-            #d = etree.SubElement(voevent.How, 'Description')
+            #d = objectify.SubElement(voevent.How, 'Description')
             #voevent.How.Description[voevent.How.index(d)] = desc
             ##Simpler:
-            etree.SubElement(voevent.How, 'Description')
+            objectify.SubElement(voevent.How, 'Description')
             voevent.How.Description[-1] = desc
     if references is not None:
         voevent.How.extend(references)
 
 def add_why(voevent, importance=None, expires=None, inferences=None):
-    """NB. importance / expires overwrite previous values.
-    Whereas inferences are appended to any pre-existing list.
+    """
+    NB. importance / expires are 'Why' attributes, therefore setting them
+    will overwrite previous values.
+    On the other hand, inferences are appended to the list.
 
     Args:
         importance: Float from 0.0 to 1.0
@@ -290,13 +298,40 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
         inferences: list of Inference elements.
     """
     if not voevent.xpath('Why'):
-        etree.SubElement(voevent, 'Why')
+        objectify.SubElement(voevent, 'Why')
     if importance is not None:
         voevent.Why.attrib['importance'] = str(importance)
     if expires is not None:
         voevent.Why.attrib['expires'] = expires.replace(microsecond=0).isoformat()
     if inferences is not None:
         voevent.Why.extend(inferences)
+
+def set_citations(voevent, ivorns, citation_type, description=None):
+    """
+    (Overwrites any previous citations set.)
+
+    This is the logical default, since there are carefully defined
+    meanings associated with single or multiple EventIVORN references;
+    see the VOEvent spec for details.
+
+    Args:
+    voevent: The packet to modify
+    ivorns: A list of ivorn strings. In keeping with the rest of this library,
+            the 'ivo://' prefix should be omitted.
+    citation_type: Should be one of the pre-defined ``cite_values``.
+    description: Free text - should not contain any html tags
+                since this will upset the XML spec.
+        (TODO: implement CDATA escaping, if anyone actually requires it.)
+    """
+    if not voevent.xpath('Citations'):
+        objectify.SubElement(voevent, 'Citations')
+    while voevent.Citations.xpath('EventIvorn'):
+        del voevent.Citations.EventIvorn
+    for ivn in ivorns:
+        objectify.SubElement(voevent.Citations, 'EventIVORN', cite=citation_type)
+        voevent.Citations.EventIVORN[-1] = ''.join(('ivo://', ivn))
+    if description is not None:
+        voevent.Citations.Description = description
 
 #def get_param_names(v):
 #    '''
@@ -316,12 +351,8 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
 #    return list
 #
 
-
-#
 def pull_astro_coords(v):
-    """Returns a Position2D namedtuple.
-
-    """
+    """Returns a Position2D namedtuple."""
     ac = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
     ac_sys = v.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
     sys = ac_sys.attrib['id']

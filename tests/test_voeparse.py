@@ -189,3 +189,15 @@ class TestWhy(TestCase):
         self.assertEqual(self.v.Why.attrib['importance'], str(0.6))
         self.assertEqual(self.v.Why.Inference[0].attrib['probability'], str(0.5))
         self.assertEqual(self.v.Why.Inference[0].Name, 'Toin Coss')
+
+class TestCitations(TestCase):
+    def setUp(self):
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
+    def test_followup_citation(self):
+        refs = ['nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729']
+        voe.set_citations(self.v, refs, voe.cite_values.followup,
+                          description="GRB followup")
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+
