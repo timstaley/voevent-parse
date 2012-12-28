@@ -43,3 +43,30 @@ which effectively adds the checked out copy of the code to your python path
 via symlinks. 
 To uninstall after using this method, simply:
 ``rm ~/.local/lib/python2.7/site-packages/voevent-parse.egg-link``.
+
+lxml.objectify tips
+-------------------
+The objectify library has a few syntactic quirks which can trip up new users.
+Firstly, you should be aware that the line ``root.foo`` actually returns 
+an object that acts like a list of all the children  with the name 'foo'. 
+What's confusing is that objectify has syntactic sugar applied so that 
+``print root.foo`` is effectively identical to ``print root.foo[0]``.
+Furthermore, this can confuse access to the actual leaf values, so you should 
+be aware of the value specific accessor attribute, ``.text``, e.g.::
+  
+  >root = lxml.objectify.Element('root')
+  >root.foo = 'sometext'
+  >print root.foo
+  sometext
+  >print len(root.foo)
+  1
+  >#The string clearly does not have length==1 - it's the list.
+  >print root.foo.text
+  sometext
+  >print len(root.foo.text)
+  8
+  >#Ah, that's better!
+
+For some more examples, you might also try `here 
+<http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/>`_. 
+ 
