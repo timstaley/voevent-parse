@@ -328,10 +328,11 @@ def pull_astro_coords(v):
 
     try:
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-        posn = Position2D(ra=ac.Position2D.Value2.C1, dec=ac.Position2D.Value2.C2,
-                       err=ac.Position2D.Error2Radius,
-                       units=ac.Position2D.attrib['unit'],
-                       system=sys)
+        posn = Position2D(ra=ac.Position2D.Value2.C1,
+                          dec=ac.Position2D.Value2.C2,
+                          err=ac.Position2D.Error2Radius,
+                          units=ac.Position2D.attrib['unit'],
+                          system=sys)
     except AttributeError:
         raise ValueError("Unrecognised AstroCoords type")
     return posn
