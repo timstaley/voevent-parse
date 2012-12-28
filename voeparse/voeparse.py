@@ -256,8 +256,7 @@ def add_how(voevent, descriptions=None, references=None):
             d = etree.SubElement(voevent.How, 'Description')
             voevent.How.Description[voevent.How.index(d)] = desc
     if references is not None:
-        for ref in references:
-            voevent.How.append(ref)
+        voevent.How.extend(references)
 
 
 #def get_param_names(v):

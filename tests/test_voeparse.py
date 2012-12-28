@@ -46,7 +46,7 @@ class TestValidation(TestCase):
 
     def test_invalid_error_reporting(self):
         with self.assertRaises(etree.DocumentInvalid):
-            v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+            v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='001',
                              role='DeadParrot')
             voe.assert_valid_as_v2_0(v)
@@ -85,14 +85,14 @@ class TestIO(TestCase):
 
 class TestMinimalVOEvent(TestCase):
     def test_make_minimal_voevent(self):
-        v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+        v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
         self.assertTrue(voe.valid_as_v2_0(v))
 
 class TestWho(TestCase):
     def setUp(self):
-        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
         self.date = datetime.datetime.now()
@@ -118,7 +118,7 @@ class TestWho(TestCase):
 
 class TestWhat(TestCase):
     def setUp(self):
-        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
     def test_simple_params(self):
@@ -138,7 +138,7 @@ class TestPullAstroCoords(TestCase):
 
 class TestWhereWhen(TestCase):
     def setUp(self):
-        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
     def test_set_wherewhen(self):
@@ -154,7 +154,7 @@ class TestWhereWhen(TestCase):
 
 class TestHow(TestCase):
     def setUp(self):
-        self.v = voe.make_voevent(stream='voevent.soton.ac.uk/TEST',
+        self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
     def test_add_How(self):
@@ -163,7 +163,11 @@ class TestHow(TestCase):
         self.assertEqual(len(self.v.How.Description), 2)
         self.assertEqual(descriptions,
                          [self.v.How.Description[0], self.v.How.Description[1]])
-
+        refs = [voe.Reference('http://www.saltycrane.com/blog/2011/07/'
+                              'example-parsing-xml-lxml-objectify/'),
+                voe.Reference('http://github.com/timstaley/voevent-parse')]
+        voe.add_how(self.v, references=refs)
+        self.assertEqual(len(self.v.How.Reference), len(refs))
 
 
 
