@@ -1,16 +1,48 @@
-#Downloaded from:
-#http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
+"""This module simply serves to store the XML schema, a 'skeleton' VOEvent
+xml document for creation of new instances, and various other minor definitions:
+"""
 
+#############################
+# Some useful string defs namespaced via a class container:
+
+class roles(object):
+    observation = 'observation'
+    prediction = 'prediction'
+    utility = 'utility'
+    test = 'test'
+
+class coord_system(object):
+    """Handy tags listing common coordinate system identifiers"""
+    fk5 = 'UTC-FK5-GEO'
+    geosurface = 'GEOSURFACE'
+    geolunar = 'GEOLUN'
+
+class coord_units(object):
+    """Handy tags listing the unit names used by voeparse."""
+    degrees = 'degrees'
+
+class cite_values(object):
+    """Possible attributes of citations"""
+    followup = 'followup'
+    supersedes = 'supersedes'
+    retraction = 'retraction'
+
+####################################
+#: Skeleton XML for instantiating a new VOEvent tree
 v2_0_skeleton_str = """<?xml version="1.0" ?>
 <voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0"
     xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd"
-    version="2.0" 
-    role="test" 
+    version="2.0"
+    role="test"
     ivorn="ivo://undefined">
 </voe:VOEvent>
 """
 
+####################################
+#: VOEvent 2.0 schema for validation
+#Schema downloaded from:
+#http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
 v2_0_schema_str = """<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.ivoa.net/xml/VOEvent/v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   targetNamespace="http://www.ivoa.net/xml/VOEvent/v2.0" elementFormDefault="unqualified">
