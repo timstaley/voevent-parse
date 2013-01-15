@@ -1,6 +1,6 @@
-===============
+=============
 voevent-parse
-===============
+=============
 
 A bare-bones, lightweight library for parsing, manipulating, and generating 
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets.
@@ -11,7 +11,7 @@ Update: As of 28/12/12 subroutines for easy creation of all major elements
 are in place.)
 
 Rationale
----------------
+---------
 The python library `lxml.objectify <http://lxml.de/objectify.html>`_ 
 provides very elegant, 
 attribute-style access to data stored in XML packets. 
@@ -30,7 +30,7 @@ with varying formats of VOEvent.
 
 
 Prerequisites
----------------
+-------------
 
 - `lxml <http://lxml.de/>`_ (version >= 2.3).  
   For recent Ubuntu versions this is as simple as ``sudo apt-get install python-lxml`` - 
@@ -38,7 +38,7 @@ Prerequisites
   Otherwise, you might try ``pip install lxml --upgrade`` or something similar.
 
 Installation
--------------
+------------
 At this stage, I'm assuming that only developers will want to install the 
 package. In which case, I recommend ``python setup.py develop --user``,
 which effectively adds the checked out copy of the code to your python path
@@ -70,6 +70,13 @@ e.g.::
   8
   >#Ah, that's better!
 
-For some more examples, you might also try `here 
-<http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/>`_. 
+For some more examples, you might also try:  
+http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/.
+
+API reference docs
+------------------
+While currently quite minimal, these can be found at 
+http://voevent-parse.readthedocs.org,  
+or can be built from the source if you prefer the traditional python docs 
+colour-scheme. 
  
