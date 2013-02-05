@@ -16,7 +16,7 @@ by the VOEvent spec."""
 # element creation routines.
 def Param(name, value=None, unit=None, ucd=None, dataType=None,
                 utype=None):
-    """Creates an element representing a Param
+    """Create a Param element.
 
       NB name is not mandated by schema, but *is* mandated in full spec.
 
@@ -39,7 +39,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None,
     return objectify.Element('Param', attrib=atts)
 
 def Group(params, name=None, type=None):
-    """Creates an element representing a group of Params.
+    """Create an element representing a group of Params.
 
     """
     atts = {}
@@ -53,14 +53,14 @@ def Group(params, name=None, type=None):
     return g
 
 def Reference(uri, meaning=None):
-    """Foolproof wrapper function to create a 'Reference' element"""
+    """Create a 'Reference' element"""
     attrib = {'uri': uri}
     if meaning is not None:
         attrib['meaning'] = meaning
     return objectify.Element('Reference', attrib)
 
 def Inference(probability=None, relation=None, name=None, concept=None):
-    """Create an inference element.
+    """Create an Inference element.
 
     **Args**:
       - probability: float of value 0.0 to 1.0.
