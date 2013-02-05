@@ -240,7 +240,7 @@ def add_how(voevent, descriptions=None, references=None):
     **Args**:
       - voevent
       - descriptions: Description string (or list of description strings).
-      - references: A :py:class:`.Reference` element (or list thereof).
+      - references: A :py:class:`voeparse.misc.Reference` element (or list thereof).
     """
     if not voevent.xpath('How'):
         etree.SubElement(voevent, 'How')
@@ -255,16 +255,19 @@ def add_how(voevent, descriptions=None, references=None):
         voevent.How.extend(_listify(references))
 
 def add_why(voevent, importance=None, expires=None, inferences=None):
-    """
-    NB. importance / expires are 'Why' attributes, therefore setting them
-    will overwrite previous values.
-    On the other hand, inferences are appended to the list.
+    """Add Inferences or set importance / expires attributes.
+
+    .. note::
+
+        ``importance`` / ``expires`` are 'Why' attributes, therefore setting them
+        will overwrite previous values.
+        ``inferences``, on the other hand,  are appended to the list.
 
     **Args**:
       - voevent
       - importance: Float from 0.0 to 1.0
       - expires: Datetime. (See voevent spec).
-      - inferences: An Inference element (or list thereof).
+      - inferences: A :py:class:`voeparse.misc.Inference` element (or list thereof).
     """
     if not voevent.xpath('Why'):
         etree.SubElement(voevent, 'Why')
@@ -275,31 +278,19 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
     if inferences is not None:
         voevent.Why.extend(_listify(inferences))
 
-def set_citations(voevent, ivorns, citation_type, description=None):
-    """
-    (Overwrites any previous citations set.)
+def add_citations(voevent, citations):
+    """Add citations to the voevent (creating relevant sub-element if required).
 
-    This is the logical behaviour, since there are carefully defined
-    meanings associated with single or multiple EventIVORN references;
-    see the VOEvent spec for details.
+    The schema mandates that the 'Citations' section must either be entirely
+    absent, or non-empty - hence we require this wrapper function for its
+    creation prior to listing the first citation.
 
     **Args**:
       - voevent
-      - ivorns: A list of ivorn strings. In keeping with the rest of this library,
-        the 'ivo://' prefix should be omitted.
-      - citation_type: Should be one of the pre-defined ``cite_values``.
-      - description: Free text - should not contain any html tags
-        since this will upset the XML spec.
+      - citation: A :py:class:`voeparse.misc.Citation` element (or list thereof).
 
-    .. todo:: Implement CDATA escaping, if anyone actually requires it.
     """
     if not voevent.xpath('Citations'):
         etree.SubElement(voevent, 'Citations')
-    while voevent.Citations.xpath('EventIvorn'):
-        del voevent.Citations.EventIvorn
-    for ivn in ivorns:
-        etree.SubElement(voevent.Citations, 'EventIVORN', cite=citation_type)
-        voevent.Citations.EventIVORN[-1] = ''.join(('ivo://', ivn))
-    if description is not None:
-        voevent.Citations.Description = description
+    voevent.Citations.extend(_listify(citations))
 

@@ -62,9 +62,12 @@ def Reference(uri, meaning=None):
 def Inference(probability=None, relation=None, name=None, concept=None):
     """Create an inference element.
 
-    NB VOEvent spec allows for multiple name / concepts per Inference,
-    but I have implemented the simpler case of one each for now -
-    I expect this will be sufficient for most purposes.
+    **Args**:
+      - probability: float of value 0.0 to 1.0.
+      - relation: string, e.g. 'associated' (see VOEvent spec).
+      - name: string
+      - concept: string, one of a
+        'formal UCD-like vocabulary of astronomical concepts' - see VOEvent spec.
     """
     atts = {}
     if probability is not None:
@@ -77,3 +80,20 @@ def Inference(probability=None, relation=None, name=None, concept=None):
     if concept is not None:
         inf.Concept = concept
     return inf
+
+def Citation(ivorn, cite_type):
+    """Create a Citation element.
+
+    **Args**:
+     - ivorn: string. It is assumed this will be copied verbatim from elsewhere,
+       and so these should have any prefix (e.g. 'ivo://','http://') already
+       in place - the function will not alter the value.
+     - cite_type: String. Should be one of the pre-defined
+       :py:class:`.definitions.cite_types`.
+    """
+    # This is an ugly hack around the limitations of the  lxml.objectify API:
+    c = objectify.StringElement(cite=cite_type)
+    c._setText(ivorn)
+    c.tag = "EventIVORN"
+    return c
+

@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import lxml.objectify
 import lxml.etree
 from voeparse.definitions import *
-from voeparse.misc import Param, Group, Reference, Inference, Position2D
+from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citation
 from voeparse.voevent import *
 
 __version__ = version
@@ -13,7 +13,7 @@ __version__ = version
 # Various convenience routines...
 ###########################################################
 
-def prettystr(el):
+def prettystr(subtree):
     """Print an element tree with nice indentation.
 
     Prettyprinting a whole VOEvent doesn't seem to work - possibly this is
@@ -21,9 +21,9 @@ def prettystr(el):
     This function is a quick workaround for easily desk-checking
     what you're putting together.
     """
-    lxml.objectify.deannotate(el)
-    lxml.etree.cleanup_namespaces(el)
-    return lxml.etree.tostring(el, pretty_print=True)
+    lxml.objectify.deannotate(subtree)
+    lxml.etree.cleanup_namespaces(subtree)
+    return lxml.etree.tostring(subtree, pretty_print=True)
 
 def pull_astro_coords(voevent):
     """Returns a Position2D namedtuple."""

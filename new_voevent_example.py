@@ -2,7 +2,6 @@ import datetime
 import voeparse as vp
 from lxml import etree
 
-#========================================
 v = vp.Voevent(stream='astronomy.physics.science.org/super_exciting_events',
                stream_id=123, role=vp.roles.test)
 
@@ -54,6 +53,11 @@ vp.add_why(v, importance=0.5,
                                  name='GRB121212A',
                                  concept='process.variation.burst;em.radio')
            )
+
+vp.add_citations(v,
+         vp.Citation(ivorn='ivo://astronomy.physics.science.org/super_exciting_events#101',
+                     cite_type=vp.cite_types.followup))
+
 
 vp.assert_valid_as_v2_0(v)
 

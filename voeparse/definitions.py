@@ -25,8 +25,8 @@ class coord_units(object):
     """Handy tags listing the unit names used by voeparse."""
     degrees = 'degrees'
 
-class cite_values(object):
-    """Possible attributes of citations"""
+class cite_types(object):
+    """Possible types of citation"""
     followup = 'followup'
     supersedes = 'supersedes'
     retraction = 'retraction'
