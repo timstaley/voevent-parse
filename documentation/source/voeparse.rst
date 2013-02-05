@@ -2,10 +2,18 @@
 :mod:`voeparse` Package
 =======================
 
+A package for elegant and concise manipulation of VOEvent XML packets.
+
+.. warning::
+   Much of the content within assumes the reader has at least a summary 
+   understanding of the
+   `VOEvent <http://en.wikipedia.org/wiki/VOEvent>`_ 
+   `specifications <http://www.ivoa.net/Documents/VOEvent/>`_. 
+
 .. hint:: 
 
-   Currently, we import all the sub-module members to ``voeparse.*``,
-   for brevity (see ``__init__.py``).
+   Currently, we import all the sub-package module members to ``voeparse.*``,
+   for brevity (see ``voeparse/__init__.py``).
    
 
 :mod:`voeparse` - top level convenience routines

@@ -76,7 +76,7 @@ class TestIO(TestCase):
                                   datapaths.swift_bat_grb_pos_v2).getroot()
         swift_grb_v2_voeparsed = voe.load(datapaths.swift_bat_grb_pos_v2)
         raw = etree.tostring(swift_grb_v2_raw,
-                             pretty_print=True,
+                             pretty_print=False,
                              xml_declaration=True,
                              encoding='UTF-8')
         processed = voe.dumps(swift_grb_v2_voeparsed)
@@ -102,7 +102,7 @@ class TestMinimalVOEvent(TestCase):
 class TestWho(TestCase):
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
-                             stream_id='100',
+                             stream_id=100,
                              role='test')
         self.date = datetime.datetime.now()
 
@@ -113,7 +113,7 @@ class TestWho(TestCase):
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
     def test_set_who_minimal(self):
-        voe.set_who(self.v, self.date, author_stream='voevent.soton.ac.uk/TEST')
+        voe.set_who(self.v, self.date, author_ivorn='voevent.soton.ac.uk/TEST')
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
     def test_set_author(self):
@@ -132,8 +132,8 @@ class TestWhat(TestCase):
                              stream_id='100',
                              role='test')
     def test_simple_params(self):
-        self.v.What.append(voe.SimpleParam(name='Dead Parrot'))
-        self.v.What.append(voe.SimpleParam(name='The Answer', value='42'))
+        self.v.What.append(voe.Param(name='Dead Parrot'))
+        self.v.What.append(voe.Param(name='The Answer', value=42))
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
 class TestWhereWhen(TestCase):
@@ -148,7 +148,7 @@ class TestWhereWhen(TestCase):
                        )
         voe.set_where_when(self.v, coords=c,
                            obs_time=datetime.datetime.now(),
-                           observatory_location=voe.coord_system.geosurface)
+                           observatory_location=voe.definitions.observatory_location.geosurface)
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(c, voe.pull_astro_coords(self.v))
 

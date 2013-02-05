@@ -2,6 +2,8 @@
 xml document for creation of new instances, and various other minor definitions:
 """
 
+version = "dev-alpha-Feb2013"
+
 #############################
 # Some useful string defs namespaced via a class container:
 
@@ -11,9 +13,11 @@ class roles(object):
     utility = 'utility'
     test = 'test'
 
-class coord_system(object):
+class sky_coord_system(object):
     """Handy tags listing common coordinate system identifiers"""
     fk5 = 'UTC-FK5-GEO'
+
+class observatory_location(object):
     geosurface = 'GEOSURFACE'
     geolunar = 'GEOLUN'
 
@@ -217,7 +221,7 @@ v2_0_schema_str = """<?xml version="1.0" encoding="UTF-8"?>
   <xs:complexType name="WhereWhen">
     <xs:annotation>
       <xs:documentation> WhereWhen: Space-Time Coordinates. Lots and lots of elements here, but the
-        import is that each event has these: observatory, coord_system, time, timeError, longitude,
+        import is that each event has these: observatory, sky_coord_system, time, timeError, longitude,
         latitude, posError.</xs:documentation>
     </xs:annotation>
     <xs:choice maxOccurs="unbounded">

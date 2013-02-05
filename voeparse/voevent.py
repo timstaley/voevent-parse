@@ -15,9 +15,14 @@ def Voevent(stream, stream_id, role):
     """Create an empty VOEvent packet with specified identifying properties.
 
     **Args:**
-      - stream and stream_id: Strings, used to construct the IVORN:
-        ``ivorn = 'ivo://' + stream + '#' + stream_id``
-      - role: String conforming to VOEvent spec.
+      - stream and stream_id: strings, used to construct the IVORN:
+        ``ivorn = 'ivo://' + stream + '#' + stream_id``.
+
+        So, e.g. we might set
+          ``stream='voevent.soton.ac.uk/super_exciting_events',``
+          ``stream_id=str(77)``
+        NB. conversion of stream_id to string is attempted if it is not already a string.
+      - role: string conforming to VOEvent spec.
         (See also  :py:class:`.definitions.roles`)
 
     **Returns:**
@@ -26,13 +31,15 @@ def Voevent(stream, stream_id, role):
     """
     v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str)
     _remove_root_tag_prefix(v)
-    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
+    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', repr(stream_id)))
     v.attrib['role'] = role
     #Presumably we'll always want the following children:
     #(NB, valid to then leave them empty)
     etree.SubElement(v, 'Who')
     etree.SubElement(v, 'What')
     etree.SubElement(v, 'WhereWhen')
+    v.Who.Description = ("VOEvent created with voevent-parse version "
+                            + voeparse.definitions.version)
     return v
 ####################################################
 # And finally, lots of utility functions...
@@ -101,7 +108,7 @@ def _return_to_standard_xml(v):
     _reinsert_root_tag_prefix(v)
     etree.cleanup_namespaces(v)
 
-def dumps(voevent, validate=False, pretty_print=True, xml_declaration=True):
+def dumps(voevent, validate=False, pretty_print=False, xml_declaration=True):
     """Converts voevent to string.
 
     .. note:: Encoding is UTF-8, in line with VOE2.0 schema.
@@ -142,27 +149,28 @@ def assert_valid_as_v2_0(voevent):
 
 
 
-def set_who(v, date=None, author_stream=None, description=None, reference=None):
-    """For setting the basics of the Who component, e.g. AuthorIVORN.
+def set_who(v, date=None, author_ivorn=None):
+    """Sets the minimal 'Who' attributes:  date of authoring, AuthorIVORN.
 
     **Args**
       - v: Voevent instance to update.
-      - date: A datetime object. Can be None if the voevent already
-        has a date set. Microseconds are ignored, as per the VOEvent spec.
-      - author_ivorn, description, reference: Should be strings.
-
-    .. todo:: Implement description & reference parameters.
+      - date: A ``datetime`` object.
+        Microseconds are ignored, as per the VOEvent spec.
+      - author_ivorn: String, e.g. ``voevent.soton.ac.uk/4PiSky``.
+        The prefix ``ivo://`` will be prepended internally.
 
     """
-    if author_stream is not None:
-        v.Who.AuthorIVORN = ''.join(('ivo://', author_stream))
+    if author_ivorn is not None:
+        v.Who.AuthorIVORN = ''.join(('ivo://', author_ivorn))
     if date is not None:
         v.Who.Date = date.replace(microsecond=0).isoformat()
 
 def set_author(voevent, title=None, shortName=None, logoURL=None,
                contactName=None, contactEmail=None, contactPhone=None,
                contributor=None):
-    """For adding author details.
+    """For setting fields in the detailed author description.
+
+    This can optionally be neglected if a well defined AuthorIVORN is supplied.
 
     .. note:: Unusually for this library,
         the args here use CamelCase naming convention,
@@ -215,26 +223,36 @@ def set_where_when(voevent, coords, obs_time,
     pos2d.Error2Radius = coords.err
 
 
+#Define this for convenience in add_how:
+def _listify(x):
+    """Ensure x is iterable; if not then enclose it in a list and return it."""
+    if isinstance(x, types.StringTypes):
+        return [x]
+    elif isinstance(x, Iterable):
+        return x
+    else:
+        return [x]
+
 
 def add_how(voevent, descriptions=None, references=None):
     """Add entries to the How section.
 
     **Args**:
       - voevent
-      - descriptions: list of description strings.
-      - references: list of :py:class:`.Reference` elements.
+      - descriptions: Description string (or list of description strings).
+      - references: A :py:class:`.Reference` element (or list thereof).
     """
     if not voevent.xpath('How'):
         etree.SubElement(voevent, 'How')
     if descriptions is not None:
-        for desc in descriptions:
+        for desc in _listify(descriptions):
             #d = etree.SubElement(voevent.How, 'Description')
             #voevent.How.Description[voevent.How.index(d)] = desc
             ##Simpler:
             etree.SubElement(voevent.How, 'Description')
             voevent.How.Description[-1] = desc
     if references is not None:
-        voevent.How.extend(references)
+        voevent.How.extend(_listify(references))
 
 def add_why(voevent, importance=None, expires=None, inferences=None):
     """
@@ -246,7 +264,7 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
       - voevent
       - importance: Float from 0.0 to 1.0
       - expires: Datetime. (See voevent spec).
-      - inferences: list of Inference elements.
+      - inferences: An Inference element (or list thereof).
     """
     if not voevent.xpath('Why'):
         etree.SubElement(voevent, 'Why')
@@ -255,7 +273,7 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
     if expires is not None:
         voevent.Why.attrib['expires'] = expires.replace(microsecond=0).isoformat()
     if inferences is not None:
-        voevent.Why.extend(inferences)
+        voevent.Why.extend(_listify(inferences))
 
 def set_citations(voevent, ivorns, citation_type, description=None):
     """

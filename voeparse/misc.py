@@ -14,18 +14,43 @@ by the VOEvent spec."""
 ####################################
 #A few small 'classes' - really just wrapper functions about
 # element creation routines.
-def SimpleParam(name, value=None, unit=None, ucd=None, dataType=None,
+def Param(name, value=None, unit=None, ucd=None, dataType=None,
                 utype=None):
     """Creates an element representing a Param
 
       NB name is not mandated by schema, but *is* mandated in full spec.
+
+      **Args:**
+       - value: A string, int, or float.
+         This is converted to a string for storage.
+       - unit: string, e.g. 'deg' for degrees.
+       - ucd: string denoting `unified content descriptor
+         <http://arxiv.org/abs/1110.0525>`_.
+         For a list of valid UCDs, see  http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
+       - dataType: String denoting type of ``value`` - ``string``, ``int`` or ``float``.
     """
     #We use locals() to allow concise looping over the arguments.
     atts = locals()
     for k in atts.keys():
         if atts[k] is None:
             del atts[k]
-    return etree.Element('Param', attrib=atts)
+    if 'value' in atts and type(value) != str:
+        atts['value'] = repr(atts['value'])
+    return objectify.Element('Param', attrib=atts)
+
+def Group(params, name=None, type=None):
+    """Creates an element representing a group of Params.
+
+    """
+    atts = {}
+    if name:
+        atts['name'] = name
+    if type:
+        atts['type'] = type
+    g = objectify.Element('Group', attrib=atts)
+    for p in params:
+        g.append(p)
+    return g
 
 def Reference(uri, meaning=None):
     """Foolproof wrapper function to create a 'Reference' element"""
