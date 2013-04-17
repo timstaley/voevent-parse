@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from resources import datapaths
+from voeparse.tests.resources import datapaths
 
 from lxml import objectify, etree
 #from astropysics.coords.coordsys import FK5Coordinates
