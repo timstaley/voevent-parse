@@ -73,14 +73,12 @@ def pull_params(voevent):
     return result
 
 
-
-#def get_isotime(voevent):
-#    assert isinstance(voevent, voe.VOEvent)
-#    try:
-#        ol = voevent.WhereWhen.ObsDataLocation.ObservationLocation
-#        return ol.AstroCoords.Time.TimeInstant.ISOTime
-#    except:
-#        return None
+def pull_isotime(voevent):
+    try:
+        ol = voevent.WhereWhen.ObsDataLocation.ObservationLocation
+        return str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+    except AttributeError:
+        return None
 #
 #def make_Who(names, emails):
 #    names = listify(names)
