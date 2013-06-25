@@ -15,19 +15,23 @@ def Voevent(stream, stream_id, role):
     """Create an empty VOEvent packet with specified identifying properties.
 
     **Args:**
-      - stream and stream_id: strings, used to construct the IVORN:
-        ``ivorn = 'ivo://' + stream + '#' + stream_id``.
+      - stream, stream_id: used to construct the IVORN like so::
 
-        So, e.g. we might set
-          ``stream='voevent.soton.ac.uk/super_exciting_events',``
-          ``stream_id=str(77)``
-        NB. conversion of stream_id to string is attempted if it is not already a string.
+          ivorn = 'ivo://' + stream + '#' + stream_id
+
+        (N.B. ``stream_id`` is converted to string first.)
+        So, e.g. we might set::
+
+          stream='voevent.soton.ac.uk/super_exciting_events'
+          stream_id=77
+
       - role: string conforming to VOEvent spec.
         (See also  :py:class:`.definitions.roles`)
 
     **Returns:**
      Instance of lxml.objectify.Element representing root-node of the VOEvent
      etree.
+
     """
     v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str)
     _remove_root_tag_prefix(v)
