@@ -205,6 +205,9 @@ class TestCitations(TestCase):
 class TestConvenienceRoutines(TestCase):
     def setUp(self):
         self.swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
+        self.blank = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id='100',
+                             role='test')
     def test_pull_astro_coords(self):
         known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
                                              err=0.05,
@@ -217,3 +220,6 @@ class TestConvenienceRoutines(TestCase):
         params = voe.pull_params(self.swift_grb_v2_packet)
         self.assertEqual(params[None]['Packet_Type']['value'], '61')
         self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'], 'false')
+
+        params = voe.pull_params(self.blank)
+        self.assertEqual(params, {})

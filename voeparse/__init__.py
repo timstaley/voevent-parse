@@ -59,7 +59,8 @@ def pull_params(voevent):
     """
     result = {}
     w = voevent.What
-    if not w: return result
+    if w.countchildren() == 0:
+        return result
     toplevel_params = {}
     result[None] = toplevel_params
     for p in voevent.What.Param:
