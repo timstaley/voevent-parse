@@ -42,23 +42,35 @@ def pull_astro_coords(voevent):
         raise ValueError("Unrecognised AstroCoords type")
     return posn
 
-#def get_param_names(voevent):
-#    '''
-#    Grabs the "what" section of a voevent, and produces a list of tuples of group name and param name.
-#    For a bare param, the group name is the empty string.
-#    
-#    NB. This replicates functionality from VOEventLib - but the inbuilt version is broken as of v0.3.
-#    '''
-#    list = []
-#    w = voevent.What
-#    if not w: return list
-#    for p in voevent.What.Param:
-#        list.append(('', p.name))
-#    for g in voevent.What.Group:
-#        for p in g.Param:
-#            list.append((g.name, p.name))
-#    return list
-#
+def pull_params(voevent):
+    """Attempts to load the 'What' section of a voevent as a nested dictionary.
+
+    Parameters without a group are indexed under the key 'None' - otherwise,
+    we might get name-clashes between params and groups (unlikely but possible).
+
+    Note that the dictionaries returned represent the 'attrib' accessor,
+    so to get to the values you'll need to use something like::
+
+      result[None]['ParamName']['value']
+
+    Which is a bit tedious - but giving direct access means throwing away
+    other attrib values such as the units and UCD. Of course, it's
+    easy to manipulate the resulting dict as you wish.
+    """
+    result = {}
+    w = voevent.What
+    if not w: return result
+    toplevel_params = {}
+    result[None] = toplevel_params
+    for p in voevent.What.Param:
+        toplevel_params[p.attrib['name']] = p.attrib
+    for g in voevent.What.Group:
+        g_params = {}
+        result[g.attrib['name']] = g_params
+        for p in g.Param:
+            g_params[p.attrib['name']] = p.attrib
+    return result
+
 
 
 #def get_isotime(voevent):

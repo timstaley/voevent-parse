@@ -82,16 +82,6 @@ class TestIO(TestCase):
         processed = voe.dumps(swift_grb_v2_voeparsed)
         self.assertEqual(raw, processed)
 
-class TestPullAstroCoords(TestCase):
-    def test_swift_grb_v2(self):
-        swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
-        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
-                                             err=0.05,
-                                             units='deg',
-                                             system='UTC-FK5-GEO')
-        p = voe.pull_astro_coords(swift_grb_v2_packet)
-        self.assertEqual(p, known_swift_grb_posn)
-
 class TestMinimalVOEvent(TestCase):
     def test_make_minimal_voevent(self):
         v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
@@ -211,3 +201,19 @@ class TestCitations(TestCase):
         self.assertTrue(voe.valid_as_v2_0(self.v))
         print voe.prettystr(self.v.Citations)
         self.assertEqual(len(self.v.Citations.getchildren()), 2)
+
+class TestConvenienceRoutines(TestCase):
+    def setUp(self):
+        self.swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
+    def test_pull_astro_coords(self):
+        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
+                                             err=0.05,
+                                             units='deg',
+                                             system='UTC-FK5-GEO')
+        p = voe.pull_astro_coords(self.swift_grb_v2_packet)
+        self.assertEqual(p, known_swift_grb_posn)
+
+    def test_pull_params(self):
+        params = voe.pull_params(self.swift_grb_v2_packet)
+        self.assertEqual(params[None]['Packet_Type']['value'], '61')
+        self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'], 'false')
