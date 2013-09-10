@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 import lxml.objectify
 import lxml.etree
+import datetime
 from voeparse.definitions import *
 from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citation
 from voeparse.voevent import *
@@ -74,9 +75,20 @@ def pull_params(voevent):
 
 
 def pull_isotime(voevent):
+    """Returns a datetime object, or None if not found.
+
+    Specifically, we return a standard library datetime object,
+    i.e. one that is *timezone-naive* (that is, agnostic about its timezone,
+    see python docs) - this avoids an added dependency on pytz.
+
+    The details of the reference system for time and space are provided
+    in the AstroCoords object, but typically time reference is UTC.
+
+    """
     try:
         ol = voevent.WhereWhen.ObsDataLocation.ObservationLocation
-        return str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+        isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+        return datetime.datetime.strptime(isotime_str, "%Y-%m-%dT%H:%M:%S.%f")
     except AttributeError:
         return None
 #

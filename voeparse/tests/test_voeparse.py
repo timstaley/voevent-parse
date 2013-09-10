@@ -223,3 +223,10 @@ class TestConvenienceRoutines(TestCase):
 
         params = voe.pull_params(self.blank)
         self.assertEqual(params, {})
+    
+    def test_pull_isotime(self):
+        isotime = voe.pull_isotime(self.swift_grb_v2_packet)
+        self.assertIsInstance(isotime, datetime.datetime)
+
+        null_result = voe.pull_isotime(self.blank)
+        self.assertIsNone(null_result)
