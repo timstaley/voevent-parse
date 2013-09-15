@@ -76,3 +76,28 @@ http://voevent-parse.readthedocs.org,
 or can be built from the source if you prefer the traditional python docs 
 colour-scheme. 
  
+See also
+--------
+
+Alternative parsing libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+voevent-parse was preceded by 
+`VOEventLib <http://lib.skyalert.org/VOEventLib/>`_, which has similar aims
+but a different stylistic approach 
+(see http://lib.skyalert.org/VOEventLib/VOEventLib/doc/index.html ).
+
+Brokers
+~~~~~~~
+In order to receive VOEvent packets, you will require a utility capable of 
+connecting to the VOEvent backbone. Two such tools are 
+`Comet <http://comet.transientskp.org/>_` and 
+`Dakota <http://voevent.dc3.com/>_`. 
+
+Associated utility routines
+~~~~~~
+Depending on what you want to use your VOEvents for, you may be interested
+in `pysovo <https://github.com/timstaley/pysovo>_`, 
+a collection of routines for dealing with VOEvents and
+responding to them accordingly.
+ 
+
