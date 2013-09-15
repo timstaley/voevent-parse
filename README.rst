@@ -5,9 +5,13 @@ voevent-parse
 A bare-bones, lightweight library for parsing, manipulating, and generating 
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets.
 
-**Update: I've now designated a version 0.1.0 and uploaded to PyPI.** You can install this using:
+**voevent-parse is now available on PyPI.** You can install this using:
 
 ``pip install voevent-parse``.
+
+I intend to mark any updates by bumping the version number accordingly.
+That said, if you find yourself using voevent-parse in any serious context,
+do drop me an email so I can keep you informed of any updates or bugs.
 
 Rationale
 ---------
@@ -90,13 +94,13 @@ Brokers
 ~~~~~~~
 In order to receive VOEvent packets, you will require a utility capable of 
 connecting to the VOEvent backbone. Two such tools are 
-`Comet <http://comet.transientskp.org/>_` and 
-`Dakota <http://voevent.dc3.com/>_`. 
+`Comet <http://comet.transientskp.org/>`_ and 
+`Dakota <http://voevent.dc3.com/>`_. 
 
 Associated utility routines
-~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Depending on what you want to use your VOEvents for, you may be interested
-in `pysovo <https://github.com/timstaley/pysovo>_`, 
+in `pysovo <https://github.com/timstaley/pysovo>`_, 
 a collection of routines for dealing with VOEvents and
 responding to them accordingly.
  
