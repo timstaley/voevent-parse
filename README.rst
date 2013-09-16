@@ -35,16 +35,19 @@ Installation
 ------------
 Take your pick; options are:
 
- - ``pip install voevent-parse`` 
-   
-   (with a virtualenv, recommended)
+- ``pip install voevent-parse``    
+  (with a virtualenv, recommended)
+- ``pip install voevent-parse --user``    
+  (to install for current user only)
+- Other development tricks e.g. symlink into ``~/.local/lib/python2.7/site-packages``.
 
- - ``pip install voevent-parse --user`` 
-   
-   (to install for current user only)
 
- - Other development tricks e.g. symlink into ``~/.local/lib/python2.7/site-packages``.
-
+API reference docs
+------------------
+While currently quite minimal, these can be found at 
+http://voevent-parse.readthedocs.org,  
+or can be built from the source if you prefer the traditional python docs 
+colour-scheme. 
 
 lxml.objectify tips
 -------------------
@@ -73,12 +76,6 @@ e.g.::
 For some more examples, you might also try:  
 http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/.
 
-API reference docs
-------------------
-While currently quite minimal, these can be found at 
-http://voevent-parse.readthedocs.org,  
-or can be built from the source if you prefer the traditional python docs 
-colour-scheme. 
  
 See also
 --------
