@@ -9,10 +9,6 @@ A bare-bones, lightweight library for parsing, manipulating, and generating
 
 ``pip install voevent-parse``.
 
-I intend to mark any updates by bumping the version number accordingly.
-That said, if you find yourself using voevent-parse in any serious context,
-do drop me an email so I can keep you informed of any updates or bugs.
-
 Rationale
 ---------
 The python library `lxml.objectify <http://lxml.de/objectify.html>`_ 
@@ -40,6 +36,10 @@ Take your pick; options are:
 - ``pip install voevent-parse --user``    
   (to install for current user only)
 - Other development tricks e.g. symlink into ``~/.local/lib/python2.7/site-packages``.
+
+I intend to mark any updates by bumping the version number accordingly.
+That said, if you find yourself using voevent-parse in any serious context,
+do drop me an email so I can keep you informed of any updates or bugs.
 
 
 API reference docs
