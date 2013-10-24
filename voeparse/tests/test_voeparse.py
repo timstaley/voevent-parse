@@ -236,6 +236,7 @@ class TestConvenienceRoutines(TestCase):
                                              system='UTC-FK5-GEO')
         p = voe.pull_astro_coords(self.swift_grb_v2_packet)
         self.assertEqual(p, known_swift_grb_posn)
+        self.assertIsInstance(p.ra, float)
 
     def test_pull_params(self):
         params = voe.pull_params(self.swift_grb_v2_packet)

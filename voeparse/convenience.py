@@ -16,9 +16,9 @@ def pull_astro_coords(voevent):
 
     try:
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-        posn = Position2D(ra=ac.Position2D.Value2.C1,
-                          dec=ac.Position2D.Value2.C2,
-                          err=ac.Position2D.Error2Radius,
+        posn = Position2D(ra=float(ac.Position2D.Value2.C1),
+                          dec=float(ac.Position2D.Value2.C2),
+                          err=float(ac.Position2D.Error2Radius),
                           units=ac.Position2D.attrib['unit'],
                           system=sys)
     except AttributeError:
