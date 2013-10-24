@@ -16,35 +16,28 @@ A package for elegant and concise manipulation of VOEvent XML packets.
    for brevity (see ``voeparse/__init__.py``).
    
 
-:mod:`voeparse` - top level convenience routines
-------------------------------------------------
-
-.. automodule:: voeparse
-    :members:
-    :undoc-members:
-
-
-:mod:`.voevent` - VOEvent packet manipulation
----------------------------------------------
+:mod:`.voevent` - Basic VOEvent packet manipulation
+---------------------------------------------------
 
 .. automodule:: voeparse.voevent
     :members: 
     :undoc-members:
 
 
-:mod:`.misc` - Sub-Elements and other helpers
+:mod:`.misc` - Sub-elements and other helpers
 ---------------------------------------------
 
 .. automodule:: voeparse.misc
     :members:
     :undoc-members:
-    :show-inheritance:
-    :exclude-members: Position2D
-    
-    .. autoclass:: Position2D
-    
-      A ``namedtuple`` used to collect together attributes of the commonly used
-      *Position2D* element type.
+
+      
+:mod:`.convenience` - Convenience routines
+------------------------------------------
+
+.. automodule:: voeparse.convenience
+    :members:
+    :undoc-members:
 
 :mod:`.definitions`
 -------------------

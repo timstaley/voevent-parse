@@ -8,7 +8,7 @@ def pull_astro_coords(voevent):
     """
     Extracts the 'AstroCoords' of the 'ObservationLocation'.
 
-    Returns a Position2D namedtuple.
+    Returns a :py:class:`.Position2D` namedtuple.
     """
     ac = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem

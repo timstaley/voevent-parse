@@ -8,9 +8,17 @@ import datetime
 from lxml import objectify, etree
 
 
-Position2D = namedtuple('Position2D', 'ra dec err units system')
-""""A namedtuple for simple representation of a 2D position as described
-by the VOEvent spec."""
+class Position2D(namedtuple('Position2D', 'ra dec err units system')):
+    """"A namedtuple for simple representation of a 2D position as described
+    by the VOEvent spec.
+
+    **Args**:
+     - ra
+     - dec
+     - err
+     - units
+     - system
+    """
 
 _datatypes_autoconversion = {
          int: ('int', lambda i: str(i)),
@@ -25,20 +33,20 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
       NB name is not mandated by schema, but *is* mandated in full spec.
 
       **Args:**
-       - value: A string representing your value, or if ac=True, can also be
-         an instance of int/float/datetime.
-         This is converted to a string for storage.
-       - unit: string, e.g. 'deg' for degrees.
+       - value: A string representing your value. Or, if ``ac=True``, can also
+         be an instance of ``int``/``float``/``datetime``.
+         Always stored as a string representation, as per VO spec.
+       - unit: string e.g. 'deg' for degrees.
        - ucd: string denoting `unified content descriptor
          <http://arxiv.org/abs/1110.0525>`_.
          For a list of valid UCDs, see:
          http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
-       - dataType: String denoting type of ``value``; restricted to 3 options
-         ``string``(default), ``int`` , or ``float``.
+       - dataType: String denoting type of ``value``; restricted to 3 options:
+         ``string`` (default), ``int`` , or ``float``.
          (NB *not* to be confused with standard XML Datatypes, which have many
          more possible values.)
-       - utype: (string) See http://wiki.ivoa.net/twiki/bin/view/IVOA/Utypes
-       - ac: (bool) Attempt automatic conversion of passed value to
+       - utype: string. See http://wiki.ivoa.net/twiki/bin/view/IVOA/Utypes
+       - ac: bool. Attempt automatic conversion of passed value to
          string, and set ``dataType`` accordingly (only attempted
          if dataType is the default, i.e. None).
          (NB only supports types listed in _datatypes_autoconversion dict)
