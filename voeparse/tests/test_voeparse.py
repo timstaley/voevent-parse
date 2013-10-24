@@ -140,6 +140,8 @@ class TestWhat(TestCase):
         self.v.What.append(voe.Param(name='The Answer', value=42))
         self.v.What.append(voe.Param(name='What is the time?',
                                      value=datetime.datetime.now()))
+        self.v.What.append(voe.Param(name='This is a lie',
+                                     value=False))
         self.assertTrue(voe.valid_as_v2_0(self.v))
 #         print
 #         print voe.prettystr(self.v.What)

@@ -21,6 +21,7 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
     """
 
 _datatypes_autoconversion = {
+         bool:('string', lambda b: str(b)),
          int: ('int', lambda i: str(i)),
          float: ('float', lambda f: str(f)),
          datetime.datetime: ('string', lambda dt: dt.isoformat()),
@@ -34,7 +35,13 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
 
       **Args:**
        - value: A string representing your value. Or, if ``ac=True``, can also
-         be an instance of ``int``/``float``/``datetime``.
+         be an instance of one of the following:
+
+          - ``bool``
+          - ``int``
+          - ``float``
+          - ``datetime``
+
          Always stored as a string representation, as per VO spec.
        - unit: string e.g. 'deg' for degrees.
        - ucd: string denoting `unified content descriptor
