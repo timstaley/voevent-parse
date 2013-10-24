@@ -42,8 +42,8 @@ def Voevent(stream, stream_id, role):
     etree.SubElement(v, 'Who')
     etree.SubElement(v, 'What')
     etree.SubElement(v, 'WhereWhen')
-    v.Who.Description = ("VOEvent created with voevent-parse version "
-                            + voeparse.definitions.version)
+    v.Who.Description = ('VOEvent created with voevent-parse: '
+                            + 'https://github.com/timstaley/voevent-parse')
     return v
 ####################################################
 # And finally, lots of utility functions...
@@ -127,7 +127,14 @@ def dumps(voevent, validate=False, pretty_print=False, xml_declaration=True):
     return s
 
 def dump(voevent, file, validate=False, pretty_print=True, xml_declaration=True):
-    """Dumps voevent to file."""
+    """Writes the voevent to the file object.
+
+    e.g.::
+
+        with open('/tmp/myvoevent.xml','w') as f:
+            voeparse.dump(v, f)
+
+    """
     file.write(dumps(voevent, validate, pretty_print, xml_declaration))
 
 def valid_as_v2_0(voevent):

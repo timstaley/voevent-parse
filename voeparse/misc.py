@@ -4,6 +4,7 @@ and a few other helper classes."""
 
 from __future__ import absolute_import
 from collections import namedtuple
+import datetime
 from lxml import objectify, etree
 
 
@@ -11,31 +12,52 @@ Position2D = namedtuple('Position2D', 'ra dec err units system')
 """"A namedtuple for simple representation of a 2D position as described
 by the VOEvent spec."""
 
-####################################
-#A few small 'classes' - really just wrapper functions about
-# element creation routines.
-def Param(name, value=None, unit=None, ucd=None, dataType=None,
-                utype=None):
+_datatypes_autoconversion = {
+         int: ('int', lambda i: str(i)),
+         float: ('float', lambda f: str(f)),
+         datetime.datetime: ('string', lambda dt: dt.isoformat()),
+         }
+
+def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
+          ac=True):
     """Create a Param element.
 
       NB name is not mandated by schema, but *is* mandated in full spec.
 
       **Args:**
-       - value: A string, int, or float.
+       - value: A string representing your value, or if ac=True, can also be
+         an instance of int/float/datetime.
          This is converted to a string for storage.
        - unit: string, e.g. 'deg' for degrees.
        - ucd: string denoting `unified content descriptor
          <http://arxiv.org/abs/1110.0525>`_.
-         For a list of valid UCDs, see  http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
-       - dataType: String denoting type of ``value`` - ``string``, ``int`` or ``float``.
+         For a list of valid UCDs, see:
+         http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
+       - dataType: String denoting type of ``value``; restricted to 3 options
+         ``string``(default), ``int`` , or ``float``.
+         (NB *not* to be confused with standard XML Datatypes, which have many
+         more possible values.)
+       - utype: (string) See http://wiki.ivoa.net/twiki/bin/view/IVOA/Utypes
+       - ac: (bool) Attempt automatic conversion of passed value to
+         string, and set ``dataType`` accordingly (only attempted
+         if dataType is the default, i.e. None).
+         (NB only supports types listed in _datatypes_autoconversion dict)
     """
     #We use locals() to allow concise looping over the arguments.
     atts = locals()
+    atts.pop('ac')
     for k in atts.keys():
         if atts[k] is None:
             del atts[k]
-    if 'value' in atts and type(value) != str:
-        atts['value'] = repr(atts['value'])
+    if (ac
+        and value is not None
+        and (not isinstance(value, basestring))
+        and dataType is None
+        ):
+        if type(value) in _datatypes_autoconversion:
+            datatype, func = _datatypes_autoconversion[type(value)]
+            atts['dataType'] = datatype
+            atts['value'] = func(value)
     return objectify.Element('Param', attrib=atts)
 
 def Group(params, name=None, type=None):

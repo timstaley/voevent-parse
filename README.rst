@@ -5,9 +5,9 @@ voevent-parse
 A bare-bones, lightweight library for parsing, manipulating, and generating 
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets.
 
-**voevent-parse is now available on PyPI.** You can install this using:
+**voevent-parse is available via PyPI.** 
+See below for details on installation.
 
-``pip install voevent-parse``.
 
 Rationale
 ---------
@@ -48,6 +48,7 @@ While currently quite minimal, these can be found at
 http://voevent-parse.readthedocs.org,  
 or can be built from the source if you prefer the traditional python docs 
 colour-scheme. 
+
 
 lxml.objectify tips
 -------------------

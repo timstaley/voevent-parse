@@ -117,14 +117,33 @@ class TestWho(TestCase):
         self.assertEqual(self.v.Who.Author.shortName, '4PiSky')
 
 class TestWhat(TestCase):
+    def shortDescription(self):
+        return None
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
-    def test_simple_params(self):
+
+    def test_autoconvert_off(self):
+        """Param values can only be strings..."""
+        self.v.What.append(voe.Param(name='Dead Parrot', ac=False))
+        self.v.What.append(voe.Param(name='The Answer', value=str(42), ac=False))
+        self.assertTrue(voe.valid_as_v2_0(self.v))
+        
+        with self.assertRaises(TypeError):
+            self.v.What.append(voe.Param(name='IntValue', value=42, ac=False))
+
+
+    def test_autoconvert_on(self):
+        """...but we provide some python smarts to alleviate this."""
         self.v.What.append(voe.Param(name='Dead Parrot'))
         self.v.What.append(voe.Param(name='The Answer', value=42))
+        self.v.What.append(voe.Param(name='What is the time?',
+                                     value=datetime.datetime.now()))
         self.assertTrue(voe.valid_as_v2_0(self.v))
+#         print
+#         print voe.prettystr(self.v.What)
+
 
 class TestWhereWhen(TestCase):
     def setUp(self):
@@ -193,13 +212,13 @@ class TestCitations(TestCase):
                           )
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(len(self.v.Citations.getchildren()), 1)
-        print voe.prettystr(self.v.Citations)
+#         print voe.prettystr(self.v.Citations)
         voe.add_citations(self.v,
                           voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
                                cite_type=voe.cite_types.followup)
                           )
         self.assertTrue(voe.valid_as_v2_0(self.v))
-        print voe.prettystr(self.v.Citations)
+#         print voe.prettystr(self.v.Citations)
         self.assertEqual(len(self.v.Citations.getchildren()), 2)
 
 class TestConvenienceRoutines(TestCase):

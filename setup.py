@@ -7,10 +7,10 @@ with open('requirements.txt') as f:
 
 setup(
     name="voevent-parse",
-    version="0.4.0",
+    version="0.4.1",
     packages=['voeparse', 'voeparse.tests', 'voeparse.tests.resources'],
     package_data={'voeparse':['tests/resources/*.xml']}, 
-    description="Convenience routines for parsing and manipulation of"
+    description="Convenience routines for parsing and manipulation of "
                 "VOEvent XML packets.",
     author="Tim Staley",
     author_email="timstaley337@gmail.com",
