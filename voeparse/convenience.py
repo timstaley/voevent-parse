@@ -46,13 +46,15 @@ def pull_params(voevent):
         return result
     toplevel_params = {}
     result[None] = toplevel_params
-    for p in voevent.What.Param:
-        toplevel_params[p.attrib['name']] = p.attrib
-    for g in voevent.What.Group:
-        g_params = {}
-        result[g.attrib['name']] = g_params
-        for p in g.Param:
-            g_params[p.attrib['name']] = p.attrib
+    if hasattr(voevent.What, 'Param'):
+        for p in voevent.What.Param:
+            toplevel_params[p.attrib['name']] = p.attrib
+    if hasattr(voevent.What, 'Group'):
+        for g in voevent.What.Group:
+            g_params = {}
+            result[g.attrib['name']] = g_params
+            for p in g.Param:
+                g_params[p.attrib['name']] = p.attrib
     return result
 
 

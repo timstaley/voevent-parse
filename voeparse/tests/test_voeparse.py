@@ -240,11 +240,18 @@ class TestConvenienceRoutines(TestCase):
 
     def test_pull_params(self):
         params = voe.pull_params(self.swift_grb_v2_packet)
+
         self.assertEqual(params[None]['Packet_Type']['value'], '61')
-        self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'], 'false')
+        self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'],
+                         'false')
 
         params = voe.pull_params(self.blank)
         self.assertEqual(params, {})
+
+        single_par = copy(self.blank)
+        single_par.What.append(voe.Param(name="test_param", value=123))
+        params = voe.pull_params(single_par)
+        self.assertEqual(len(params), 1)
     
     def test_pull_isotime(self):
         isotime = voe.pull_isotime(self.swift_grb_v2_packet)
