@@ -35,7 +35,9 @@ def Voevent(stream, stream_id, role):
     """
     v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str)
     _remove_root_tag_prefix(v)
-    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', repr(stream_id)))
+    if not isinstance(stream_id , basestring):
+        stream_id = repr(stream_id)
+    v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
     #Presumably we'll always want the following children:
     #(NB, valid to then leave them empty)

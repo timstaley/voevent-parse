@@ -87,10 +87,14 @@ class TestIO(TestCase):
 
 class TestMinimalVOEvent(TestCase):
     def test_make_minimal_voevent(self):
-        v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
+        v1 = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
-        self.assertTrue(voe.valid_as_v2_0(v))
+        self.assertTrue(voe.valid_as_v2_0(v1))
+        v2 = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
+                             stream_id=100,
+                             role='test')
+        self.assertEqual(v1.attrib['ivorn'], v2.attrib['ivorn'])
 
 class TestWho(TestCase):
     def setUp(self):
