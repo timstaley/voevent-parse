@@ -67,12 +67,12 @@ def loads(s, validate=False):
     return v
 
 
-def load(path):
-    """Load VOEvent from file.
+def load(fp):
+    """Load VOEvent from file object.
 
     See also: :py:func:`.loads`
     """
-    s = open(path, 'rb').read()
+    s = fp.read()
     return loads(s)
 
 

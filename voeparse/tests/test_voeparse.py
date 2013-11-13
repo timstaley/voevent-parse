@@ -37,7 +37,8 @@ class TestValidation(TestCase):
         Now we perform the same validation tests, but applied via the
         convenience functions.
         """
-        v = voe.load(datapaths.swift_bat_grb_pos_v2)
+        with open(datapaths.swift_bat_grb_pos_v2) as f:
+            v = voe.load(f)
         self.assertTrue(voe.valid_as_v2_0(v))
         v.Who.BadChild = 42
         self.assertFalse(voe.valid_as_v2_0(v))
@@ -57,7 +58,8 @@ class TestIO(TestCase):
     def shortDescription(self):
         return None
     def test_load_of_voe_v2(self):
-        vff = voe.load(datapaths.swift_bat_grb_pos_v2)
+        with open(datapaths.swift_bat_grb_pos_v2) as f:
+            vff = voe.load(f)
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             vfs = voe.loads(f.read())
         self.assertEqual(objectify.dump(vff), objectify.dump(vfs))
@@ -74,7 +76,8 @@ class TestIO(TestCase):
         """
         swift_grb_v2_raw = objectify.parse(
                                   datapaths.swift_bat_grb_pos_v2).getroot()
-        swift_grb_v2_voeparsed = voe.load(datapaths.swift_bat_grb_pos_v2)
+        with open(datapaths.swift_bat_grb_pos_v2) as f:
+            swift_grb_v2_voeparsed = voe.load(f)
         raw = etree.tostring(swift_grb_v2_raw,
                              pretty_print=False,
                              xml_declaration=True,
@@ -225,7 +228,8 @@ class TestCitations(TestCase):
 
 class TestConvenienceRoutines(TestCase):
     def setUp(self):
-        self.swift_grb_v2_packet = voe.load(datapaths.swift_bat_grb_pos_v2)
+        with open(datapaths.swift_bat_grb_pos_v2) as f:
+            self.swift_grb_v2_packet = voe.load(f)
         self.blank = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
