@@ -5,7 +5,7 @@ from lxml import etree
 v = vp.Voevent(stream='astronomy.physics.science.org/super_exciting_events',
                stream_id=123, role=vp.roles.test)
 
-vp.set_who(v, date=datetime.datetime.now(),
+vp.set_who(v, date=datetime.datetime.utcnow(),
            author_ivorn="www.4pisky.soton.ac.uk")
 
 vp.set_author(v, title="4PiSky Testing Node",

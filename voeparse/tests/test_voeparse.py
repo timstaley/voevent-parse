@@ -101,7 +101,7 @@ class TestWho(TestCase):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id=100,
                              role='test')
-        self.date = datetime.datetime.now()
+        self.date = datetime.datetime.utcnow()
 
 
 
@@ -146,7 +146,7 @@ class TestWhat(TestCase):
         self.v.What.append(voe.Param(name='Dead Parrot'))
         self.v.What.append(voe.Param(name='The Answer', value=42))
         self.v.What.append(voe.Param(name='What is the time?',
-                                     value=datetime.datetime.now()))
+                                     value=datetime.datetime.utcnow()))
         self.v.What.append(voe.Param(name='This is a lie',
                                      value=False))
         self.assertTrue(voe.valid_as_v2_0(self.v))
@@ -165,7 +165,7 @@ class TestWhereWhen(TestCase):
                        units='deg', system='UTC-FK5-GEO'
                        )
         voe.set_where_when(self.v, coords=c,
-                           obs_time=datetime.datetime.now(),
+                           obs_time=datetime.datetime.utcnow(),
                            observatory_location=voe.definitions.observatory_location.geosurface)
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(c, voe.pull_astro_coords(self.v))
