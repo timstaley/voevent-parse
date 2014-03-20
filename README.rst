@@ -37,6 +37,13 @@ Take your pick; options are:
   (to install for current user only)
 - Other development tricks e.g. symlink into ``~/.local/lib/python2.7/site-packages``.
 
+If you're working with pip/virtualenv, then note that lxml has some 
+prerequisites for compilation that can cause a standard ``pip install`` 
+to fail with somewhat cryptic errors.
+On Ubuntu you can satisfy those requirements using::
+
+	apt-get install libxml2-dev libxslt-dev
+
 I intend to mark any updates by bumping the version number accordingly.
 That said, if you find yourself using voevent-parse in any serious context,
 do drop me an email so I can keep you informed of any updates or bugs.
