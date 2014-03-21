@@ -67,6 +67,28 @@ class TestIO(TestCase):
         self.assertEqual(vfs.attrib['ivorn'],
                          'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729')
 
+    def test_namespace_variations(self):
+        # NB, not enclosing root element in a namespace is invalid under schema
+        # But this has been seen in the past (isolated bug case?)
+        # Anyway, handled easily enough
+        with open(datapaths.no_namespace_test_packet) as f:
+            vff = voe.load(f)
+        self.assertFalse(voe.valid_as_v2_0(vff))
+        self.assertEqual(vff.tag, 'VOEvent')
+        self.assertEqual(vff.attrib['ivorn'],
+                     'ivo://com.dc3/dc3.broker#BrokerTest-2014-02-24T15:55:27.72')
+
+
+        with open(datapaths.swift_bat_grb_pos_v2) as f:
+            xml_str = f.read()
+            xml_str = xml_str.replace('voe', 'foobar_ns')
+        #print xml_str
+        vfs = voe.loads(xml_str)
+        voe.assert_valid_as_v2_0(vfs)
+        self.assertEqual(vfs.tag, 'VOEvent')
+        self.assertEqual(vfs.attrib['ivorn'],
+                     'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729')
+
     def test_dumps(self):
         """
         Note, the processed output does not match the raw input -
@@ -219,7 +241,7 @@ class TestCitations(TestCase):
                           voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729',
                                cite_type=voe.cite_types.followup)
                           )
-        self.assertTrue(voe.valid_as_v2_0(self.v))
+        voe.assert_valid_as_v2_0(self.v)
         self.assertEqual(len(self.v.Citations.getchildren()), 1)
 #         print voe.prettystr(self.v.Citations)
         voe.add_citations(self.v,

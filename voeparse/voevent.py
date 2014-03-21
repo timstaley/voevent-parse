@@ -95,16 +95,26 @@ def _remove_root_tag_prefix(v):
 
     I've gone for the latter option.
     """
-    v.tag = v.tag.replace(''.join(('{', v.nsmap['voe'], '}')), '')
-    # Now v.tag = '{}VOEvent'
+    if v.prefix:
+        # Create subelement without a prefix via etree.SubElement
+        etree.SubElement(v, 'original_prefix' )
+        # Now carefully access said named subelement (without prefix cascade)
+        # and alter the first value in the list of children with this name...
+        # LXML syntax is a minefield!
+        v['{}original_prefix'][0] = v.prefix
+        v.tag = v.tag.replace(''.join(('{', v.nsmap[v.prefix], '}')), '')
+        # Now v.tag = '{}VOEvent', v.prefix = None
     return
 
 
 def _reinsert_root_tag_prefix(v):
     """
-    Returns 'voe' namespace prefix to root tag.
+    Returns namespace prefix to root tag, if it had one.
     """
-    v.tag = ''.join(('{', v.nsmap['voe'], '}VOEvent'))
+    if hasattr(v, 'original_prefix'):
+        original_prefix = v.original_prefix
+        del v.original_prefix
+        v.tag = ''.join(('{', v.nsmap[original_prefix], '}VOEvent'))
     return
 
 def _return_to_standard_xml(v):
