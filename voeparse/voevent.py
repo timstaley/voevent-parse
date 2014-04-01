@@ -15,22 +15,22 @@ def Voevent(stream, stream_id, role):
     """Create an empty VOEvent packet with specified identifying properties.
 
     **Args:**
-      - stream, stream_id: used to construct the IVORN like so::
 
-          ivorn = 'ivo://' + stream + '#' + stream_id
+    - stream, stream_id: used to construct the IVORN like so::
 
-        (N.B. ``stream_id`` is converted to string first.)
-        So, e.g. we might set::
+        ivorn = 'ivo://' + stream + '#' + stream_id
+
+      (N.B. ``stream_id`` is converted to string if required.)
+      So, e.g. we might set::
 
           stream='voevent.soton.ac.uk/super_exciting_events'
           stream_id=77
 
-      - role: string conforming to VOEvent spec.
-        (See also  :py:class:`.definitions.roles`)
+    - role: string conforming to VOEvent spec.
+      (See also  :py:class:`.definitions.roles`)
 
-    **Returns:**
-     Instance of lxml.objectify.Element representing root-node of the VOEvent
-     etree.
+    **Returns:** Instance of lxml.objectify.Element representing root-node of
+    the VOEvent etree.
 
     """
     v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str)
@@ -175,12 +175,13 @@ def assert_valid_as_v2_0(voevent):
 def set_who(v, date=None, author_ivorn=None):
     """Sets the minimal 'Who' attributes:  date of authoring, AuthorIVORN.
 
-    **Args**
-      - v: Voevent instance to update.
-      - date: A ``datetime`` object.
-        Microseconds are ignored, as per the VOEvent spec.
-      - author_ivorn: String, e.g. ``voevent.soton.ac.uk/4PiSky``.
-        The prefix ``ivo://`` will be prepended internally.
+    **Args:**
+
+    - v: Voevent instance to update.
+    - date: A ``datetime`` object.
+      Microseconds are ignored, as per the VOEvent spec.
+    - author_ivorn: String, e.g. ``voevent.soton.ac.uk/4PiSky``.
+      The prefix ``ivo://`` will be prepended internally.
 
     """
     if author_ivorn is not None:
@@ -218,10 +219,11 @@ def set_where_when(voevent, coords, obs_time,
     """Set up a basic WhereWhen for an observed sky position.
 
     **Args**:
-         - voevent
-         - coords: Should be instance of voeparse.Position2D
-         - obs_time: Nominal DateTime of the observation.
-         - observatory_location: Telescope locale, see VOEvent spec.
+
+    - voevent
+    - coords: Should be instance of voeparse.Position2D
+    - obs_time: Nominal DateTime of the observation.
+    - observatory_location: Telescope locale, see VOEvent spec.
 
     .. todo:: Implement TimeError using datetime.timedelta
     """
@@ -260,10 +262,11 @@ def _listify(x):
 def add_how(voevent, descriptions=None, references=None):
     """Add entries to the How section.
 
-    **Args**:
-      - voevent
-      - descriptions: Description string (or list of description strings).
-      - references: A :py:class:`voeparse.misc.Reference` element (or list thereof).
+    **Args:**
+
+    - voevent
+    - descriptions: Description string (or list of description strings).
+    - references: A :py:class:`voeparse.misc.Reference` element (or list thereof).
     """
     if not voevent.xpath('How'):
         etree.SubElement(voevent, 'How')
@@ -287,10 +290,11 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
         ``inferences``, on the other hand,  are appended to the list.
 
     **Args**:
-      - voevent
-      - importance: Float from 0.0 to 1.0
-      - expires: Datetime. (See voevent spec).
-      - inferences: A :py:class:`voeparse.misc.Inference` element (or list thereof).
+
+    - voevent
+    - importance: Float from 0.0 to 1.0
+    - expires: Datetime. (See voevent spec).
+    - inferences: A :py:class:`voeparse.misc.Inference` element (or list thereof).
     """
     if not voevent.xpath('Why'):
         etree.SubElement(voevent, 'Why')
@@ -309,8 +313,9 @@ def add_citations(voevent, citations):
     creation prior to listing the first citation.
 
     **Args**:
-      - voevent
-      - citation: A :py:class:`voeparse.misc.Citation` element (or list thereof).
+
+    - voevent
+    - citation: A :py:class:`voeparse.misc.Citation` element (or list thereof).
 
     """
     if not voevent.xpath('Citations'):

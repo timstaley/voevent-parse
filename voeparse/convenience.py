@@ -6,7 +6,7 @@ from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citati
 
 def pull_astro_coords(voevent):
     """
-    Extracts the 'AstroCoords' of the 'ObservationLocation'.
+    Extracts the `AstroCoords` of the `ObservationLocation`.
 
     Returns a :py:class:`.Position2D` namedtuple.
     """
@@ -26,19 +26,21 @@ def pull_astro_coords(voevent):
     return posn
 
 def pull_params(voevent):
-    """Attempts to load the 'What' section of a voevent as a nested dictionary.
+    """
+    Attempts to load the `What` section of a voevent as a nested dictionary.
 
-    Parameters without a group are indexed under the key 'None' - otherwise,
-    we might get name-clashes between params and groups (unlikely but possible).
+    **Returns:** Nested dict, ``Group->Param->Attribs``. Access like so::
 
-    Note that the dictionaries returned represent the 'attrib' accessor,
-    so to get to the values you'll need to use something like::
+        foo_param_val = what_dict['GroupName']['ParamName']['value']
 
-      result[None]['ParamName']['value']
+    .. note::
 
-    Which is a bit tedious - but giving direct access means throwing away
-    other attrib values such as the units and UCD. Of course, it's
-    easy to manipulate the resulting dict as you wish.
+      Parameters without a group are indexed under the key 'None' - otherwise,
+      we might get name-clashes between `params` and `groups` (unlikely but
+      possible) so for ungrouped Params you'll need something like::
+
+        what_dict[None]['ParamName']['value']
+
     """
     result = {}
     w = voevent.What
