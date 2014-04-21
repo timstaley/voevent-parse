@@ -2,8 +2,6 @@
 xml document for creation of new instances, and various other minor definitions:
 """
 
-version = "dev-alpha-Feb2013"
-
 #############################
 # Some useful string defs namespaced via a class container:
 
