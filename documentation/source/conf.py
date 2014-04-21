@@ -50,7 +50,7 @@ copyright = u'2013, Tim Staley'
 # built documents.
 #
 # The short X.Y version.
-version = voeparse.__version__
+version = voeparse._nominal_version
 # The full version, including alpha/beta/rc tags.
 release = version
 
