@@ -1,5 +1,10 @@
-"""Convenience routines allowing easy access to information in VOEvent packets."""
-#Tim Staley, <timstaley337@gmail.com>, 2012
+"""
+A package for concise manipulation of VOEvent XML packets.
+
+The top level init file imports various classes into the package-level
+namespace, for convenience.
+"""
+
 
 from __future__ import absolute_import
 import os
@@ -7,10 +12,13 @@ from pkg_resources import get_distribution, DistributionNotFound
 
 import lxml.objectify
 import lxml.etree
-from voeparse.definitions import *
-from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citation
 from voeparse.voevent import *
-from voeparse.convenience import *
+import voeparse.definitions as definitions
+from voeparse.misc import (Param, Group, Reference, Inference, Position2D,
+                           Citation)
+from voeparse.convenience import (pull_astro_coords,pull_params,pull_isotime,
+                                    prettystr)
+
 
 
 ###########################################################
@@ -29,21 +37,5 @@ except DistributionNotFound:
     __version__ = 'Local import @ '+os.path.dirname(os.path.abspath(__file__))
 else:
     __version__ = _nominal_version
-
-###########################################################
-# Various convenience routines...
-###########################################################
-
-def prettystr(subtree):
-    """Print an element tree with nice indentation.
-
-    Prettyprinting a whole VOEvent doesn't seem to work - possibly this is
-    due to whitespacing issues in the skeleton string definition.
-    This function is a quick workaround for easily desk-checking
-    what you're putting together.
-    """
-    lxml.objectify.deannotate(subtree)
-    lxml.etree.cleanup_namespaces(subtree)
-    return lxml.etree.tostring(subtree, pretty_print=True)
 
 

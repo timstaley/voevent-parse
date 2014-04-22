@@ -9,9 +9,10 @@ Welcome to VOEvent-parse's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
-   voeparse 
+   introduction
+   reference
 
 
 Indices and tables

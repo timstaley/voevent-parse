@@ -13,9 +13,10 @@ See also: the slightly terse documentation at http://lxml.de/objectify.html
 import copy
 import voeparse
 
-xml_filename = 'tests/resources/SWIFT_bat_position_v2.0_example.xml'
+xml_filename = 'voeparse/tests/resources/SWIFT_bat_position_v2.0_example.xml'
 
-v = voeparse.load(xml_filename)
+with open(xml_filename) as f:
+    v = voeparse.load(f)
 
 #Basic attribute access
 print "Ivorn:", v.attrib['ivorn']
@@ -31,7 +32,7 @@ print "Copy valid? ", voeparse.valid_as_v2_0(v_copy)
 
 #Changing values:
 v_copy.Who.Author.shortName = 'BillyBob'
-v_copy.attrib['role'] = 'test'
+v_copy.attrib['role'] = voeparse.definitions.roles.test
 print "Changes valid? ", voeparse.valid_as_v2_0(v_copy)
 
 v_copy.attrib['role'] = 'flying circus'

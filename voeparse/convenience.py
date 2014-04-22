@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 import datetime
+import lxml
 from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citation
 
 def pull_astro_coords(voevent):
@@ -77,3 +78,17 @@ def pull_isotime(voevent):
         return datetime.datetime.strptime(isotime_str, "%Y-%m-%dT%H:%M:%S.%f")
     except AttributeError:
         return None
+
+def prettystr(subtree):
+    """Print an element tree with nice indentation.
+
+    Prettyprinting a whole VOEvent doesn't seem to work - possibly this is
+    due to whitespacing issues in the skeleton string definition.
+    This function is a quick workaround for easily desk-checking
+    what you're putting together.
+    """
+    lxml.objectify.deannotate(subtree)
+    lxml.etree.cleanup_namespaces(subtree)
+    return lxml.etree.tostring(subtree, pretty_print=True)
+
+

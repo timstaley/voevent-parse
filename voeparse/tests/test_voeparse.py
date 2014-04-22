@@ -239,14 +239,14 @@ class TestCitations(TestCase):
         ref = 'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729'
         voe.add_citations(self.v,
                           voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729',
-                               cite_type=voe.cite_types.followup)
+                               cite_type=voe.definitions.cite_types.followup)
                           )
         voe.assert_valid_as_v2_0(self.v)
         self.assertEqual(len(self.v.Citations.getchildren()), 1)
 #         print voe.prettystr(self.v.Citations)
         voe.add_citations(self.v,
                           voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
-                               cite_type=voe.cite_types.followup)
+                               cite_type=voe.definitions.cite_types.followup)
                           )
         self.assertTrue(voe.valid_as_v2_0(self.v))
 #         print voe.prettystr(self.v.Citations)
