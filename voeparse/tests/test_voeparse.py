@@ -3,15 +3,16 @@ from unittest import TestCase
 from voeparse.tests.resources import datapaths
 
 from lxml import objectify, etree
-#from astropysics.coords.coordsys import FK5Coordinates
 from copy import copy
 import datetime
 
 import voeparse as voe
 
+
 class TestValidation(TestCase):
     def shortDescription(self):
         return None
+
     def test_schema_valid_for_test_data(self):
         """
         First, let's check everything is in order with the test data
@@ -48,15 +49,15 @@ class TestValidation(TestCase):
     def test_invalid_error_reporting(self):
         with self.assertRaises(etree.DocumentInvalid):
             v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
-                             stream_id='001',
-                             role='DeadParrot')
+                            stream_id='001',
+                            role='DeadParrot')
             voe.assert_valid_as_v2_0(v)
-
 
 
 class TestIO(TestCase):
     def shortDescription(self):
         return None
+
     def test_load_of_voe_v2(self):
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             vff = voe.load(f)
@@ -76,8 +77,7 @@ class TestIO(TestCase):
         self.assertFalse(voe.valid_as_v2_0(vff))
         self.assertEqual(vff.tag, 'VOEvent')
         self.assertEqual(vff.attrib['ivorn'],
-                     'ivo://com.dc3/dc3.broker#BrokerTest-2014-02-24T15:55:27.72')
-
+                         'ivo://com.dc3/dc3.broker#BrokerTest-2014-02-24T15:55:27.72')
 
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             xml_str = f.read()
@@ -87,7 +87,7 @@ class TestIO(TestCase):
         voe.assert_valid_as_v2_0(vfs)
         self.assertEqual(vfs.tag, 'VOEvent')
         self.assertEqual(vfs.attrib['ivorn'],
-                     'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729')
+                         'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729')
 
     def test_dumps(self):
         """
@@ -97,7 +97,7 @@ class TestIO(TestCase):
         etree.tostring processed version of the original.
         """
         swift_grb_v2_raw = objectify.parse(
-                                  datapaths.swift_bat_grb_pos_v2).getroot()
+            datapaths.swift_bat_grb_pos_v2).getroot()
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             swift_grb_v2_voeparsed = voe.load(f)
         raw = etree.tostring(swift_grb_v2_raw,
@@ -107,16 +107,18 @@ class TestIO(TestCase):
         processed = voe.dumps(swift_grb_v2_voeparsed)
         self.assertEqual(raw, processed)
 
+
 class TestMinimalVOEvent(TestCase):
     def test_make_minimal_voevent(self):
         v1 = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
-                             stream_id='100',
-                             role='test')
+                         stream_id='100',
+                         role='test')
         self.assertTrue(voe.valid_as_v2_0(v1))
         v2 = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
-                             stream_id=100,
-                             role='test')
+                         stream_id=100,
+                         role='test')
         self.assertEqual(v1.attrib['ivorn'], v2.attrib['ivorn'])
+
 
 class TestWho(TestCase):
     def setUp(self):
@@ -124,7 +126,6 @@ class TestWho(TestCase):
                              stream_id=100,
                              role='test')
         self.date = datetime.datetime.utcnow()
-
 
 
     def test_set_who_date(self):
@@ -145,9 +146,11 @@ class TestWho(TestCase):
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(self.v.Who.Author.shortName, '4PiSky')
 
+
 class TestWhat(TestCase):
     def shortDescription(self):
         return None
+
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
@@ -156,9 +159,10 @@ class TestWhat(TestCase):
     def test_autoconvert_off(self):
         """Param values can only be strings..."""
         self.v.What.append(voe.Param(name='Dead Parrot', ac=False))
-        self.v.What.append(voe.Param(name='The Answer', value=str(42), ac=False))
+        self.v.What.append(
+            voe.Param(name='The Answer', value=str(42), ac=False))
         self.assertTrue(voe.valid_as_v2_0(self.v))
-        
+
         with self.assertRaises(TypeError):
             self.v.What.append(voe.Param(name='IntValue', value=42, ac=False))
 
@@ -172,6 +176,8 @@ class TestWhat(TestCase):
         self.v.What.append(voe.Param(name='This is a lie',
                                      value=False))
         self.assertTrue(voe.valid_as_v2_0(self.v))
+
+
 #         print
 #         print voe.prettystr(self.v.What)
 
@@ -181,22 +187,38 @@ class TestWhereWhen(TestCase):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
+        self.coords = voe.Position2D(ra=123.456, dec=45.678,
+                           err=0.1,
+                           units='deg', system='UTC-FK5-GEO'
+        )
+
     def test_set_wherewhen(self):
-        c = voe.Position2D(ra=123.456, dec=45.678,
-                       err=0.1,
-                       units='deg', system='UTC-FK5-GEO'
-                       )
-        voe.set_where_when(self.v, coords=c,
+        voe.set_where_when(self.v, coords=self.coords,
                            obs_time=datetime.datetime.utcnow(),
                            observatory_location=voe.definitions.observatory_location.geosurface)
         self.assertTrue(voe.valid_as_v2_0(self.v))
-        self.assertEqual(c, voe.pull_astro_coords(self.v))
+        self.assertEqual(self.coords, voe.pull_astro_coords(self.v))
+
+    @unittest.skip("Will fix this after documentation update.")
+    def test_idempotent(self):
+        self.assertEqual(self.v.WhereWhen.countchildren(), 0)
+        voe.set_where_when(self.v, coords=self.coords,
+                           obs_time=datetime.datetime.utcnow(),
+                           observatory_location=voe.definitions.observatory_location.geosurface)
+        self.assertEqual(self.v.WhereWhen.countchildren(), 1)
+        voe.set_where_when(self.v, coords=self.coords,
+                           obs_time=datetime.datetime.utcnow(),
+                           observatory_location=voe.definitions.observatory_location.geosurface)
+        self.assertEqual(self.v.WhereWhen.countchildren(), 1)
+
+
 
 class TestHow(TestCase):
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
+
     def test_add_How(self):
         descriptions = ['One sentence.', 'Another.']
         voe.add_how(self.v, descriptions)
@@ -213,6 +235,7 @@ class TestHow(TestCase):
 
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
+
 class TestWhy(TestCase):
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
@@ -227,43 +250,50 @@ class TestWhy(TestCase):
                     inferences=inferences)
         self.assertTrue(voe.valid_as_v2_0(self.v))
         self.assertEqual(self.v.Why.attrib['importance'], str(0.6))
-        self.assertEqual(self.v.Why.Inference[0].attrib['probability'], str(0.5))
+        self.assertEqual(self.v.Why.Inference[0].attrib['probability'],
+                         str(0.5))
         self.assertEqual(self.v.Why.Inference[0].Name, 'Toin Coss')
+
 
 class TestCitations(TestCase):
     def setUp(self):
         self.v = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
                              stream_id='100',
                              role='test')
+
     def test_followup_citation(self):
         ref = 'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729'
         voe.add_citations(self.v,
-                          voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729',
-                               cite_type=voe.definitions.cite_types.followup)
-                          )
+                          voe.Citation(
+                              'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729',
+                              cite_type=voe.definitions.cite_types.followup)
+        )
         voe.assert_valid_as_v2_0(self.v)
         self.assertEqual(len(self.v.Citations.getchildren()), 1)
-#         print voe.prettystr(self.v.Citations)
+        #         print voe.prettystr(self.v.Citations)
         voe.add_citations(self.v,
-                          voe.Citation('ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
-                               cite_type=voe.definitions.cite_types.followup)
-                          )
+                          voe.Citation(
+                              'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
+                              cite_type=voe.definitions.cite_types.followup)
+        )
         self.assertTrue(voe.valid_as_v2_0(self.v))
-#         print voe.prettystr(self.v.Citations)
+        #         print voe.prettystr(self.v.Citations)
         self.assertEqual(len(self.v.Citations.getchildren()), 2)
+
 
 class TestConvenienceRoutines(TestCase):
     def setUp(self):
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             self.swift_grb_v2_packet = voe.load(f)
         self.blank = voe.Voevent(stream='voevent.soton.ac.uk/TEST',
-                             stream_id='100',
-                             role='test')
+                                 stream_id='100',
+                                 role='test')
+
     def test_pull_astro_coords(self):
-        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec= -9.313700,
-                                             err=0.05,
-                                             units='deg',
-                                             system='UTC-FK5-GEO')
+        known_swift_grb_posn = voe.Position2D(ra=74.741200, dec=-9.313700,
+                                              err=0.05,
+                                              units='deg',
+                                              system='UTC-FK5-GEO')
         p = voe.pull_astro_coords(self.swift_grb_v2_packet)
         self.assertEqual(p, known_swift_grb_posn)
         self.assertIsInstance(p.ra, float)
@@ -282,7 +312,7 @@ class TestConvenienceRoutines(TestCase):
         single_par.What.append(voe.Param(name="test_param", value=123))
         params = voe.pull_params(single_par)
         self.assertEqual(len(params), 1)
-    
+
     def test_pull_isotime(self):
         isotime = voe.pull_isotime(self.swift_grb_v2_packet)
         self.assertIsInstance(isotime, datetime.datetime)

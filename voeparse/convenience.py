@@ -3,13 +3,16 @@
 from __future__ import absolute_import
 import datetime
 import lxml
-from voeparse.misc import Param, Group, Reference, Inference, Position2D, Citation
-
+from voeparse.misc import (Param, Group, Reference, Inference, Position2D, 
+                           Citation)
 def pull_astro_coords(voevent):
-    """
-    Extracts the `AstroCoords` of the `ObservationLocation`.
+    """Extracts the `AstroCoords` from the first `WhereWhen.ObservationLocation`.
 
-    Returns a :py:class:`.Position2D` namedtuple.
+    Args:
+        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent etree.
+    Returns:
+        :py:class:`.Position2D`: The position defined by the first
+            ObservationLocation element under the WhereWhen section.
     """
     ac = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
@@ -26,21 +29,24 @@ def pull_astro_coords(voevent):
         raise ValueError("Unrecognised AstroCoords type")
     return posn
 
+
 def pull_params(voevent):
-    """
-    Attempts to load the `What` section of a voevent as a nested dictionary.
+    """Attempts to load the `What` section of a voevent as a nested dictionary.
 
-    **Returns:** Nested dict, ``Group->Param->Attribs``. Access like so::
+    Args:
+        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent etree.
+    Returns:
+        Nested dict: Mapping of ``Group->Param->Attribs``. Access like so::
 
-        foo_param_val = what_dict['GroupName']['ParamName']['value']
+            foo_param_val = what_dict['GroupName']['ParamName']['value']
 
-    .. note::
+        .. note::
 
-      Parameters without a group are indexed under the key 'None' - otherwise,
-      we might get name-clashes between `params` and `groups` (unlikely but
-      possible) so for ungrouped Params you'll need something like::
+          Parameters without a group are indexed under the key 'None' - otherwise,
+          we might get name-clashes between `params` and `groups` (unlikely but
+          possible) so for ungrouped Params you'll need something like::
 
-        what_dict[None]['ParamName']['value']
+            what_dict[None]['ParamName']['value']
 
     """
     result = {}
@@ -62,11 +68,20 @@ def pull_params(voevent):
 
 
 def pull_isotime(voevent):
-    """Returns a datetime object, or None if not found.
+    """Extract the event time from the WhereWhen section, if present.
 
-    Specifically, we return a standard library datetime object,
-    i.e. one that is *timezone-naive* (that is, agnostic about its timezone,
-    see python docs) - this avoids an added dependency on pytz.
+    Accesses the first `WhereWhere.ObsDataLocation.ObservationLocation`
+    element and returns the AstroCoords.Time.TimeInstant.ISOTime element,
+    converted to a datetime.
+
+    Args:
+        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent
+            etree.
+    Returns:
+        :class:`datetime.datetime`: Specifically, we return a standard library
+            datetime object, i.e. one that is **timezone-naive** (that is,
+            agnostic about its timezone, see python docs).
+            This avoids an added dependency on pytz.
 
     The details of the reference system for time and space are provided
     in the AstroCoords object, but typically time reference is UTC.
@@ -79,13 +94,20 @@ def pull_isotime(voevent):
     except AttributeError:
         return None
 
+
 def prettystr(subtree):
     """Print an element tree with nice indentation.
 
-    Prettyprinting a whole VOEvent doesn't seem to work - possibly this is
-    due to whitespacing issues in the skeleton string definition.
-    This function is a quick workaround for easily desk-checking
-    what you're putting together.
+    Prettyprinting a whole VOEvent often doesn't seem to work, probably for
+    issues relating to whitespace cf.
+    http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
+    This function is a quick workaround for prettyprinting a subsection
+    of a VOEvent, for easier desk-checking.
+
+    Args:
+        subtree(lxml.etree): A node in the VOEvent element tree.
+    Returns:
+        string: Prettyprinted string representation of the raw XML.
     """
     lxml.objectify.deannotate(subtree)
     lxml.etree.cleanup_namespaces(subtree)

@@ -1,8 +1,11 @@
 """This module simply serves to store the XML schema, a 'skeleton' VOEvent
-xml document for creation of new instances, and various other minor definitions:
+xml document for creation of new instances, and various other minor definitions.
+
+These values may be used in place of literal strings, to allow autocompletion
+and document the fact that they are 'standardized' values.
 """
 
-#############################
+# ############################
 # Some useful string defs namespaced via a class container:
 
 class roles(object):
@@ -11,20 +14,25 @@ class roles(object):
     utility = 'utility'
     test = 'test'
 
+
 class sky_coord_system(object):
-    """Handy tags listing common coordinate system identifiers"""
+    """Common coordinate system identifiers. See also :class:`.Position2D`."""
     fk5 = 'UTC-FK5-GEO'
 
+
 class observatory_location(object):
+    """Common generic values for the WhereWhen.ObservatoryLocation attribute."""
     geosurface = 'GEOSURFACE'
     geolunar = 'GEOLUN'
+
 
 class coord_units(object):
     """Handy tags listing the unit names used by voeparse."""
     degrees = 'degrees'
 
+
 class cite_types(object):
-    """Possible types of citation"""
+    """Possible types of :func:`.Citation`"""
     followup = 'followup'
     supersedes = 'supersedes'
     retraction = 'retraction'

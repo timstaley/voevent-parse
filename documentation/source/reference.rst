@@ -1,6 +1,8 @@
-=========================
-:mod:`voeparse` reference
-=========================
+.. _api:
+
+===========================
+voevent-parse API reference
+===========================
 
 .. warning::
    Much of the content within assumes the reader has at least a summary
@@ -8,36 +10,37 @@
    `VOEvent <http://en.wikipedia.org/wiki/VOEvent>`_
    `specifications <http://www.ivoa.net/Documents/VOEvent/>`_.
 
-.. automodule:: voeparse.__init__
-    :members:
-    :undoc-members:
+.. note::
+    The top-level ``__init__.py`` file `imports key classes and subroutines
+    <imports_>`_
+    into the top-level ``voeparse`` namespace, for brevity.
 
 
-:mod:`.voevent` - Basic VOEvent packet manipulation
----------------------------------------------------
+:mod:`voeparse.voevent` - Basic VOEvent packet manipulation
+-----------------------------------------------------------
 
 .. automodule:: voeparse.voevent
     :members: 
     :undoc-members:
 
 
-:mod:`.misc` - Sub-elements and other helpers
----------------------------------------------
+:mod:`voeparse.misc` - Sub-elements and other helpers
+-----------------------------------------------------
 
 .. automodule:: voeparse.misc
     :members:
     :undoc-members:
 
       
-:mod:`.convenience` - Convenience routines
-------------------------------------------
+:mod:`voeparse.convenience` - Convenience routines
+--------------------------------------------------
 
 .. automodule:: voeparse.convenience
     :members:
     :undoc-members:
 
-:mod:`.definitions`
--------------------
+:mod:`voeparse.definitions` - Standard values as defined by VOEvent specification
+---------------------------------------------------------------------------------
 
 .. automodule:: voeparse.definitions
    :members:
@@ -46,3 +49,4 @@
 
 
 
+.. _imports: https://github.com/timstaley/voevent-parse/blob/master/voeparse/__init__.py#L17
