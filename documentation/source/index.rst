@@ -60,8 +60,8 @@ Reference documentation can be found at
 http://voevent-parse.readthedocs.org,
 or generated directly from the repository using Sphinx_.
 
-Issues, Contributions
----------------------
+Source, Issues, Contributions
+-----------------------------
 Bug reports (or even better, pull requests) are welcomed. The source code and
 issue tracker may be found at https://github.com/timstaley/voevent-parse.
 
