@@ -60,10 +60,12 @@ Reference documentation can be found at
 http://voevent-parse.readthedocs.org,
 or generated directly from the repository using Sphinx_.
 
-Source, Issues, Contributions
------------------------------
+Source, Issues, Contributions, Tests
+------------------------------------
 Bug reports (or even better, pull requests) are welcomed. The source code and
 issue tracker may be found at https://github.com/timstaley/voevent-parse.
+*voevent-parse* also has a suite of unit-tests which may be run in the usual
+manner, typically using nose_ from the repository root directory.
 
 
 lxml.objectify 'gotchas'
@@ -159,3 +161,4 @@ Reference material
 .. _Sphinx: http://sphinx-doc.org/
 .. _pip: https://pip.readthedocs.org/en/latest/
 .. _virtualenv: http://virtualenv.readthedocs.org/en/latest/virtualenv.html
+.. _nose: https://nose.readthedocs.org/en/latest/
