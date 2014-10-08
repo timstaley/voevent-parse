@@ -56,7 +56,7 @@ v.What.append(amb_temp)
 
 
 # Now we set the sky location of our event:
-vp.set_where_when(v,
+vp.add_where_when(v,
                   coords=vp.Position2D(ra=123.5, dec=45, err=0.1,
                                        units='deg',
                                        system=vp.definitions.sky_coord_system.fk5),

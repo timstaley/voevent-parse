@@ -20,7 +20,7 @@ common tasks, so that accessing those vital data elements is as simple as::
 
 Rationale
 ---------
-Voevent-parse aims to make dealing with VOEvent packets easy, while remaining
+*voevent-parse* aims to make dealing with VOEvent packets easy, while remaining
 small, flexible, and stable enough to be suitable for use as a dependency in a
 range of larger projects.
 To achieve this, we add a user-friendly layer on top of
@@ -66,8 +66,8 @@ Bug reports (or even better, pull requests) are welcomed. The source code and
 issue tracker may be found at https://github.com/timstaley/voevent-parse.
 
 
-lxml.objectify tips
--------------------
+lxml.objectify 'gotchas'
+------------------------
 The objectify library has a few syntactic quirks which can trip up new users.
 Firstly, you should be aware that the line ``root.foo`` actually returns
 an object that acts like a *list* of all the children  of the ``root`` element
@@ -89,6 +89,32 @@ e.g.::
   # the list of children called 'foo' does.
   print root.foo.text # 'sometext'
   print len(root.foo.text) # 8. Sanity prevails!
+
+Another 'gotcha' is that *creating* multiple child elements of the same
+name is a bit unintuitive. Essentially, ``objectify`` works implicitly
+if each element has only one child::
+
+    from lxml import objectify, etree
+    simple_root = objectify.Element('simple_root')
+    simple_root.layer1 = None
+    simple_root.layer1.layer2 = 5
+    print etree.tostring(simple_root, pretty_print=True)
+
+But if there are multiple children then each child must be explicitly declared
+as an lxml ``Element`` in order to co-exist with its siblings::
+
+    from lxml import objectify, etree
+    import math
+    siblings_root = objectify.Element('siblings')
+    siblings_root.bars = None
+    siblings_root.bars.append(objectify.Element('bar'))
+    siblings_root.bars.append(objectify.Element('bar'))
+    siblings_root.bars.bar[0] = math.pi
+    siblings_root.bars.bar[1] = 42
+    print etree.tostring(siblings_root, pretty_print=True)
+
+... which is another reason to use *voevent-parse* as a user-friendly interface
+for common operations.
 
 For some more examples, you might also try:
 http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/.

@@ -11,7 +11,7 @@ from voeventparse.voevent import (
     voevent_v2_0_schema,
     load, loads, dump, dumps,
     valid_as_v2_0, assert_valid_as_v2_0,
-    set_who, set_author, set_where_when,
+    set_who, set_author, add_where_when,
     add_how, add_why, add_citations
 )
 import voeventparse.definitions as definitions

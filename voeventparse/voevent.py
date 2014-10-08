@@ -213,7 +213,7 @@ def set_author(voevent, title=None, shortName=None, logoURL=None,
             voevent.Who.Author[k] = v
 
 
-def set_where_when(voevent, coords, obs_time, observatory_location):
+def add_where_when(voevent, coords, obs_time, observatory_location):
     """Add details of an observation to the WhereWhen section.
 
     Args:

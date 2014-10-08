@@ -7,16 +7,25 @@ from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
                                Citation)
 
 
-def pull_astro_coords(voevent):
-    """Extracts the `AstroCoords` from the first `WhereWhen.ObservationLocation`.
+def pull_astro_coords(voevent, index=0):
+    """Extracts the `AstroCoords` from a given `WhereWhen.ObsDataLocation`.
+
+    Note that a packet may include multiple 'ObsDataLocation' entries
+    under the 'WhereWhen' section, for example giving locations of an object
+    moving over time. Most packets will have only one, however, so the
+    default is to just return co-ords extracted from the first.
 
     Args:
-        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the
+            VOEvent etree.
+        index (int): Index of the ObsDataLocation to extract AstroCoords from.
+
     Returns:
-        :py:class:`.Position2D`: The position defined by the first
-            ObservationLocation element under the WhereWhen section.
+        :py:class:`.Position2D`: The sky position defined in the
+            ObsDataLocation.
     """
-    ac = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoords
+    od = voevent.WhereWhen.ObsDataLocation[index]
+    ac = od.ObservationLocation.AstroCoords
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
     sys = ac_sys.attrib['id']
 
@@ -30,6 +39,42 @@ def pull_astro_coords(voevent):
     except AttributeError:
         raise ValueError("Unrecognised AstroCoords type")
     return posn
+
+
+def pull_isotime(voevent, index=0):
+    """Extracts the event time from a given `WhereWhen.ObsDataLocation`.
+
+    Accesses a `WhereWhere.ObsDataLocation.ObservationLocation`
+    element and returns the AstroCoords.Time.TimeInstant.ISOTime element,
+    converted to a datetime.
+
+    Note that a packet may include multiple 'ObsDataLocation' entries
+    under the 'WhereWhen' section, for example giving locations of an object
+    moving over time. Most packets will have only one, however, so the
+    default is to access the first.
+
+    Args:
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent
+            etree.
+        index (int): Index of the ObsDataLocation to extract an ISOtime from.
+
+    Returns:
+        :class:`datetime.datetime`: Specifically, we return a standard library
+            datetime object, i.e. one that is **timezone-naive** (that is,
+            agnostic about its timezone, see python docs).
+            This avoids an added dependency on pytz.
+
+    The details of the reference system for time and space are provided
+    in the AstroCoords object, but typically time reference is UTC.
+
+    """
+    try:
+        od = voevent.WhereWhen.ObsDataLocation[index]
+        ol = od.ObservationLocation
+        isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+        return datetime.datetime.strptime(isotime_str, "%Y-%m-%dT%H:%M:%S.%f")
+    except AttributeError:
+        return None
 
 
 def pull_params(voevent):
@@ -67,34 +112,6 @@ def pull_params(voevent):
             for p in g.Param:
                 g_params[p.attrib['name']] = p.attrib
     return result
-
-
-def pull_isotime(voevent):
-    """Extract the event time from the WhereWhen section, if present.
-
-    Accesses the first `WhereWhere.ObsDataLocation.ObservationLocation`
-    element and returns the AstroCoords.Time.TimeInstant.ISOTime element,
-    converted to a datetime.
-
-    Args:
-        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent
-            etree.
-    Returns:
-        :class:`datetime.datetime`: Specifically, we return a standard library
-            datetime object, i.e. one that is **timezone-naive** (that is,
-            agnostic about its timezone, see python docs).
-            This avoids an added dependency on pytz.
-
-    The details of the reference system for time and space are provided
-    in the AstroCoords object, but typically time reference is UTC.
-
-    """
-    try:
-        ol = voevent.WhereWhen.ObsDataLocation.ObservationLocation
-        isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
-        return datetime.datetime.strptime(isotime_str, "%Y-%m-%dT%H:%M:%S.%f")
-    except AttributeError:
-        return None
 
 
 def prettystr(subtree):
