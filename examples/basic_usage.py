@@ -8,14 +8,16 @@ The attributes are built from the structure of the XML file,
 so the best way to understand where the variable names come from is to simply 
 open the XML packet in your favourite web browser and dig around.
 
-See also: the slightly terse documentation at http://lxml.de/objectify.html
+See also:
+* lxml documentation at http://lxml.de/objectify.html
+* VOEvent standard at http://www.ivoa.net/documents/VOEvent/
+* VOEvent schema file at http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
 """
 import copy
 import voeparse
+from voeparse.tests.resources.datapaths import swift_bat_grb_pos_v2
 
-xml_filename = 'voeparse/tests/resources/SWIFT_bat_position_v2.0_example.xml'
-
-with open(xml_filename) as f:
+with open(swift_bat_grb_pos_v2) as f:
     v = voeparse.load(f)
 
 #Basic attribute access
@@ -39,7 +41,7 @@ v_copy.attrib['role'] = 'flying circus'
 print "How about now? ", voeparse.valid_as_v2_0(v_copy)
 print "But the original is ok, because we copied? ", voeparse.valid_as_v2_0(v)
 
-v.Who.BadPath = "This new child certainly won't conform with the schema."
+v.Who.BadPath = "This new attribute certainly won't conform with the schema."
 assert voeparse.valid_as_v2_0(v) == False
 del v.Who.BadPath
 assert voeparse.valid_as_v2_0(v) == True

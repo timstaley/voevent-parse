@@ -119,13 +119,14 @@ a collection of routines for dealing with VOEvents and
 responding to them accordingly.
 
 
-:ref:`API Reference <api>`
---------------------------
+Reference material
+------------------
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   reference
+    examples
+    reference
 
 
 Indices and tables
