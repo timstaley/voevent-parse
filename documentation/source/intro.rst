@@ -12,9 +12,9 @@ built atop  `lxml.objectify`_.
 VOEvent-parse provides convenience routines to take care of many
 common tasks, so that accessing those vital data elements is as simple as::
 
-    import voeparse
+    import voeventparse
     with open(xml_filename) as f:
-        v = voeparse.load(f)
+        v = voeventparse.load(f)
     print "AuthorIVORN:", v.Who.AuthorIVORN  #Prints e.g. ivo://nasa.gsfc.tan/gcn
     v.Who.AuthorIVORN = 'ivo://i.heart.python/lxml' #Alters the XML value.
 

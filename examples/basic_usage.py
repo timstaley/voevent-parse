@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """A quick usage example. 
 
-Once voeparse is installed, this should tell you most of what you need to know
+Once voeventparse is installed, this should tell you most of what you need to know
 in order to start doing things with VOEvent packets.
 
 The attributes are built from the structure of the XML file, 
@@ -14,11 +14,11 @@ See also:
 * VOEvent schema file at http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
 """
 import copy
-import voeparse
-from voeparse.tests.resources.datapaths import swift_bat_grb_pos_v2
+import voeventparse
+from voeventparse.tests.resources.datapaths import swift_bat_grb_pos_v2
 
 with open(swift_bat_grb_pos_v2) as f:
-    v = voeparse.load(f)
+    v = voeventparse.load(f)
 
 #Basic attribute access
 print "Ivorn:", v.attrib['ivorn']
@@ -28,25 +28,25 @@ print "Short name:", v.Who.Author.shortName
 print "Contact:", v.Who.Author.contactEmail
 
 #Copying by value, and validation:
-print "Original valid as v2.0? ", voeparse.valid_as_v2_0(v)
+print "Original valid as v2.0? ", voeventparse.valid_as_v2_0(v)
 v_copy = copy.copy(v)
-print "Copy valid? ", voeparse.valid_as_v2_0(v_copy)
+print "Copy valid? ", voeventparse.valid_as_v2_0(v_copy)
 
 #Changing values:
 v_copy.Who.Author.shortName = 'BillyBob'
-v_copy.attrib['role'] = voeparse.definitions.roles.test
-print "Changes valid? ", voeparse.valid_as_v2_0(v_copy)
+v_copy.attrib['role'] = voeventparse.definitions.roles.test
+print "Changes valid? ", voeventparse.valid_as_v2_0(v_copy)
 
 v_copy.attrib['role'] = 'flying circus'
-print "How about now? ", voeparse.valid_as_v2_0(v_copy)
-print "But the original is ok, because we copied? ", voeparse.valid_as_v2_0(v)
+print "How about now? ", voeventparse.valid_as_v2_0(v_copy)
+print "But the original is ok, because we copied? ", voeventparse.valid_as_v2_0(v)
 
 v.Who.BadPath = "This new attribute certainly won't conform with the schema."
-assert voeparse.valid_as_v2_0(v) == False
+assert voeventparse.valid_as_v2_0(v) == False
 del v.Who.BadPath
-assert voeparse.valid_as_v2_0(v) == True
+assert voeventparse.valid_as_v2_0(v) == True
 #######################################################
 # And now, SCIENCE
 #######################################################
-c = voeparse.pull_astro_coords(v)
+c = voeventparse.pull_astro_coords(v)
 print "Coords:", c

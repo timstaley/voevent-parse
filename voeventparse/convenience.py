@@ -3,13 +3,15 @@
 from __future__ import absolute_import
 import datetime
 import lxml
-from voeparse.misc import (Param, Group, Reference, Inference, Position2D, 
-                           Citation)
+from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
+                               Citation)
+
+
 def pull_astro_coords(voevent):
     """Extracts the `AstroCoords` from the first `WhereWhen.ObservationLocation`.
 
     Args:
-        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent etree.
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
     Returns:
         :py:class:`.Position2D`: The position defined by the first
             ObservationLocation element under the WhereWhen section.
@@ -34,7 +36,7 @@ def pull_params(voevent):
     """Attempts to load the `What` section of a voevent as a nested dictionary.
 
     Args:
-        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent etree.
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
     Returns:
         Nested dict: Mapping of ``Group->Param->Attribs``. Access like so::
 
@@ -75,7 +77,7 @@ def pull_isotime(voevent):
     converted to a datetime.
 
     Args:
-        voevent (:class:`voeparse.voevent.Voevent`): Root node of the VOevent
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent
             etree.
     Returns:
         :class:`datetime.datetime`: Specifically, we return a standard library

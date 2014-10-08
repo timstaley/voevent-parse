@@ -1,12 +1,12 @@
 import unittest
 from unittest import TestCase
-from voeparse.tests.resources import datapaths
+from voeventparse.tests.resources import datapaths
 
 from lxml import objectify, etree
 from copy import copy
 import datetime
 
-import voeparse as voe
+import voeventparse as voe
 
 
 class TestValidation(TestCase):
@@ -28,7 +28,7 @@ class TestValidation(TestCase):
         del Who.BadChild
         self.assertTrue(voe.voevent_v2_0_schema.validate(v))
 
-        #NB dropping the namespace from root element invalidates packet:
+        # NB dropping the namespace from root element invalidates packet:
         # This is why we must re-insert it before output.
         v.tag = 'VOEvent'
         self.assertFalse(voe.voevent_v2_0_schema.validate(v))
@@ -82,7 +82,7 @@ class TestIO(TestCase):
         with open(datapaths.swift_bat_grb_pos_v2) as f:
             xml_str = f.read()
             xml_str = xml_str.replace('voe', 'foobar_ns')
-        #print xml_str
+        # print xml_str
         vfs = voe.loads(xml_str)
         voe.assert_valid_as_v2_0(vfs)
         self.assertEqual(vfs.tag, 'VOEvent')
@@ -178,7 +178,7 @@ class TestWhat(TestCase):
         self.assertTrue(voe.valid_as_v2_0(self.v))
 
 
-#         print
+# print
 #         print voe.prettystr(self.v.What)
 
 
@@ -188,8 +188,8 @@ class TestWhereWhen(TestCase):
                              stream_id='100',
                              role='test')
         self.coords = voe.Position2D(ra=123.456, dec=45.678,
-                           err=0.1,
-                           units='deg', system='UTC-FK5-GEO'
+                                     err=0.1,
+                                     units='deg', system='UTC-FK5-GEO'
         )
 
     def test_set_wherewhen(self):
@@ -210,7 +210,6 @@ class TestWhereWhen(TestCase):
                            obs_time=datetime.datetime.utcnow(),
                            observatory_location=voe.definitions.observatory_location.geosurface)
         self.assertEqual(self.v.WhereWhen.countchildren(), 1)
-
 
 
 class TestHow(TestCase):

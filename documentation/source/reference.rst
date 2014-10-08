@@ -12,40 +12,40 @@ voevent-parse API reference
 .. note::
     The top-level ``__init__.py`` file `imports key classes and subroutines
     <imports_>`_
-    into the top-level ``voeparse`` namespace, for brevity.
+    into the top-level ``voeventparse`` namespace, for brevity.
 
 
-:mod:`voeparse.voevent` - Basic VOEvent packet manipulation
------------------------------------------------------------
+:mod:`voeventparse.voevent` - Basic VOEvent packet manipulation
+---------------------------------------------------------------
 
-.. automodule:: voeparse.voevent
+.. automodule:: voeventparse.voevent
     :members: 
     :undoc-members:
 
 
-:mod:`voeparse.misc` - Sub-elements and other helpers
------------------------------------------------------
+:mod:`voeventparse.misc` - Subtree-elements and other helpers
+-------------------------------------------------------------
 
-.. automodule:: voeparse.misc
+.. automodule:: voeventparse.misc
     :members:
     :undoc-members:
 
       
-:mod:`voeparse.convenience` - Convenience routines
---------------------------------------------------
+:mod:`voeventparse.convenience` - Convenience routines
+------------------------------------------------------
 
-.. automodule:: voeparse.convenience
+.. automodule:: voeventparse.convenience
     :members:
     :undoc-members:
 
-:mod:`voeparse.definitions` - Standard values as defined by VOEvent specification
----------------------------------------------------------------------------------
+:mod:`voeventparse.definitions` - Standard or common string values
+------------------------------------------------------------------
 
-.. automodule:: voeparse.definitions
+.. automodule:: voeventparse.definitions
    :members:
    :undoc-members:
    :exclude-members: v2_0_schema_str, v2_0_skeleton_str
 
 
 
-.. _imports: https://github.com/timstaley/voevent-parse/blob/master/voeparse/__init__.py#L17
+.. _imports: https://github.com/timstaley/voevent-parse/blob/master/voeventparse/__init__.py#L17

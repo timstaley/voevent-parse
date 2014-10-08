@@ -6,10 +6,10 @@ from lxml import objectify, etree
 from collections import Iterable
 import types
 
-import voeparse.definitions
+import voeventparse.definitions
 
 voevent_v2_0_schema = etree.XMLSchema(
-    etree.fromstring(voeparse.definitions.v2_0_schema_str))
+    etree.fromstring(voeventparse.definitions.v2_0_schema_str))
 
 
 def Voevent(stream, stream_id, role):
@@ -38,7 +38,7 @@ def Voevent(stream, stream_id, role):
             http://lxml.de/objectify.html#the-lxml-objectify-api
     """
     parser = objectify.makeparser(remove_blank_text=True)
-    v = objectify.fromstring(voeparse.definitions.v2_0_skeleton_str,
+    v = objectify.fromstring(voeventparse.definitions.v2_0_skeleton_str,
                              parser=parser)
     _remove_root_tag_prefix(v)
     if not isinstance(stream_id, basestring):
@@ -46,7 +46,7 @@ def Voevent(stream, stream_id, role):
     v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
     # Presumably we'll always want the following children:
-    #(NB, valid to then leave them empty)
+    # (NB, valid to then leave them empty)
     etree.SubElement(v, 'Who')
     etree.SubElement(v, 'What')
     etree.SubElement(v, 'WhereWhen')
@@ -71,7 +71,7 @@ def loads(s):
     """
     # .. note::
     #
-    #        The namespace is removed from the root element tag to make
+    # The namespace is removed from the root element tag to make
     #        objectify access work as expected,
     #        (see  :py:func:`._remove_root_tag_prefix`)
     #        so we must re-insert it when we want to conform to schema.
@@ -126,7 +126,7 @@ def dump(voevent, file, pretty_print=True, xml_declaration=True):
     e.g.::
 
         with open('/tmp/myvoevent.xml','w') as f:
-            voeparse.dump(v, f)
+            voeventparse.dump(v, f)
 
     Args:
         voevent(:class:`Voevent`): Root node of the VOevent etree.
@@ -222,10 +222,10 @@ def set_where_when(voevent, coords, obs_time, observatory_location):
         obs_time(datetime.datetime): Nominal DateTime of the observation.
         observatory_location(string): Telescope locale, e.g. 'La Palma'.
             May be a generic location as listed under
-            :class:`voeparse.definitions.observatory_location`.
+            :class:`voeventparse.definitions.observatory_location`.
     """
 
-    #    .. todo:: Implement TimeError using datetime.timedelta
+    # .. todo:: Implement TimeError using datetime.timedelta
 
     obs_data = etree.SubElement(voevent.WhereWhen, 'ObsDataLocation')
     etree.SubElement(obs_data, 'ObservatoryLocation', id=observatory_location)
@@ -254,7 +254,7 @@ def add_how(voevent, descriptions=None, references=None):
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
         descriptions(string): Description string, or list of description
             strings.
-        references(:py:class:`voeparse.misc.Reference`): A reference element
+        references(:py:class:`voeventparse.misc.Reference`): A reference element
             (or list thereof).
     """
     if not voevent.xpath('How'):
@@ -262,7 +262,7 @@ def add_how(voevent, descriptions=None, references=None):
     if descriptions is not None:
         for desc in _listify(descriptions):
             # d = etree.SubElement(voevent.How, 'Description')
-            #voevent.How.Description[voevent.How.index(d)] = desc
+            # voevent.How.Description[voevent.How.index(d)] = desc
             ##Simpler:
             etree.SubElement(voevent.How, 'Description')
             voevent.How.Description[-1] = desc
@@ -284,7 +284,7 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
         importance(float): Value from 0.0 to 1.0
         expires(datetime.datetime): Expiration date given inferred reason
             (See voevent spec).
-        inferences(:class:`voeparse.misc.Inference`): Inference or list of
+        inferences(:class:`voeventparse.misc.Inference`): Inference or list of
             inferences, denoting probable identifications or associations, etc.
     """
     if not voevent.xpath('Why'):
@@ -307,7 +307,7 @@ def add_citations(voevent, citations):
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-        citation(:class:`voeparse.misc.Citation`): Citation or list of citations.
+        citation(:class:`voeventparse.misc.Citation`): Citation or list of citations.
 
     """
     if not voevent.xpath('Citations'):
@@ -359,14 +359,14 @@ def _reinsert_root_tag_prefix(v):
 
 
 def _return_to_standard_xml(v):
-    #Remove lxml.objectify DataType namespace prefixes:
+    # Remove lxml.objectify DataType namespace prefixes:
     objectify.deannotate(v)
     #Put the default namespace back:
     _reinsert_root_tag_prefix(v)
     etree.cleanup_namespaces(v)
 
 
-#Define this for convenience in add_how:
+# Define this for convenience in add_how:
 def _listify(x):
     """Ensure x is iterable; if not then enclose it in a list and return it."""
     if isinstance(x, types.StringTypes):

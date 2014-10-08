@@ -6,9 +6,10 @@ import tempfile
 import os
 import sys
 
+
 class TestExamples(TestCase):
     def setUp(self):
-        #Run in a tempdir, in case the examples dump any output
+        # Run in a tempdir, in case the examples dump any output
         self.orig_dir = os.getcwd()
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)

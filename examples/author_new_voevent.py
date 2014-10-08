@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import datetime
 import os
-import voeparse as vp
+import voeventparse as vp
 from lxml import etree
 
 

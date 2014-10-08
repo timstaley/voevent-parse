@@ -20,7 +20,7 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
         system (:class:`.definitions.sky_coord_system`): Co-ordinate system
             e.g. UTC-FK5-GEO
     """
-    pass #Just wrapping a namedtuple so we can assign a docstring.
+    pass  # Just wrapping a namedtuple so we can assign a docstring.
 
 
 _datatypes_autoconversion = {
@@ -70,7 +70,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
             (NB only supports types listed in _datatypes_autoconversion dict)
 
     """
-    #We use locals() to allow concise looping over the arguments.
+    # We use locals() to allow concise looping over the arguments.
     atts = locals()
     atts.pop('ac')
     for k in atts.keys():

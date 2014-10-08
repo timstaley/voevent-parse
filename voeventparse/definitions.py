@@ -27,7 +27,7 @@ class observatory_location(object):
 
 
 class coord_units(object):
-    """Handy tags listing the unit names used by voeparse."""
+    """Handy tags listing the unit names used by voeventparse."""
     degrees = 'degrees'
 
 

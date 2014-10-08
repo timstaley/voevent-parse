@@ -12,7 +12,7 @@
 # serve to show the default.
 
 import sys, os
-import voeparse
+import voeventparse
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -52,7 +52,7 @@ copyright = u'2013,2014 Tim Staley'
 # built documents.
 #
 # The short X.Y version.
-version = voeparse._nominal_version
+version = voeventparse._nominal_version
 # The full version, including alpha/beta/rc tags.
 release = version
 
