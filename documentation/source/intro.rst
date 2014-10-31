@@ -143,8 +143,9 @@ Associated utility routines
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Depending on what you want to use your VOEvents for, you may be interested
 in `pysovo <https://github.com/timstaley/pysovo>`_,
-a collection of routines for dealing with VOEvents and
-responding to them accordingly.
+a collection of routines for responding to VOEvents, and/or
+`fourpiskytools <https://github.com/timstaley/fourpiskytools>`_, which provides
+basic routines for submitting VOEvents to a broker for publication.
 
 
 Reference material
