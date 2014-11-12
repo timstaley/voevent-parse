@@ -147,6 +147,11 @@ a collection of routines for responding to VOEvents, and/or
 `fourpiskytools <https://github.com/timstaley/fourpiskytools>`_, which provides
 basic routines for submitting VOEvents to a broker for publication.
 
+Acknowledgement
+---------------
+If you make use of *voevent-parse* in work leading to a publication, we ask
+that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
+
 
 Reference material
 ------------------
@@ -156,6 +161,7 @@ Reference material
 
     examples
     reference
+
 
 .. _lxml: http://lxml.de/installation.html
 .. _lxml.objectify: http://lxml.de/objectify.html
