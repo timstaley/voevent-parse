@@ -3,6 +3,8 @@
 voevent-parse
 =============
 
+Version |version|
+
 Welcome to voevent-parse's documentation. If you're new here, I recommend you
 start with the :ref:`introduction <intro>` and then take a look at the
 :ref:`usage examples <examples>`.
