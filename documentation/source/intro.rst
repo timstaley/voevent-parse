@@ -153,14 +153,7 @@ If you make use of *voevent-parse* in work leading to a publication, we ask
 that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
 
 
-Reference material
-------------------
 
-.. toctree::
-    :maxdepth: 2
-
-    examples
-    reference
 
 
 .. _lxml: http://lxml.de/installation.html
