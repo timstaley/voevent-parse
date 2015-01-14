@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
 from voeventparse.tests.resources import datapaths
-
+from six import b
 from lxml import objectify, etree
 from copy import copy
 import datetime
@@ -38,7 +38,7 @@ class TestValidation(TestCase):
         Now we perform the same validation tests, but applied via the
         convenience functions.
         """
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             v = vp.load(f)
         self.assertTrue(vp.valid_as_v2_0(v))
         v.Who.BadChild = 42
@@ -59,9 +59,9 @@ class TestIO(TestCase):
         return None
 
     def test_load_of_voe_v2(self):
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             vff = vp.load(f)
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             vfs = vp.loads(f.read())
         self.assertEqual(objectify.dump(vff), objectify.dump(vfs))
         self.assertEqual(vfs.tag, 'VOEvent')
@@ -72,16 +72,16 @@ class TestIO(TestCase):
         # NB, not enclosing root element in a namespace is invalid under schema
         # But this has been seen in the past (isolated bug case?)
         # Anyway, handled easily enough
-        with open(datapaths.no_namespace_test_packet) as f:
+        with open(datapaths.no_namespace_test_packet, 'rb') as f:
             vff = vp.load(f)
         self.assertFalse(vp.valid_as_v2_0(vff))
         self.assertEqual(vff.tag, 'VOEvent')
         self.assertEqual(vff.attrib['ivorn'],
                          'ivo://com.dc3/dc3.broker#BrokerTest-2014-02-24T15:55:27.72')
 
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             xml_str = f.read()
-            xml_str = xml_str.replace('voe', 'foobar_ns')
+            xml_str = xml_str.replace(b'voe', b'foobar_ns')
         # print xml_str
         vfs = vp.loads(xml_str)
         vp.assert_valid_as_v2_0(vfs)
@@ -98,7 +98,7 @@ class TestIO(TestCase):
         """
         swift_grb_v2_raw = objectify.parse(
             datapaths.swift_bat_grb_pos_v2).getroot()
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             swift_grb_v2_voeparsed = vp.load(f)
         raw = etree.tostring(swift_grb_v2_raw,
                              pretty_print=False,
@@ -299,7 +299,7 @@ class TestCitations(TestCase):
 
 class TestConvenienceRoutines(TestCase):
     def setUp(self):
-        with open(datapaths.swift_bat_grb_pos_v2) as f:
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             self.swift_grb_v2_packet = vp.load(f)
         self.blank = vp.Voevent(stream='voevent.soton.ac.uk/TEST',
                                  stream_id='100',

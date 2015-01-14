@@ -1,10 +1,9 @@
 """Routines for handling etrees representing VOEvent packets."""
-
 from __future__ import absolute_import
-import lxml
+from __future__ import unicode_literals
+from six import string_types
 from lxml import objectify, etree
-from collections import Iterable
-import types
+import collections
 
 import voeventparse.definitions
 
@@ -41,7 +40,7 @@ def Voevent(stream, stream_id, role):
     v = objectify.fromstring(voeventparse.definitions.v2_0_skeleton_str,
                              parser=parser)
     _remove_root_tag_prefix(v)
-    if not isinstance(stream_id, basestring):
+    if not isinstance(stream_id, string_types):
         stream_id = repr(stream_id)
     v.attrib['ivorn'] = ''.join(('ivo://', stream, '#', stream_id))
     v.attrib['role'] = role
@@ -56,15 +55,20 @@ def Voevent(stream, stream_id, role):
 
 
 def loads(s):
-    """Load VOEvent from string.
+    """
+    Load VOEvent from bytes.
 
     This parses a VOEvent XML packet string, taking care of some subtleties.
+    For Python 3 users, ``s`` should be a bytes object - see also
+    http://lxml.de/FAQ.html,
+    "Why can't lxml parse my XML from unicode strings?"
+    (Python 2 users can stick with old-school ``str`` type if preferred)
 
     Currently pretty basic, but we can imagine using this function to
     homogenise or at least identify different VOEvent versions, etc.
 
     Args:
-        s (string): String containing raw XML.
+        s (bytes): Bytes containing raw XML.
     Returns:
         Root-node of the :class:`Voevent` etree.
 
@@ -85,7 +89,9 @@ def load(file):
 
     See also: :py:func:`.loads`
     Args:
-        file (file): An open file object
+        file (file): An open file object (binary mode preferred), see also
+        http://lxml.de/FAQ.html :
+        "Can lxml parse from file objects opened in unicode/text mode?"
     Returns:
         Root-node of the :class:`Voevent` etree.
     """
@@ -109,7 +115,7 @@ def dumps(voevent, pretty_print=False, xml_declaration=True, encoding='UTF-8'):
         xml_declaration (bool): Prepends a doctype tag to the string output,
             i.e. something like ``<?xml version='1.0' encoding='UTF-8'?>``
     Returns:
-        String containing raw XML representation of VOEvent.
+        Bytes containing raw XML representation of VOEvent.
 
     """
     _return_to_standard_xml(voevent)
@@ -125,12 +131,12 @@ def dump(voevent, file, pretty_print=True, xml_declaration=True):
 
     e.g.::
 
-        with open('/tmp/myvoevent.xml','w') as f:
+        with open('/tmp/myvoevent.xml','wb') as f:
             voeventparse.dump(v, f)
 
     Args:
         voevent(:class:`Voevent`): Root node of the VOevent etree.
-        file (file): An open file object for writing.
+        file (file): An open (binary mode) file object for writing.
         pretty_print
         pretty_print(bool): See :func:`dumps`
         xml_declaration(bool): See :func:`dumps`
@@ -208,7 +214,7 @@ def set_author(voevent, title=None, shortName=None, logoURL=None,
     AuthChildren.pop('voevent')
     if not voevent.xpath('Who/Author'):
         etree.SubElement(voevent.Who, 'Author')
-    for k, v in AuthChildren.iteritems():
+    for k, v in AuthChildren.items():
         if v is not None:
             voevent.Who.Author[k] = v
 
@@ -369,9 +375,9 @@ def _return_to_standard_xml(v):
 # Define this for convenience in add_how:
 def _listify(x):
     """Ensure x is iterable; if not then enclose it in a list and return it."""
-    if isinstance(x, types.StringTypes):
+    if isinstance(x, string_types):
         return [x]
-    elif isinstance(x, Iterable):
+    elif isinstance(x, collections.Iterable):
         return x
     else:
         return [x]

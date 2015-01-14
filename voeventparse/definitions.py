@@ -4,6 +4,8 @@ xml document for creation of new instances, and various other minor definitions.
 These values may be used in place of literal strings, to allow autocompletion
 and document the fact that they are 'standardized' values.
 """
+from __future__ import unicode_literals
+from six import b
 
 # ############################
 # Some useful string defs namespaced via a class container:
@@ -39,7 +41,7 @@ class cite_types(object):
 
 ####################################
 #: Skeleton XML for instantiating a new VOEvent tree
-v2_0_skeleton_str = """<?xml version="1.0" ?>
+v2_0_skeleton_str = b"""<?xml version="1.0" ?>
 <voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0"
     xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd"
@@ -53,7 +55,7 @@ v2_0_skeleton_str = """<?xml version="1.0" ?>
 #: VOEvent 2.0 schema for validation
 #Schema downloaded from:
 #http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
-v2_0_schema_str = """<?xml version="1.0" encoding="UTF-8"?>
+v2_0_schema_str = b"""<?xml version="1.0"?>
 <xs:schema xmlns="http://www.ivoa.net/xml/VOEvent/v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   targetNamespace="http://www.ivoa.net/xml/VOEvent/v2.0" elementFormDefault="unqualified">
 

@@ -1,9 +1,9 @@
 #!/usr/bin/python
+from __future__ import print_function
 import datetime
 import os
 import voeventparse as vp
 from lxml import etree
-
 
 # Set the basic packet ID and Author details
 
@@ -60,15 +60,15 @@ vp.add_where_when(v,
                   coords=vp.Position2D(ra=123.5, dec=45, err=0.1,
                                        units='deg',
                                        system=vp.definitions.sky_coord_system.fk5),
-                  obs_time=datetime.datetime(2013, 1, 31, 12, 05, 30),
+                  obs_time=datetime.datetime(2013, 1, 31, 12, 5, 30),
                   observatory_location=vp.definitions.observatory_location.geosurface)
 
 # Prettyprint some sections for desk-checking:
-print "\n***Here is your WhereWhen:***\n"
-print vp.prettystr(v.WhereWhen)
+print( "\n***Here is your WhereWhen:***\n")
+print( vp.prettystr(v.WhereWhen))
 
-print "\n***And your What:***\n"
-print vp.prettystr(v.What)
+print( "\n***And your What:***\n")
+print( vp.prettystr(v.What))
 
 # You would normally describe or reference your telescope / instrument here:
 vp.add_how(v, descriptions='Discovered via 4PiSky',
@@ -93,7 +93,7 @@ vp.add_citations(v,
 vp.assert_valid_as_v2_0(v)
 
 output_filename = 'new_voevent_example.xml'
-with open(output_filename, 'w') as f:
+with open(output_filename, 'wb') as f:
     vp.dump(v, f)
 
-print "Wrote your voevent to ", os.path.abspath(output_filename)
+print( "Wrote your voevent to ", os.path.abspath(output_filename))

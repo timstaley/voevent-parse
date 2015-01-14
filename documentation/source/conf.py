@@ -269,5 +269,6 @@ nitpicky=True
 nitpick_ignore = [
     ("py:obj", "lxml.etree.DocumentInvalid"),
     ("py:obj", "lxml.etree"),
+    ("py:obj", "bytes"),
 
 ]

@@ -2,6 +2,7 @@
 and a few other helper classes."""
 
 from __future__ import absolute_import
+from six import string_types
 from collections import namedtuple
 import datetime
 from lxml import objectify, etree
@@ -73,12 +74,14 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
     # We use locals() to allow concise looping over the arguments.
     atts = locals()
     atts.pop('ac')
-    for k in atts.keys():
+    temp_dict={}
+    temp_dict.update(atts)
+    for k in temp_dict.keys():
         if atts[k] is None:
             del atts[k]
     if (ac
         and value is not None
-        and (not isinstance(value, basestring))
+        and (not isinstance(value, string_types))
         and dataType is None
     ):
         if type(value) in _datatypes_autoconversion:
