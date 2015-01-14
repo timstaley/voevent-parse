@@ -9,7 +9,7 @@ A lightweight library for parsing, manipulating, and generating
 `VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets,
 built atop  `lxml.objectify`_.
 
-VOEvent-parse provides convenience routines to take care of many
+voevent-parse provides convenience routines to take care of many
 common tasks, so that accessing those vital data elements is as simple as::
 
     import voeventparse
@@ -20,7 +20,7 @@ common tasks, so that accessing those vital data elements is as simple as::
 
 Rationale
 ---------
-*voevent-parse* aims to make dealing with VOEvent packets easy, while remaining
+voevent-parse aims to make dealing with VOEvent packets easy, while remaining
 small, flexible, and stable enough to be suitable for use as a dependency in a
 range of larger projects.
 To achieve this, we add a user-friendly layer on top of
@@ -33,7 +33,7 @@ is free to utilise the full power of the lxml library when required.
 
 Installation
 ------------
-Voevent-parse is pip_ installable, try running::
+voevent-parse is pip_ installable, try running::
 
     pip install voevent-parse
 
@@ -47,11 +47,8 @@ standard ``pip install``
 to fail with somewhat cryptic errors.
 On Ubuntu you can satisfy those requirements using::
 
-    apt-get install libxml2-dev libxslt-dev
+    sudo apt-get install libxml2-dev libxslt-dev
 
-I intend to mark any updates by bumping the version number accordingly.
-That said, if you find yourself using voevent-parse in any serious context,
-do drop me an email so I can keep you informed of any updates or bugs.
 
 
 Documentation
@@ -60,11 +57,17 @@ Reference documentation can be found at
 http://voevent-parse.readthedocs.org,
 or generated directly from the repository using Sphinx_.
 
-Source, Issues, Contributions, Tests
-------------------------------------
-Bug reports (or even better, pull requests) are welcomed. The source code and
-issue tracker may be found at https://github.com/timstaley/voevent-parse.
-*voevent-parse* also has a suite of unit-tests which may be run in the usual
+Source, Issues, Development etc.
+--------------------------------
+I intend to mark any updates by bumping the version number accordingly.
+That said, if you find yourself using voevent-parse in any serious context,
+do drop me an email so I can keep you informed of any updates or critical bugs.
+
+Bug reports (or even better, pull requests) are welcomed.
+The source code and issue tracker may be found at
+https://github.com/timstaley/voevent-parse.
+
+voevent-parse also has a suite of unit-tests which may be run in the usual
 manner, typically using nose_ from the repository root directory.
 
 
@@ -115,7 +118,7 @@ as an lxml ``Element`` in order to co-exist with its siblings::
     siblings_root.bars.bar[1] = 42
     print etree.tostring(siblings_root, pretty_print=True)
 
-... which is another reason to use *voevent-parse* as a user-friendly interface
+... which is another reason to use voevent-parse as a user-friendly interface
 for common operations.
 
 For some more examples, you might also try:
@@ -149,7 +152,7 @@ basic routines for submitting VOEvents to a broker for publication.
 
 Acknowledgement
 ---------------
-If you make use of *voevent-parse* in work leading to a publication, we ask
+If you make use of voevent-parse in work leading to a publication, we ask
 that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
 
 

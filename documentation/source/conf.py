@@ -44,7 +44,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'VOEvent-parse'
+project = u'voevent-parse'
 copyright = u'2013,2014 Tim Staley'
 
 # The version info for the project you're documenting, acts as replacement for

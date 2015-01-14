@@ -2,9 +2,6 @@
 
 from setuptools import setup
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
-
 setup(
     name="voevent-parse",
     version="0.7.0",
@@ -15,6 +12,6 @@ setup(
     author="Tim Staley",
     author_email="timstaley337@gmail.com",
     url="https://github.com/timstaley/voevent-parse",
-    install_requires=required,
+    install_requires="lxml>=2.3, <4.0",
     test_suite='voeventparse.tests'
 )
