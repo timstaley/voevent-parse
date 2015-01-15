@@ -13,15 +13,11 @@ voevent-parse provides convenience routines to take care of many
 common tasks, so that accessing those vital data elements is as simple as::
 
     import voeventparse
-    with open(xml_filename) as f:
+    with open(xml_filename, 'rb') as f:
         v = voeventparse.load(f)
     print "AuthorIVORN:", v.Who.AuthorIVORN  #Prints e.g. ivo://nasa.gsfc.tan/gcn
     v.Who.AuthorIVORN = 'ivo://i.heart.python/lxml' #Alters the XML value.
 
-.. note::
-
-    As of version 0.8, voevent-parse is Python 3 compatible
-    (tested with Python versions 2.7 & 3.4).
 
 Rationale
 ---------
