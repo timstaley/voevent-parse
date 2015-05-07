@@ -6,7 +6,7 @@ Introduction
 What is voevent-parse?
 ----------------------
 A lightweight library for parsing, manipulating, and generating
-`VOEvent <http://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent>`_ XML packets,
+VOEvent_ XML packets,
 built atop  `lxml.objectify`_.
 
 voevent-parse provides convenience routines to take care of many
@@ -57,6 +57,8 @@ Documentation
 Reference documentation can be found at
 http://voevent-parse.readthedocs.org,
 or generated directly from the repository using Sphinx_.
+You can also find a tutorial at
+https://github.com/timstaley/voevent-parse-tutorial.
 
 Source, Issues, Development etc.
 --------------------------------
@@ -74,6 +76,11 @@ manner, typically using nose_ from the repository root directory.
 
 lxml.objectify 'gotchas'
 ------------------------
+
+.. note::
+    See the `tutorial <https://github.com/timstaley/voevent-parse-tutorial>`_
+    for a basic introduction to lxml.objectify.
+
 The objectify library has a few syntactic quirks which can trip up new users.
 Firstly, you should be aware that the line ``root.foo`` actually returns
 an object that acts like a *list* of all the children  of the ``root`` element
@@ -149,7 +156,8 @@ Depending on what you want to use your VOEvents for, you may be interested
 in `pysovo <https://github.com/timstaley/pysovo>`_,
 a collection of routines for responding to VOEvents, and/or
 `fourpiskytools <https://github.com/timstaley/fourpiskytools>`_, which provides
-basic routines for submitting VOEvents to a broker for publication.
+a minimum working example of a broker / event-handler setup,
+and basic routines for submitting VOEvents to a broker for publication.
 
 Acknowledgement
 ---------------
@@ -159,7 +167,7 @@ that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
 
 
 
-
+.. _VOEvent: http://voevent.readthedocs.org/
 .. _lxml: http://lxml.de/installation.html
 .. _lxml.objectify: http://lxml.de/objectify.html
 .. _Sphinx: http://sphinx-doc.org/
