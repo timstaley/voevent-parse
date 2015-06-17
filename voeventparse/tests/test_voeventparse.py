@@ -68,6 +68,15 @@ class TestIO(TestCase):
         self.assertEqual(vfs.attrib['ivorn'],
                          'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729')
 
+    def test_load_of_voe_v1(self):
+        with self.assertRaises(ValueError):
+            with open(datapaths.swift_xrt_pos_v1, 'rb') as f:
+                vff = vp.load(f)
+
+        #Can override version checking, at own risk!
+        with open(datapaths.swift_xrt_pos_v1, 'rb') as f:
+            vff = vp.load(f, check_version=False)
+
     def test_namespace_variations(self):
         # NB, not enclosing root element in a namespace is invalid under schema
         # But this has been seen in the past (isolated bug case?)

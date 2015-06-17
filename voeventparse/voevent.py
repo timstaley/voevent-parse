@@ -54,7 +54,7 @@ def Voevent(stream, stream_id, role):
     return v
 
 
-def loads(s):
+def loads(s, check_version=True):
     """
     Load VOEvent from bytes.
 
@@ -64,13 +64,18 @@ def loads(s):
     "Why can't lxml parse my XML from unicode strings?"
     (Python 2 users can stick with old-school ``str`` type if preferred)
 
-    Currently pretty basic, but we can imagine using this function to
-    homogenise or at least identify different VOEvent versions, etc.
+    By default, will raise an exception if the VOEvent is not of version
+    2.0. This can be disabled but voevent-parse routines are untested with
+    other versions.
 
     Args:
         s (bytes): Bytes containing raw XML.
+        check_version (bool): (Default=True) Checks that the VOEvent is of a
+            supported schema version - currently only v2.0 is supported.
     Returns:
         Root-node of the :class:`Voevent` etree.
+    Raises:
+        exceptions.ValueError
 
     """
     # .. note::
@@ -81,22 +86,36 @@ def loads(s):
     #        so we must re-insert it when we want to conform to schema.
     v = objectify.fromstring(s)
     _remove_root_tag_prefix(v)
+
+    if check_version:
+        version = v.attrib['version']
+        if not version == '2.0':
+            raise ValueError('Unsupported VOEvent schema version:'+ version)
+
     return v
 
 
-def load(file):
+def load(file, check_version=True):
     """Load VOEvent from file object.
 
-    See also: :py:func:`.loads`
+    A simple wrapper to read a file before passing the contents to
+    :py:func:`.loads`. Use with an open file object, e.g.::
+
+        with open('/path/to/voevent.xml', 'rb') as f:
+            v = vp.load(f)
+
     Args:
         file (file): An open file object (binary mode preferred), see also
-        http://lxml.de/FAQ.html :
-        "Can lxml parse from file objects opened in unicode/text mode?"
+            http://lxml.de/FAQ.html :
+            "Can lxml parse from file objects opened in unicode/text mode?"
+
+        check_version (bool): (Default=True) Checks that the VOEvent is of a
+            supported schema version - currently only v2.0 is supported.
     Returns:
         Root-node of the :class:`Voevent` etree.
     """
     s = file.read()
-    return loads(s)
+    return loads(s, check_version)
 
 
 def dumps(voevent, pretty_print=False, xml_declaration=True, encoding='UTF-8'):
@@ -322,7 +341,7 @@ def add_citations(voevent, citations):
 
 
 # ###################################################
-# And finally, lots of utility functions...
+# And finally, utility functions...
 
 def _remove_root_tag_prefix(v):
     """
