@@ -59,7 +59,7 @@ v.What.append(amb_temp)
 vp.add_where_when(v,
                   coords=vp.Position2D(ra=123.5, dec=45, err=0.1,
                                        units='deg',
-                                       system=vp.definitions.sky_coord_system.fk5),
+                                       system=vp.definitions.sky_coord_system.utc_fk5_geo),
                   obs_time=datetime.datetime(2013, 1, 31, 12, 5, 30),
                   observatory_location=vp.definitions.observatory_location.geosurface)
 

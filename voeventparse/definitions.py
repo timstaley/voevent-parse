@@ -18,8 +18,33 @@ class roles(object):
 
 
 class sky_coord_system(object):
-    """Common coordinate system identifiers. See also :class:`.Position2D`."""
-    fk5 = 'UTC-FK5-GEO'
+    """
+    Common coordinate system identifiers. See also :class:`.Position2D`.
+
+    This is not a simple combinatorial mix of all components, it's a
+    reproduction of the enumeration in the XML schema. Note some entries in the
+    schema enumeration are repeated, which leads me to think it may be flawed,
+    but that's an investigation for another day.
+
+    """
+    gps_fk5_topo = 'GPS-FK5-TOPO'
+    gps_icrs_geo = 'GPS-ICRS-GEO'
+    gps_icrs_topo = 'GPS-ICRS-TOPO'
+
+    tdb_fk5_bary = 'TDB-FK5-BARY'
+    tdb_icrs_bary = 'TDB-ICRS-BARY'
+
+    tt_fk5_geo = 'TT-FK5-GEO'
+    tt_fk5_topo = 'TT-FK5-TOPO'
+    tt_icrs_geo = 'TT-ICRS-GEO'
+    tt_icrs_topo = 'TT-ICRS-TOPO'
+
+    utc_fk5_geo = 'UTC-FK5-GEO'
+    utc_fk5_topo = 'UTC-FK5-TOPO'
+    utc_icrs_geo = 'UTC-ICRS-GEO'
+    utc_icrs_topo = 'UTC-ICRS-TOPO'
+
+
 
 
 class observatory_location(object):
