@@ -29,15 +29,14 @@ def pull_astro_coords(voevent, index=0):
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
     sys = ac_sys.attrib['id']
 
-    try:
+
+    if hasattr(ac.Position2D, "Name1"):
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-        posn = Position2D(ra=float(ac.Position2D.Value2.C1),
-                          dec=float(ac.Position2D.Value2.C2),
-                          err=float(ac.Position2D.Error2Radius),
-                          units=ac.Position2D.attrib['unit'],
-                          system=sys)
-    except AttributeError:
-        raise ValueError("Unrecognised AstroCoords type")
+    posn = Position2D(ra=float(ac.Position2D.Value2.C1),
+                      dec=float(ac.Position2D.Value2.C2),
+                      err=float(ac.Position2D.Error2Radius),
+                      units=ac.Position2D.attrib['unit'],
+                      system=sys)
     return posn
 
 

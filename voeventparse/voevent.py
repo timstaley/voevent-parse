@@ -340,6 +340,7 @@ def add_citations(voevent, citations):
     voevent.Citations.extend(_listify(citations))
 
 
+
 # ###################################################
 # And finally, utility functions...
 

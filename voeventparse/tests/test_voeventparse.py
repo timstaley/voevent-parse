@@ -295,7 +295,8 @@ class TestCitations(TestCase):
         )
         vp.assert_valid_as_v2_0(self.v)
         self.assertEqual(len(self.v.Citations.getchildren()), 1)
-        #         print voe.prettystr(self.v.Citations)
+        # print
+        # print vp.prettystr(self.v.Citations)
         vp.add_citations(self.v,
                           vp.Citation(
                               'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
