@@ -1,10 +1,11 @@
 """Convenience routines for common actions on VOEvent objects"""
 
 from __future__ import absolute_import
-import datetime
+import iso8601
 import lxml
 from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
                                Citation)
+
 
 
 def pull_astro_coords(voevent, index=0):
@@ -21,8 +22,8 @@ def pull_astro_coords(voevent, index=0):
         index (int): Index of the ObsDataLocation to extract AstroCoords from.
 
     Returns:
-        :py:class:`.Position2D`: The sky position defined in the
-            ObsDataLocation.
+        Position (:py:class:`.Position2D`): The sky position defined in the
+        ObsDataLocation.
     """
     od = voevent.WhereWhen.ObsDataLocation[index]
     ac = od.ObservationLocation.AstroCoords
@@ -45,12 +46,18 @@ def pull_isotime(voevent, index=0):
 
     Accesses a `WhereWhere.ObsDataLocation.ObservationLocation`
     element and returns the AstroCoords.Time.TimeInstant.ISOTime element,
-    converted to a datetime.
+    converted to a (UTC-timezoned) datetime.
 
     Note that a packet may include multiple 'ObsDataLocation' entries
     under the 'WhereWhen' section, for example giving locations of an object
     moving over time. Most packets will have only one, however, so the
     default is to access the first.
+
+    .. warning::
+
+        This function currently only works with UTC time-system coords.
+        Future updates may implement conversion from other systems (TT, GPS)
+        using astropy functionality.
 
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent
@@ -58,20 +65,22 @@ def pull_isotime(voevent, index=0):
         index (int): Index of the ObsDataLocation to extract an ISOtime from.
 
     Returns:
-        :class:`datetime.datetime`: Specifically, we return a standard library
-            datetime object, i.e. one that is **timezone-naive** (that is,
-            agnostic about its timezone, see python docs).
-            This avoids an added dependency on pytz.
+        isotime (:class:`datetime.datetime`): Datetime object as parsed by
+        `iso8601`_ (with UTC timezone).
 
-    The details of the reference system for time and space are provided
-    in the AstroCoords object, but typically time reference is UTC.
+    .. _iso8601: https://pypi.python.org/pypi/iso8601/
 
     """
     try:
         od = voevent.WhereWhen.ObsDataLocation[index]
         ol = od.ObservationLocation
+        coord_sys = ol.AstroCoords.attrib['coord_system_id']
+        if coord_sys.split('-')[0] != 'UTC':
+            raise NotImplementedError(
+                'Loading from time-systems other than UTC not yet implemented'
+            )
         isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
-        return datetime.datetime.strptime(isotime_str, "%Y-%m-%dT%H:%M:%S.%f")
+        return iso8601.parse_date(isotime_str)
     except AttributeError:
         return None
 
@@ -82,7 +91,8 @@ def pull_params(voevent):
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
     Returns:
-        Nested dict: Mapping of ``Group->Param->Attribs``. Access like so::
+        Nested dict (dict): Mapping of ``Group->Param->Attribs``.
+        Access like so::
 
             foo_param_val = what_dict['GroupName']['ParamName']['value']
 

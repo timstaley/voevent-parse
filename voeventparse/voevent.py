@@ -73,7 +73,7 @@ def loads(s, check_version=True):
         check_version (bool): (Default=True) Checks that the VOEvent is of a
             supported schema version - currently only v2.0 is supported.
     Returns:
-        Root-node of the :class:`Voevent` etree.
+        voevent (:py:class:`Voevent`): Root-node of the  etree.
     Raises:
         exceptions.ValueError
 
@@ -112,7 +112,7 @@ def load(file, check_version=True):
         check_version (bool): (Default=True) Checks that the VOEvent is of a
             supported schema version - currently only v2.0 is supported.
     Returns:
-        Root-node of the :class:`Voevent` etree.
+        voevent (:py:class:`Voevent`): Root-node of the  etree.
     """
     s = file.read()
     return loads(s, check_version)
