@@ -311,6 +311,8 @@ class TestConvenienceRoutines(TestCase):
     def setUp(self):
         with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
             self.swift_grb_v2_packet = vp.load(f)
+        with open(datapaths.moa_lensing_event_path, 'rb') as f:
+            self.moa_packet = vp.load(f)
         self.blank = vp.Voevent(stream='voevent.soton.ac.uk/TEST',
                                  stream_id='100',
                                  role='test')
@@ -327,17 +329,26 @@ class TestConvenienceRoutines(TestCase):
     def test_pull_params(self):
         params = vp.pull_params(self.swift_grb_v2_packet)
 
+        #General example, check basic functionality
         self.assertEqual(params[None]['Packet_Type']['value'], '61')
         self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'],
                          'false')
 
+        #Test empty What section
         params = vp.pull_params(self.blank)
         self.assertEqual(params, {})
 
+        #Test known (generated) example
         single_par = copy(self.blank)
         single_par.What.append(vp.Param(name="test_param", value=123))
         params = vp.pull_params(single_par)
         self.assertEqual(len(params), 1)
+        self.assertEqual(list(params[None].keys()), ['test_param'])
+
+        #Test case where a What Group is present, but empty:
+        params = vp.pull_params(self.moa_packet)
+        self.assertEqual(params['Misc_Flags'], {})
+
 
     def test_pull_isotime(self):
         isotime = vp.pull_isotime(self.swift_grb_v2_packet)

@@ -108,8 +108,9 @@ def pull_params(voevent):
         for g in voevent.What.Group:
             g_params = {}
             result[g.attrib['name']] = g_params
-            for p in g.Param:
-                g_params[p.attrib['name']] = p.attrib
+            if hasattr(g, 'Param'):
+                for p in g.Param:
+                    g_params[p.attrib['name']] = p.attrib
     return result
 
 

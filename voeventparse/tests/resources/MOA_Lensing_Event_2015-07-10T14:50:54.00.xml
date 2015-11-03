@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ivorn="ivo://nasa.gsfc.gcn/MOA#Lensing_Event_2015-07-10T14:50:54.00_4201500354-0-309" role="observation" version="2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0  http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd">
+  <Who>
+    <AuthorIVORN>ivo://nasa.gsfc.tan/gcn</AuthorIVORN>
+    <Author>
+      <shortName>MOA (via VO-GCN)</shortName>
+      <contactName>Ian Bond</contactName>
+      <contactPhone>+nn-nnn-nnn-nnnn</contactPhone>
+      <contactEmail>I.A.Bond@massey.ac.nz</contactEmail>
+    </Author>
+    <Date>2015-07-10T14:48:31</Date>
+    <Description>This VOEvent message was created with GCN VOE version: 1.18 09jul15</Description>
+  </Who>
+  <What>
+    <Param name="Packet_Type" value="139"/>
+    <Param name="Pkt_Ser_Num" value="18"/>
+    <Param name="TrigID" value="201500354" ucd="meta.id"/>
+    <Param name="Detection_TJD" value="17213" unit="days" ucd="time"/>
+    <Param name="Detection_SOD" value="53454.00" unit="sec" ucd="time"/>
+    <Param name="Maximum_TJD" value="17212" unit="days" ucd="time"/>
+    <Param name="Maximum_SOD" value="72832.00" unit="sec" ucd="time"/>
+    <Param name="Max_Time_Uncert" value="0.98" unit="sec" ucd="time"/>
+    <Param name="Max_Magnitude" value="0.00" unit="sigma" ucd="stat.snr"/>
+    <Param name="Current_Mag" value="0.00" unit="sigma" ucd="stat.snr"/>
+    <Param name="Baseline_Mag" value="0.40" unit="sec" ucd="time.interval"/>
+    <Param name="Baseline_Uncert" value="0.40"/>
+    <Param name="u0" value="0.00"/>
+    <Param name="u0_Uncert" value="0.00"/>
+    <Param name="Amplitude" value="0.00"/>
+    <Param name="Amplitude_Uncert" value="0.00"/>
+    <Param name="tE" value="22.24"/>
+    <Param name="tE_Uncert" value="12.01"/>
+    <Param name="Soln_status" value="0x0"/>
+    <Param name="Misc_flags" value="0x4"/>
+    <Group name="Trigger_ID">
+    </Group>
+    <Group name="Misc_Flags">
+    </Group>
+    <Param name="Coords_Type" value="1" unit="dn"/>
+    <Param name="Coords_String" value="source_object"/>
+    <Group name="Obs_Support_Info">
+      <Description>The Sun and Moon values are valid at the time the VOEvent XML message was created.</Description>
+      <Param name="Sun_RA" value="109.55" unit="deg" ucd="pos.eq.ra"/>
+      <Param name="Sun_Dec" value="22.22" unit="deg" ucd="pos.eq.dec"/>
+      <Param name="Sun_Distance" value="160.05" unit="deg" ucd="pos.angDistance"/>
+      <Param name="Sun_Hr_Angle" value="-10.63" unit="hr"/>
+      <Param name="Moon_RA" value="39.42" unit="deg" ucd="pos.eq.ra"/>
+      <Param name="Moon_Dec" value="12.22" unit="deg" ucd="pos.eq.dec"/>
+      <Param name="MOON_Distance" value="131.00" unit="deg" ucd="pos.angDistance"/>
+      <Param name="Moon_Illum" value="30.60" unit="%" ucd="arith.ratio"/>
+      <Param name="Galactic_Long" value="0.36" unit="deg" ucd="pos.galactic.lon"/>
+      <Param name="Galactic_Lat" value="-2.10" unit="deg" ucd="pos.galactic.lat"/>
+      <Param name="Ecliptic_Long" value="268.85" unit="deg" ucd="pos.ecliptic.lon"/>
+      <Param name="Ecliptic_Lat" value="-6.27" unit="deg" ucd="pos.ecliptic.lat"/>
+    </Group>
+    <Description>The MOA detection of a gravitational lensing event.</Description>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOLUN"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-FK5-GEO"/>
+        <AstroCoords coord_system_id="UTC-FK5-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2015-07-10T14:50:54.00</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>268.6860</C1>
+              <C2>-29.7073</C2>
+            </Value2>
+            <Error2Radius>0.0000</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+    <Description>The RA,Dec coordinates are of the type: source_object.</Description>
+  </WhereWhen>
+  <How>
+    <Description>MOA: Microlensing Observations in Astrophysics Instrument</Description>
+    <Reference uri="http://gcn.gsfc.nasa.gov/moa.html" type="url"/>
+  </How>
+  <Why importance="1.0">
+    <Inference probability="0.99">
+      <Concept>process.variation;em.opt</Concept>
+    </Inference>
+  </Why>
+  <Description>
+  </Description>
+</voe:VOEvent>
