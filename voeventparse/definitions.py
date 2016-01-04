@@ -10,14 +10,14 @@ from six import b
 # ############################
 # Some useful string defs namespaced via a class container:
 
-class roles(object):
+class roles:
     observation = 'observation'
     prediction = 'prediction'
     utility = 'utility'
     test = 'test'
 
 
-class sky_coord_system(object):
+class sky_coord_system:
     """
     Common coordinate system identifiers. See also :class:`.Position2D`.
 
@@ -53,12 +53,16 @@ class observatory_location(object):
     geolunar = 'GEOLUN'
 
 
-class coord_units(object):
-    """Handy tags listing the unit names used by voeventparse."""
-    degrees = 'degrees'
+class units:
+    """
+    Unit abbreviations as defined by CDS (incomplete listing)
+
+    cf http://vizier.u-strasbg.fr/doc/catstd-3.2.htx
+    """
+    degrees = 'deg'
 
 
-class cite_types(object):
+class cite_types:
     """Possible types of :func:`.Citation`"""
     followup = 'followup'
     supersedes = 'supersedes'

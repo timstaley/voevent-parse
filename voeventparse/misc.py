@@ -16,10 +16,11 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
         ra (float): Right ascension.
         dec (float): Declination
         err (float): Error radius.
-        units (:class:`.definitions.coord_units`): Coordinate units
+        units (str): Coordinate units, cf :class:`.definitions.units`
             e.g. degrees, radians.
-        system (:class:`.definitions.sky_coord_system`): Co-ordinate system
-            e.g. UTC-FK5-GEO
+        system (str): Co-ordinate system, e.g. UTC-FK5-GEO
+            cf :class:`.definitions.sky_coord_system`
+
     """
     pass  # Just wrapping a namedtuple so we can assign a docstring.
 
