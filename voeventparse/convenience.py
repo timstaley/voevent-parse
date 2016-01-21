@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 import iso8601
 import lxml
+from collections import OrderedDict
 from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
                                Citation)
 
@@ -105,11 +106,11 @@ def pull_params(voevent):
             what_dict[None]['ParamName']['value']
 
     """
-    result = {}
+    result = OrderedDict()
     w = voevent.What
     if w.countchildren() == 0:
         return result
-    toplevel_params = {}
+    toplevel_params = OrderedDict()
     result[None] = toplevel_params
     if hasattr(voevent.What, 'Param'):
         for p in voevent.What.Param:

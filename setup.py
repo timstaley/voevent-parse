@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="voevent-parse",
-    version="0.9.1",
+    version="0.9.2",
     packages=['voeventparse', 'voeventparse.tests', 'voeventparse.tests.resources'],
     package_data={'voeventparse':['tests/resources/*.xml']},
     description="Convenience routines for parsing and manipulation of "

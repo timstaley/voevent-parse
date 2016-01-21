@@ -327,12 +327,16 @@ class TestConvenienceRoutines(TestCase):
         self.assertIsInstance(p.ra, float)
 
     def test_pull_params(self):
-        params = vp.pull_params(self.swift_grb_v2_packet)
+        swift_params = vp.pull_params(self.swift_grb_v2_packet)
 
         #General example, check basic functionality
-        self.assertEqual(params[None]['Packet_Type']['value'], '61')
-        self.assertEqual(params['Misc_Flags']['Values_Out_of_Range']['value'],
+        self.assertEqual(swift_params[None]['Packet_Type']['value'], '61')
+        self.assertEqual(swift_params['Misc_Flags']['Values_Out_of_Range']['value'],
                          'false')
+
+        #Check ordering is preserved
+        self.assertEqual(list(swift_params[None].keys())[:3],
+                         ['Packet_Type', 'Pkt_Ser_Num', 'TrigID'])
 
         #Test empty What section
         params = vp.pull_params(self.blank)
