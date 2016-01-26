@@ -59,7 +59,21 @@ class units:
 
     cf http://vizier.u-strasbg.fr/doc/catstd-3.2.htx
     """
-    degrees = 'deg'
+    degree = 'deg'
+    degrees = degree #Alias for backwards compatibility. Singular otherwise.
+    arcsecond = 'arcsec'
+    milliarcsecond = 'mas'
+
+    day = 'd'
+    hour = 'h'
+    minute = 'min'
+    year = 'yr'
+
+    count = 'ct'
+    hertz = 'Hz'
+    jansky = 'Jy'
+    magnitude = 'mag'
+
 
 
 class cite_types:

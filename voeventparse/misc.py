@@ -57,7 +57,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
             string, etc.
             NB the value is always *stored* as a string representation,
             as per VO spec.
-        unit(string): e.g. 'deg' for degrees.
+        unit(string): Units of value. See :class:`.definitions.units`
         ucd(string): `unified content descriptor <http://arxiv.org/abs/1110.0525>`_.
             For a list of valid UCDs, see:
             http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
