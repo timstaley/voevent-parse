@@ -3,6 +3,13 @@
 Usage examples
 ==============
 
+.. note::
+    See also the `tutorial notebooks`_, which give a step-by-step introduction
+    to using voevent-parse.
+
+.. _tutorial notebooks: https://github.com/timstaley/voevent-parse-tutorial
+
+
 Basic data access and manipulation
 -----------------------------------
 

@@ -78,8 +78,8 @@ lxml.objectify 'gotchas'
 ------------------------
 
 .. note::
-    See the `tutorial <https://github.com/timstaley/voevent-parse-tutorial>`_
-    for a basic introduction to lxml.objectify.
+    See also the `tutorial <https://github.com/timstaley/voevent-parse-tutorial>`_,
+    which includes a basic introduction to lxml.objectify.
 
 The objectify library has a few syntactic quirks which can trip up new users.
 Firstly, you should be aware that the line ``root.foo`` actually returns
