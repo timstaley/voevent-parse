@@ -6,6 +6,7 @@ import lxml
 from collections import OrderedDict
 from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
                                Citation)
+from copy import deepcopy
 
 
 
@@ -139,6 +140,7 @@ def prettystr(subtree):
     Returns:
         string: Prettyprinted string representation of the raw XML.
     """
+    subtree = deepcopy(subtree)
     lxml.objectify.deannotate(subtree)
     lxml.etree.cleanup_namespaces(subtree)
     return lxml.etree.tostring(subtree, pretty_print=True)

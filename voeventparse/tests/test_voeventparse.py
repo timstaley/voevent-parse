@@ -360,3 +360,18 @@ class TestConvenienceRoutines(TestCase):
 
         null_result = vp.pull_isotime(self.blank)
         self.assertIsNone(null_result)
+
+class TestPrettyStr(TestCase):
+    def setUp(self):
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
+            self.swift_grb_v2_packet = vp.load(f)
+    def test_for_packet_mangling(self):
+        """
+        Check that applying prettystr to a packet does not change it.
+        """
+        self.assertTrue(vp.valid_as_v2_0(self.swift_grb_v2_packet))
+        before = vp.dumps(self.swift_grb_v2_packet)
+        vp.prettystr(self.swift_grb_v2_packet)
+        self.assertTrue(vp.valid_as_v2_0(self.swift_grb_v2_packet))
+        after = vp.dumps(self.swift_grb_v2_packet)
+        self.assertEqual(before,after)
