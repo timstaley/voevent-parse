@@ -29,7 +29,7 @@ project = u'voevent-parse'
 copyright = u'2013,2014 Tim Staley'
 
 # The short X.Y version.
-version = voeventparse._nominal_version
+version = voeventparse.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 

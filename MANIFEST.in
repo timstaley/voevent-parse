@@ -1,2 +1,4 @@
 include *.txt
 include voeparse/tests/resources/*.xml
+include versioneer.py
+include voeventparse/_version.py

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 from setuptools import setup
+import versioneer
 
 setup(
     name="voevent-parse",
-    version="0.9.4",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=['voeventparse', 'voeventparse.tests', 'voeventparse.tests.resources'],
     package_data={'voeventparse':['tests/resources/*.xml']},
     description="Convenience routines for parsing and manipulation of "
