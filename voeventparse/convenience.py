@@ -88,7 +88,16 @@ def pull_isotime(voevent, index=0):
 
 
 def pull_params(voevent):
-    """Attempts to load the `What` section of a voevent as a nested dictionary.
+    """
+    Attempts to load the `What` section of a voevent as a nested dictionary.
+
+    .. warning:: Missing name attributes
+
+        `Param` or `Group` entries which are missing the `name` attribute
+        will be entered under a dictionary key of ``None``. This means that if
+        there are multiple entries missing the `name` attribute then earlier
+        entries will be overwritten by later entries, so you will not be able
+        to use this convenience routine effectively.
 
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
@@ -115,14 +124,14 @@ def pull_params(voevent):
     result[None] = toplevel_params
     if hasattr(voevent.What, 'Param'):
         for p in voevent.What.Param:
-            toplevel_params[p.attrib['name']] = p.attrib
+            toplevel_params[p.attrib.get('name')] = p.attrib
     if hasattr(voevent.What, 'Group'):
         for g in voevent.What.Group:
             g_params = {}
-            result[g.attrib['name']] = g_params
+            result[g.attrib.get('name')] = g_params
             if hasattr(g, 'Param'):
                 for p in g.Param:
-                    g_params[p.attrib['name']] = p.attrib
+                    g_params[p.attrib.get('name')] = p.attrib
     return result
 
 
