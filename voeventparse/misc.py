@@ -24,7 +24,6 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
     """
     pass  # Just wrapping a namedtuple so we can assign a docstring.
 
-
 _datatypes_autoconversion = {
     bool: ('string', lambda b: str(b)),
     int: ('int', lambda i: str(i)),

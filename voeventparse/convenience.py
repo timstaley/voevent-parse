@@ -1,13 +1,14 @@
 """Convenience routines for common actions on VOEvent objects"""
 
 from __future__ import absolute_import
-import iso8601
-import lxml
+
 from collections import OrderedDict
-from voeventparse.misc import (Param, Group, Reference, Inference, Position2D,
-                               Citation)
 from copy import deepcopy
 
+import astropy.time
+import lxml
+import pytz
+from voeventparse.misc import (Position2D)
 
 
 def pull_astro_coords(voevent, index=0):
@@ -32,7 +33,6 @@ def pull_astro_coords(voevent, index=0):
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
     sys = ac_sys.attrib['id']
 
-
     if hasattr(ac.Position2D, "Name1"):
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
     posn = Position2D(ra=float(ac.Position2D.Value2.C1),
@@ -43,8 +43,13 @@ def pull_astro_coords(voevent, index=0):
     return posn
 
 
+# def pull_astropy_time(voevent, index=0):
+
 def pull_isotime(voevent, index=0):
-    """Extracts the event time from a given `WhereWhen.ObsDataLocation`.
+    """
+    Extracts the event time from a given `WhereWhen.ObsDataLocation`
+
+    Returns a datetime (timezone-aware, UTC).
 
     Accesses a `WhereWhere.ObsDataLocation.ObservationLocation`
     element and returns the AstroCoords.Time.TimeInstant.ISOTime element,
@@ -55,11 +60,13 @@ def pull_isotime(voevent, index=0):
     moving over time. Most packets will have only one, however, so the
     default is to access the first.
 
-    .. warning::
+    This function now implements conversion from the
+    TDB (Barycentric Dynamical Time) time scale in ISOTime format,
+    since this is the format used by GAIA VOEvents.
+    (See also http://docs.astropy.org/en/stable/time/#time-scale )
 
-        This function currently only works with UTC time-system coords.
-        Future updates may implement conversion from other systems (TT, GPS)
-        using astropy functionality.
+    Other timescales (i.e. TT, GPS) will presumably be formatted as a
+    TimeOffset, parsing this format is not yet implemented.
 
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent
@@ -77,12 +84,28 @@ def pull_isotime(voevent, index=0):
         od = voevent.WhereWhen.ObsDataLocation[index]
         ol = od.ObservationLocation
         coord_sys = ol.AstroCoords.attrib['coord_system_id']
-        if coord_sys.split('-')[0] != 'UTC':
+        timesys_identifier = coord_sys.split('-')[0]
+
+        if timesys_identifier == 'UTC':
+            isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+            time = astropy.time.Time(isotime_str, format='isot', scale='utc')
+        elif (timesys_identifier == 'TDB'):
+            isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
+            time = astropy.time.Time(isotime_str, format='isot', scale='tdb')
+        elif (timesys_identifier == 'TT' or timesys_identifier =='GPS'):
             raise NotImplementedError(
-                'Loading from time-systems other than UTC not yet implemented'
+                "Conversion from time-system '{}' to UTC not yet implemented"
             )
-        isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
-        return iso8601.parse_date(isotime_str)
+        else:
+            raise ValueError(
+                'Unrecognised time-system: {} (badly formatted VOEvent?)'.format(
+                    timesys_identifier
+                )
+            )
+
+        timezone_naive_UTC_datetime = time.utc.to_datetime()
+        return timezone_naive_UTC_datetime.replace(tzinfo=pytz.UTC)
+
     except AttributeError:
         return None
 
@@ -153,5 +176,3 @@ def prettystr(subtree):
     lxml.objectify.deannotate(subtree)
     lxml.etree.cleanup_namespaces(subtree)
     return lxml.etree.tostring(subtree, pretty_print=True)
-
-

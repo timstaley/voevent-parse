@@ -24,6 +24,7 @@ Contents
     intro
     examples
     reference
+    changelog
 
 
 Indices and tables
