@@ -46,7 +46,7 @@ If you're working with pip / virtualenv_ and not making use of system packages,
 then note that lxml has some prerequisites for compilation that can cause a
 standard ``pip install``
 to fail with somewhat cryptic errors.
-On Ubuntu you can satisfy those requirements using::
+On a typical Debian / Ubuntu machine you can satisfy those requirements using::
 
     sudo apt-get install libxml2-dev libxslt-dev
 
@@ -136,13 +136,6 @@ http://www.saltycrane.com/blog/2011/07/example-parsing-xml-lxml-objectify/.
 See also
 --------
 
-Alternative parsing libraries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-voevent-parse was preceded by
-`VOEventLib <http://lib.skyalert.org/VOEventLib/>`_, which has similar aims
-but a different stylistic approach
-(see http://lib.skyalert.org/VOEventLib/VOEventLib/doc/index.html ).
-
 Brokers
 ~~~~~~~
 In order to receive VOEvent packets, you will require a utility capable of
@@ -153,17 +146,25 @@ connecting to the VOEvent backbone. Two such tools are
 Associated utility routines
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Depending on what you want to use your VOEvents for, you may be interested
-in `pysovo <https://github.com/timstaley/pysovo>`_,
-a collection of routines for responding to VOEvents, and/or
-`fourpiskytools <https://github.com/timstaley/fourpiskytools>`_, which provides
+`fourpiskytools <https://github.com/4pisky/fourpiskytools>`_, which provides
 a minimum working example of a broker / event-handler setup,
 and basic routines for submitting VOEvents to a broker for publication.
+
+Experienced users may also want to take a look at
+`fourpisky-core <https://github.com/4pisky/fourpisky-core>`_, which is much less
+easy-to-read but provides extensive examples of handling VOEvent data for
+real-time alerting purposes.
+
+Further information
+~~~~~~~~~~~~~~~~~~~
+The 4PiSky project page at https://4pisky.org/voevents/ provides links to more
+information on using VOEvents for scientific work, and other VOEvent related
+tools.
 
 Acknowledgement
 ---------------
 If you make use of voevent-parse in work leading to a publication, we ask
 that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
-
 
 
 
