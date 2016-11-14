@@ -5,6 +5,7 @@ from six import b
 from lxml import objectify, etree
 from copy import copy
 import datetime
+import pytz
 
 import voeventparse as vp
 
@@ -206,11 +207,18 @@ class TestWhereWhen(TestCase):
                                      units='deg', system='UTC-FK5-GEO')
 
     def test_set_wherewhen(self):
+        tz_aware_timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
         vp.add_where_when(self.v, coords=self.coords1,
-                           obs_time=datetime.datetime.utcnow(),
+                           obs_time=tz_aware_timestamp,
                            observatory_location=vp.definitions.observatory_location.geosurface)
         self.assertTrue(vp.valid_as_v2_0(self.v))
         self.assertEqual(self.coords1, vp.pull_astro_coords(self.v))
+        self.assertIsNotNone(vp.pull_isotime(self.v))
+        astrocoords = self.v.xpath(
+            'WhereWhen/ObsDataLocation/ObservationLocation/AstroCoords'
+        )[0]
+        isotime_str = str(astrocoords.Time.TimeInstant.ISOTime)
+        self.assertFalse('+' in isotime_str)
 
     def test_multiple_obs(self):
         self.assertEqual(self.v.WhereWhen.countchildren(), 0)
