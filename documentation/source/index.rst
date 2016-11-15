@@ -9,11 +9,6 @@ Welcome to voevent-parse's documentation. If you're new here, I recommend you
 start with the :ref:`introduction <intro>`. Then, take a look at the
 :ref:`usage examples <examples>`, or dive into the tutorial_.
 
-.. note::
-
-    As of version 0.8, voevent-parse is Python 3 compatible
-    (tested with Python versions 2.7 & 3.4).
-
 Contents
 --------
 

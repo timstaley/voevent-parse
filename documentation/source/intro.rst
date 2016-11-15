@@ -7,7 +7,7 @@ What is voevent-parse?
 ----------------------
 A lightweight library for parsing, manipulating, and generating
 VOEvent_ XML packets,
-built atop  `lxml.objectify`_.
+built atop  `lxml.objectify`_ and compatible with Python 2 and 3.
 
 voevent-parse provides convenience routines to take care of many
 common tasks, so that accessing those vital data elements is as simple as::
