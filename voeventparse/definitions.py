@@ -77,7 +77,7 @@ class units:
 
 
 class cite_types:
-    """Possible types of :func:`.Citation`"""
+    """Possible types of :func:`.EventIvorn`"""
     followup = 'followup'
     supersedes = 'supersedes'
     retraction = 'retraction'

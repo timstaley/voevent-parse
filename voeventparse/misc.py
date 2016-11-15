@@ -24,6 +24,7 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
     """
     pass  # Just wrapping a namedtuple so we can assign a docstring.
 
+
 _datatypes_autoconversion = {
     bool: ('string', lambda b: str(b)),
     int: ('int', lambda i: str(i)),
@@ -74,7 +75,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
     # We use locals() to allow concise looping over the arguments.
     atts = locals()
     atts.pop('ac')
-    temp_dict={}
+    temp_dict = {}
     temp_dict.update(atts)
     for k in temp_dict.keys():
         if atts[k] is None:
@@ -83,7 +84,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
         and value is not None
         and (not isinstance(value, string_types))
         and dataType is None
-    ):
+        ):
         if type(value) in _datatypes_autoconversion:
             datatype, func = _datatypes_autoconversion[type(value)]
             atts['dataType'] = datatype
@@ -150,8 +151,9 @@ def Inference(probability=None, relation=None, name=None, concept=None):
     return inf
 
 
-def Citation(ivorn, cite_type):
-    """Used to cite earlier VOEvents.
+def EventIvorn(ivorn, cite_type):
+    """
+    Used to cite earlier VOEvents.
 
     Args:
         ivorn(string): It is assumed this will be copied verbatim from elsewhere,
@@ -167,3 +169,15 @@ def Citation(ivorn, cite_type):
     c.tag = "EventIVORN"
     return c
 
+
+def Citation(ivorn, cite_type):
+    import warnings
+    warnings.warn(
+        """
+        `Citation` class has been renamed `EventIvorn` to reflect naming
+        conventions in the VOEvent standard.
+        As such this class name is a deprecated alias and may be removed in a
+        future release.
+        """,
+        FutureWarning)
+    return EventIvorn(ivorn, cite_type)

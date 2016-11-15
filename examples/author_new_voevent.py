@@ -86,7 +86,7 @@ vp.add_why(v, importance=0.5,
 
 # We can also cite earlier VOEvents:
 vp.add_citations(v,
-                 vp.Citation(
+                 vp.EventIvorn(
                      ivorn='ivo://astronomy.physics.science.org/super_exciting_events#101',
                      cite_type=vp.definitions.cite_types.followup))
 

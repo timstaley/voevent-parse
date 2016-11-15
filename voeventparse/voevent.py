@@ -343,7 +343,7 @@ def add_why(voevent, importance=None, expires=None, inferences=None):
         voevent.Why.extend(_listify(inferences))
 
 
-def add_citations(voevent, citations):
+def add_citations(voevent, event_ivorns):
     """Add citations to other voevents.
 
     The schema mandates that the 'Citations' section must either be entirely
@@ -352,12 +352,13 @@ def add_citations(voevent, citations):
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-        citation(:class:`voeventparse.misc.Citation`): Citation or list of citations.
+        event_ivorns (:class:`voeventparse.misc.EventIvorn`): List of EventIvorn
+            elements to add to citation list.
 
     """
     if not voevent.xpath('Citations'):
         etree.SubElement(voevent, 'Citations')
-    voevent.Citations.extend(_listify(citations))
+    voevent.Citations.extend(_listify(event_ivorns))
 
 
 # ###################################################

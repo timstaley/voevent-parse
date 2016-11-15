@@ -299,7 +299,7 @@ class TestCitations(TestCase):
     def test_followup_citation(self):
         ref = 'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729'
         vp.add_citations(self.v,
-                         vp.Citation(
+                         vp.EventIvorn(
                              'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-729',
                              cite_type=vp.definitions.cite_types.followup)
                          )
@@ -308,7 +308,7 @@ class TestCitations(TestCase):
         # print
         # print vp.prettystr(self.v.Citations)
         vp.add_citations(self.v,
-                         vp.Citation(
+                         vp.EventIvorn(
                              'ivo://nasa.gsfc.gcn/SWIFT#BAT_GRB_Pos_532871-730',
                              cite_type=vp.definitions.cite_types.followup)
                          )

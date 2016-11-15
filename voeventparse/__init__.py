@@ -5,9 +5,9 @@ A package for concise manipulation of VOEvent XML packets.
 from __future__ import absolute_import
 
 from ._version import get_versions
+
 __version__ = get_versions()['version']
 del get_versions
-
 
 from voeventparse.voevent import (
     Voevent,
@@ -19,10 +19,17 @@ from voeventparse.voevent import (
 )
 import voeventparse.definitions as definitions
 from voeventparse.misc import (
-    Param, Group,
-    Reference, Inference,
+    Citation,
+    EventIvorn,
+    Group,
+    Inference,
+    Param,
     Position2D,
-    Citation)
+    Reference,
+)
 from voeventparse.convenience import (
-    pull_astro_coords, pull_params, pull_isotime,
-    prettystr)
+    pull_astro_coords,
+    pull_isotime,
+    pull_params,
+    prettystr,
+)
