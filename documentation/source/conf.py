@@ -1,6 +1,5 @@
 
 import sys, os
-import voeventparse
 
 # -- General configuration -----------------------------------------------------
 
@@ -40,16 +39,6 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-
-# on_rtd is whether we are on readthedocs.org
-import os
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -61,51 +50,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'VOEvent-parsedoc'
 
-
-# -- Options for LaTeX output --------------------------------------------------
-
-latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
-
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
-
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
-}
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title, author, documentclass [howto/manual]).
-latex_documents = [
-  ('index', 'VOEvent-parse.tex', u'VOEvent-parse Documentation',
-   u'Tim Staley', 'manual'),
-]
-
-
-# -- Options for manual page output --------------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'voevent-parse', u'VOEvent-parse Documentation',
-     [u'Tim Staley'], 1)
-]
-
-# If true, show URL addresses after external links.
-#man_show_urls = False
-
-
-# -- Options for Texinfo output ------------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-  ('index', 'VOEvent-parse', u'VOEvent-parse Documentation',
-   u'Tim Staley', 'VOEvent-parse', 'One line description of project.',
-   'Miscellaneous'),
-]
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
