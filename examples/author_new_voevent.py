@@ -1,9 +1,11 @@
 #!/usr/bin/python
 from __future__ import print_function
+
 import datetime
 import os
+
+import pytz
 import voeventparse as vp
-from lxml import etree
 
 # Set the basic packet ID and Author details
 
@@ -15,8 +17,7 @@ vp.set_who(v, date=datetime.datetime.utcnow(),
 
 vp.set_author(v, title="4PiSky Testing Node",
               shortName="Tim"
-)
-
+              )
 
 # Now create some Parameters for entry in the 'What' section.
 
@@ -40,12 +41,12 @@ p_flux = vp.Param(name='peak_flux',
                   unit='Janskys',
                   ucd='em.radio.100-200MHz',
                   ac=True
-)
+                  )
 p_flux.Description = 'Peak Flux'
 
 v.What.append(vp.Group(params=[p_flux, int_flux], name='source_flux'))
 
-#Note ac=True (autoconvert) is the default setting if dataType=None (the default)
+# Note ac=True (autoconvert) is the default setting if dataType=None (the default)
 amb_temp = vp.Param(name="amb_temp",
                     value=15.5,
                     unit='degrees',
@@ -54,21 +55,21 @@ amb_temp = vp.Param(name="amb_temp",
 amb_temp.Description = "Ambient temperature at telescope"
 v.What.append(amb_temp)
 
-
 # Now we set the sky location of our event:
 vp.add_where_when(v,
                   coords=vp.Position2D(ra=123.5, dec=45, err=0.1,
                                        units='deg',
                                        system=vp.definitions.sky_coord_system.utc_fk5_geo),
-                  obs_time=datetime.datetime(2013, 1, 31, 12, 5, 30),
+                  obs_time=datetime.datetime(2013, 1, 31, 12, 5, 30,
+                                             tzinfo=pytz.utc),
                   observatory_location=vp.definitions.observatory_location.geosurface)
 
 # Prettyprint some sections for desk-checking:
-print( "\n***Here is your WhereWhen:***\n")
-print( vp.prettystr(v.WhereWhen))
+print("\n***Here is your WhereWhen:***\n")
+print(vp.prettystr(v.WhereWhen))
 
-print( "\n***And your What:***\n")
-print( vp.prettystr(v.What))
+print("\n***And your What:***\n")
+print(vp.prettystr(v.What))
 
 # You would normally describe or reference your telescope / instrument here:
 vp.add_how(v, descriptions='Discovered via 4PiSky',
@@ -81,7 +82,7 @@ vp.add_why(v, importance=0.5,
                                    relation='identified',
                                    name='GRB121212A',
                                    concept='process.variation.burst;em.radio')
-)
+           )
 
 # We can also cite earlier VOEvents:
 vp.add_citations(v,
@@ -96,4 +97,4 @@ output_filename = 'new_voevent_example.xml'
 with open(output_filename, 'wb') as f:
     vp.dump(v, f)
 
-print( "Wrote your voevent to ", os.path.abspath(output_filename))
+print("Wrote your voevent to ", os.path.abspath(output_filename))

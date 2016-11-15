@@ -6,6 +6,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 import astropy.time
+import iso8601
 import lxml
 import pytz
 from voeventparse.misc import (Position2D)
@@ -88,10 +89,12 @@ def pull_isotime(voevent, index=0):
 
         if timesys_identifier == 'UTC':
             isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
-            time = astropy.time.Time(isotime_str, format='isot', scale='utc')
+            return iso8601.parse_date(isotime_str)
         elif (timesys_identifier == 'TDB'):
             isotime_str = str(ol.AstroCoords.Time.TimeInstant.ISOTime)
-            time = astropy.time.Time(isotime_str, format='isot', scale='tdb')
+            isotime_dtime = iso8601.parse_date(isotime_str)
+            tdb_time = astropy.time.Time(isotime_dtime, scale='tdb')
+            return tdb_time.utc.to_datetime().replace(tzinfo=pytz.UTC)
         elif (timesys_identifier == 'TT' or timesys_identifier =='GPS'):
             raise NotImplementedError(
                 "Conversion from time-system '{}' to UTC not yet implemented"
@@ -102,9 +105,6 @@ def pull_isotime(voevent, index=0):
                     timesys_identifier
                 )
             )
-
-        timezone_naive_UTC_datetime = time.utc.to_datetime()
-        return timezone_naive_UTC_datetime.replace(tzinfo=pytz.UTC)
 
     except AttributeError:
         return None

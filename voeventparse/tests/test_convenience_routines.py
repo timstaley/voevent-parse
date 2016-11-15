@@ -87,6 +87,7 @@ class TestConvenienceRoutines(TestCase):
         self.assertIsInstance(converted_isotime, datetime.datetime)
         self.assertTrue(converted_isotime.tzinfo is not None)
         self.assertEqual(converted_isotime.utcoffset(), datetime.timedelta(0))
+        self.assertEqual(converted_isotime.utcoffset(), datetime.timedelta(0))
 
         od = self.gaia_noname_param_packet.WhereWhen.ObsDataLocation[0]
         ol = od.ObservationLocation
