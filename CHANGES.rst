@@ -2,6 +2,18 @@ Change history
 ===============
 
 
+Unreleased - 2016/11
+--------------------
+API Changes
+~~~~~~~~~~~~
+Some routines have been renamed, with the old aliases preserved for backwards
+compatibility for now:
+
+ - ``pull_isotime`` is now deprecated in favour of the alias
+   ``pull_event_time_as_utc``.
+ - ``Citation`` is now deprecated in favour of the alias ``EventIvorn``.
+
+
 0.9.8 - 2016/11/09
 -------------------
 Enhancement to ``pull_isotime`` convenience function: Add support for 

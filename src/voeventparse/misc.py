@@ -155,6 +155,8 @@ def EventIvorn(ivorn, cite_type):
     """
     Used to cite earlier VOEvents.
 
+    Use in conjunction with :func:`.add_citations`
+
     Args:
         ivorn(string): It is assumed this will be copied verbatim from elsewhere,
             and so these should have any prefix (e.g. 'ivo://','http://')
@@ -171,6 +173,9 @@ def EventIvorn(ivorn, cite_type):
 
 
 def Citation(ivorn, cite_type):
+    """
+    Deprecated alias of :func:`.EventIvorn`
+    """
     import warnings
     warnings.warn(
         """

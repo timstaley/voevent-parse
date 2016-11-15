@@ -45,6 +45,17 @@ def pull_astro_coords(voevent, index=0):
 
 
 def pull_isotime(voevent, index=0):
+    """
+    Deprecated alias of :func:`.pull_event_time_as_utc`
+    """
+    import warnings
+    warnings.warn(
+        """
+        The function `pull_isotime` has been renamed to
+        `pull_event_time_as_utc`. This alias is preserved for backwards
+        compatibility, and may be removed in a future release.
+        """,
+        FutureWarning)
     return pull_event_time_as_utc(voevent, index)
 
 def pull_event_time_as_utc(voevent, index=0):
@@ -76,10 +87,8 @@ def pull_event_time_as_utc(voevent, index=0):
         index (int): Index of the ObsDataLocation to extract an ISOtime from.
 
     Returns:
-        :class:`datetime.datetime`: Datetime object as parsed by
-        `iso8601`_ (with UTC timezone).
-
-    .. _iso8601: https://pypi.python.org/pypi/iso8601/
+        :class:`datetime.datetime`: Datetime representing the event-timestamp,
+            converted to UTC (timezone aware).
 
     """
     try:
