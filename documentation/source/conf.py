@@ -26,7 +26,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'voevent-parse'
-copyright = u'2013,2014 Tim Staley'
+copyright = u'2013-2016 Tim Staley'
 
 # The short X.Y version.
 version = voeventparse.__version__

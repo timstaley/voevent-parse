@@ -1,4 +1,6 @@
-include *.txt
-include voeparse/tests/resources/*.xml
+graft src
 include versioneer.py
-include voeventparse/_version.py
+include *.txt
+include *.md
+include *.rst
+

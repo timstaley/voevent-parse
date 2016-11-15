@@ -14,8 +14,12 @@ class TestExamples(TestCase):
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)
 
-        repo_topdir = os.path.dirname(
-            os.path.dirname(os.path.dirname(__file__)))
+        repo_topdir = os.path.join(
+            os.path.dirname(__file__), #voevent-parse/src/voeventparse/tests
+            os.pardir, #voevent-parse/src/voeventparse/
+            os.pardir, #voevent-parse/src/
+            os.pardir, #voevent-parse/
+        )
         self.examples_dir = os.path.join(repo_topdir, 'examples')
         sys.path.insert(0, self.examples_dir)
 
@@ -28,8 +32,3 @@ class TestExamples(TestCase):
 
     def test_new_voevent(self):
         import author_new_voevent
-
-
-
-
-
