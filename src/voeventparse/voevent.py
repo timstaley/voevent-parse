@@ -37,8 +37,8 @@ def Voevent(stream, stream_id, role):
 
     Returns:
         Root-node of the VOEvent, as represented by an lxml.objectify element
-            tree ('etree'). See also
-            http://lxml.de/objectify.html#the-lxml-objectify-api
+        tree ('etree'). See also
+        http://lxml.de/objectify.html#the-lxml-objectify-api
     """
     parser = objectify.makeparser(remove_blank_text=True)
     v = objectify.fromstring(voeventparse.definitions.v2_0_skeleton_str,
@@ -80,9 +80,10 @@ def loads(s, check_version=True):
         check_version (bool): (Default=True) Checks that the VOEvent is of a
             supported schema version - currently only v2.0 is supported.
     Returns:
-        voevent (:py:class:`Voevent`): Root-node of the  etree.
+        :py:class:`Voevent`: Root-node of the  etree.
     Raises:
-        exceptions.ValueError
+        exceptions.ValueError: If passed a VOEvent of wrong schema version
+            (i.e. schema 1.1)
 
     """
     # .. note::
@@ -119,7 +120,7 @@ def load(file, check_version=True):
         check_version (bool): (Default=True) Checks that the VOEvent is of a
             supported schema version - currently only v2.0 is supported.
     Returns:
-        voevent (:py:class:`Voevent`): Root-node of the  etree.
+        :py:class:`Voevent`: Root-node of the  etree.
     """
     s = file.read()
     return loads(s, check_version)
@@ -141,7 +142,7 @@ def dumps(voevent, pretty_print=False, xml_declaration=True, encoding='UTF-8'):
         xml_declaration (bool): Prepends a doctype tag to the string output,
             i.e. something like ``<?xml version='1.0' encoding='UTF-8'?>``
     Returns:
-        Bytes containing raw XML representation of VOEvent.
+        bytes: Bytestring containing raw XML representation of VOEvent.
 
     """
     _return_to_standard_xml(voevent)
@@ -175,7 +176,8 @@ def valid_as_v2_0(voevent):
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-    Returns: Bool (VOEvent is valid?)
+    Returns:
+        bool: Whether VOEvent is valid
     """
     _return_to_standard_xml(voevent)
     valid_bool = voevent_v2_0_schema.validate(voevent)
@@ -192,8 +194,9 @@ def assert_valid_as_v2_0(voevent):
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-    Returns: None. NB raises :py:obj:`lxml.etree.DocumentInvalid` if VOEvent
-        does not conform to schema.
+    Raises:
+         :py:obj:`lxml.etree.DocumentInvalid`: if VOEvent does not conform to
+            schema.
     """
     _return_to_standard_xml(voevent)
     voevent_v2_0_schema.assertValid(voevent)

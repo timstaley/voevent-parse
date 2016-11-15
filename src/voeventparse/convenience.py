@@ -88,7 +88,7 @@ def pull_event_time_as_utc(voevent, index=0):
 
     Returns:
         :class:`datetime.datetime`: Datetime representing the event-timestamp,
-            converted to UTC (timezone aware).
+        converted to UTC (timezone aware).
 
     """
     try:
