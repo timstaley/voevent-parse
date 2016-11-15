@@ -44,11 +44,12 @@ def pull_astro_coords(voevent, index=0):
     return posn
 
 
-# def pull_astropy_time(voevent, index=0):
-
 def pull_isotime(voevent, index=0):
+    return pull_event_time_as_utc(voevent, index)
+
+def pull_event_time_as_utc(voevent, index=0):
     """
-    Extracts the event time from a given `WhereWhen.ObsDataLocation`
+    Extracts the event time from a given `WhereWhen.ObsDataLocation`.
 
     Returns a datetime (timezone-aware, UTC).
 
@@ -75,7 +76,7 @@ def pull_isotime(voevent, index=0):
         index (int): Index of the ObsDataLocation to extract an ISOtime from.
 
     Returns:
-        isotime (:class:`datetime.datetime`): Datetime object as parsed by
+        :class:`datetime.datetime`: Datetime object as parsed by
         `iso8601`_ (with UTC timezone).
 
     .. _iso8601: https://pypi.python.org/pypi/iso8601/
