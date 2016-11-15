@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from six import string_types
 from lxml import objectify, etree
 import collections
-
+import pytz
 import voeventparse.definitions
 
 voevent_v2_0_schema = etree.XMLSchema(
@@ -90,7 +90,7 @@ def loads(s, check_version=True):
     if check_version:
         version = v.attrib['version']
         if not version == '2.0':
-            raise ValueError('Unsupported VOEvent schema version:'+ version)
+            raise ValueError('Unsupported VOEvent schema version:' + version)
 
     return v
 
@@ -238,19 +238,39 @@ def set_author(voevent, title=None, shortName=None, logoURL=None,
             voevent.Who.Author[k] = v
 
 
-def add_where_when(voevent, coords, obs_time, observatory_location):
-    """Add details of an observation to the WhereWhen section.
+def add_where_when(voevent, coords, obs_time, observatory_location,
+                   allow_tz_naive_datetime=False):
+    """
+    Add details of an observation to the WhereWhen section.
+
+    We
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
         coords(:class:`.Position2D`): Sky co-ordinates of event.
-        obs_time(datetime.datetime): Nominal DateTime of the observation.
+        obs_time(datetime.datetime): Nominal DateTime of the observation. Must
+            either be timezone-aware, or should be carefully verified as
+            representing UTC and then set parameter
+            ``allow_tz_naive_datetime=True``.
         observatory_location(string): Telescope locale, e.g. 'La Palma'.
             May be a generic location as listed under
             :class:`voeventparse.definitions.observatory_location`.
+        allow_tz_naive_datetime (bool): (Default False). Accept timezone-naive
+            datetime-timestamps. See comments for ``obs_time``.
+
     """
 
     # .. todo:: Implement TimeError using datetime.timedelta
+    if obs_time.tzinfo is not None:
+        utc_naive_obs_time = obs_time.astimezone(pytz.utc).replace(tzinfo=None)
+    elif not allow_tz_naive_datetime:
+        raise ValueError(
+            "Datetime passed without tzinfo, cannot be sure if it is really a "
+            "UTC timestamp. Please verify function call and either add tzinfo "
+            "or pass parameter 'allow_tz_naive_obstime=True', as appropriate",
+        )
+    else:
+        utc_naive_obs_time = obs_time
 
     obs_data = etree.SubElement(voevent.WhereWhen, 'ObsDataLocation')
     etree.SubElement(obs_data, 'ObservatoryLocation', id=observatory_location)
@@ -260,7 +280,7 @@ def add_where_when(voevent, coords, obs_time, observatory_location):
                           coord_system_id=coords.system)
     time = etree.SubElement(ac, 'Time', unit='s')
     instant = etree.SubElement(time, 'TimeInstant')
-    instant.ISOTime = obs_time.isoformat()
+    instant.ISOTime = utc_naive_obs_time.isoformat()
     # iso_time = etree.SubElement(instant, 'ISOTime') = obs_time.isoformat()
 
     pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
@@ -340,7 +360,6 @@ def add_citations(voevent, citations):
     voevent.Citations.extend(_listify(citations))
 
 
-
 # ###################################################
 # And finally, utility functions...
 
@@ -387,7 +406,7 @@ def _reinsert_root_tag_prefix(v):
 def _return_to_standard_xml(v):
     # Remove lxml.objectify DataType namespace prefixes:
     objectify.deannotate(v)
-    #Put the default namespace back:
+    # Put the default namespace back:
     _reinsert_root_tag_prefix(v)
     etree.cleanup_namespaces(v)
 

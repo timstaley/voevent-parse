@@ -15,6 +15,8 @@ class TestConvenienceRoutines(TestCase):
             self.moa_packet = vp.load(f)
         with open(datapaths.gaia_alert_16aac_direct, 'rb') as f:
             self.gaia_noname_param_packet = vp.load(f)
+        with open(datapaths.asassn_scraped_example, 'rb') as f:
+            self.assasn_scraped_packet = vp.load(f)
         self.blank = vp.Voevent(stream='voevent.soton.ac.uk/TEST',
                                 stream_id='100',
                                 role='test')
@@ -71,11 +73,20 @@ class TestConvenienceRoutines(TestCase):
         null_result = vp.pull_isotime(self.blank)
         self.assertIsNone(null_result)
 
+    def test_pull_isotime_formatted_with_timezone_plus(self):
+        # An edge case: ISOFormat can include a timezone suffix,
+        # e.g. '2016-09-25T11:16:48+00:00'
+        # The VOEvent UTC format means that the suffix is redundant,
+        # but *that doesn't necessarily mean it won't get added anyway!*
+        asassn_time = vp.pull_isotime(self.assasn_scraped_packet)
+        self.assertIsNotNone(asassn_time)
+
     def test_pull_isotime_from_TDB(self):
         converted_isotime = vp.pull_isotime(self.gaia_noname_param_packet)
         # check it works, and returns timezone aware datetime:
         self.assertIsInstance(converted_isotime, datetime.datetime)
         self.assertTrue(converted_isotime.tzinfo is not None)
+        self.assertEqual(converted_isotime.utcoffset(), datetime.timedelta(0))
         self.assertEqual(converted_isotime.utcoffset(), datetime.timedelta(0))
 
         od = self.gaia_noname_param_packet.WhereWhen.ObsDataLocation[0]
