@@ -48,4 +48,4 @@ voevent-parse API reference
 
 
 
-.. _imports: https://github.com/timstaley/voevent-parse/blob/master/voeventparse/__init__.py#L17
+.. _imports: https://github.com/timstaley/voevent-parse/blob/master/src/voeventparse/__init__.py
