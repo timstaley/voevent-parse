@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0"
+             xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0
+                                 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd"
+             version="2.0" role="test"
+             ivorn="ivo://example/exciting_events#123">
+  <Who>
+    <AuthorIVORN>ivo://hotwired.org</AuthorIVORN>
+    <Date>1970-01-01T00:00:00</Date>
+    <Author>
+      <title>Hotwired VOEvent Tutorial</title>
+    </Author>
+  </Who>
+  <What>
+    <Group name="source_flux">
+      <Param dataType="float" name="peak_flux" ucd="em.radio.100-200MHz"
+             unit="Janskys" value="0.0015">
+        <Description>Peak Flux</Description>
+      </Param>
+      <Param dataType="float" name="int_flux" ucd="em.radio.100-200MHz"
+             unit="Janskys" value="2.0e-3">
+        <Description>Integrated Flux</Description>
+      </Param>
+    </Group>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOSURFACE"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-FK5-GEO"/>
+        <AstroCoords coord_system_id="UTC-FK5-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>1970-01-01T00:00:00</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>123.5</C1>
+              <C2>45</C2>
+            </Value2>
+            <Error2Radius>0.1</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <How>
+    <Description>JDS spied with his little eye</Description>
+  </How>
+  <Why importance="0.5">
+    <Inference probability="0.1" relation="identified">
+      <Name>GRB121212A</Name>
+      <Concept>process.variation.burst;em.radio</Concept>
+    </Inference>
+  </Why>
+  <Citations>
+    <EventIVORN cite="followup">ivo://example/exciting_events#1</EventIVORN>
+  </Citations>
+</voe:VOEvent>

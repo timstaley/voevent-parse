@@ -1,3 +1,9 @@
+sudo: false
+addons:
+  apt:
+    packages:
+    - pandoc
+
 language: python
 matrix:
   include:
@@ -18,4 +24,4 @@ notifications:
     on_success: never
     on_failure: always
 
-sudo: false
+

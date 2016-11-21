@@ -13,6 +13,9 @@ compatibility for now:
    ``pull_event_time_as_utc``.
  - ``Citation`` is now deprecated in favour of the alias ``EventIvorn``.
 
+Documentation now includes tutorial material which was previously hosted in
+a separate GitHub repo.
+
 
 0.9.8 - 2016/11/09
 -------------------
@@ -23,6 +26,7 @@ stream.
 (Support for remaining VOEvent timescales 'GPS' and 'TT' has been 
 considered but needs a motivating use-case, see 
 https://github.com/timstaley/voevent-parse/issues/5 )
+NB this functionality introduces a dependence on Astropy>=1.2.
 
 0.9.7 - 2016/10/31 
 ------------------

@@ -4,10 +4,9 @@ Usage examples
 ==============
 
 .. note::
-    See also the `tutorial notebooks`_, which give a step-by-step introduction
-    to using voevent-parse.
-
-.. _tutorial notebooks: https://github.com/timstaley/voevent-parse-tutorial
+    These scripts give some quick syntax examples.
+    See also the :ref:`tutorial` notebooks, for a step-by-step introduction
+    to using voevent-parse and working with XML data.
 
 
 Basic data access and manipulation

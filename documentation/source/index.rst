@@ -18,6 +18,7 @@ Contents
 
     intro
     examples
+    tutorial/index
     reference
     changelog
 

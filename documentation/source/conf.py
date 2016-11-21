@@ -1,4 +1,3 @@
-
 import sys, os
 import voeventparse
 
@@ -9,17 +8,19 @@ needs_sphinx = '1.3'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.todo',
-               'sphinx.ext.coverage', 'sphinx.ext.viewcode',
-               'sphinx.ext.napoleon']
-
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.napoleon',
+              'nbsphinx',
+              'IPython.sphinxext.ipython_console_highlighting',
+              ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
-
 
 # The master toctree document.
 master_doc = 'index'
@@ -35,7 +36,7 @@ release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -50,8 +51,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'VOEvent-parsedoc'
 
-
-
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
 
@@ -59,7 +58,7 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 autodoc_member_order = 'bysource'
 todo_include_todos = True
 
-nitpicky=True
+nitpicky = True
 nitpick_ignore = [
     ("py:obj", "lxml.etree.DocumentInvalid"),
     ("py:obj", "lxml.etree"),
