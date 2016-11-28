@@ -31,6 +31,7 @@ from voeventparse.convenience import (
     get_grouped_params,
     get_toplevel_params,
     get_event_position,
+    pull_astro_coords,
     pull_isotime,
     pull_params,
     prettystr,
