@@ -7,6 +7,7 @@ install_requires = [
     "astropy>=1.2",
     "lxml>=2.3, <4.0",
     'iso8601',
+    'orderedmultidict',
     'pytz',
     'six',
 ]

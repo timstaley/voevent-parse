@@ -10,6 +10,7 @@ import iso8601
 import lxml
 import pytz
 from voeventparse.misc import (Position2D)
+from orderedmultidict import omdict as OMDict
 
 
 def get_event_time_as_utc(voevent, index=0):
@@ -74,7 +75,7 @@ def get_event_time_as_utc(voevent, index=0):
         return None
 
 
-def pull_astro_coords(voevent, index=0):
+def get_event_position(voevent, index=0):
     """Extracts the `AstroCoords` from a given `WhereWhen.ObsDataLocation`.
 
     Note that a packet may include multiple 'ObsDataLocation' entries
@@ -104,6 +105,95 @@ def pull_astro_coords(voevent, index=0):
                       units=ac.Position2D.attrib['unit'],
                       system=sys)
     return posn
+
+def _get_param_children_as_omdict(subtree_element):
+    elt = subtree_element
+    omd = OMDict()
+    if elt.find('Param') is not None:
+        for p in elt.Param:
+            omd.add(p.attrib.get('name'),p.attrib)
+    return omd
+
+def get_grouped_params(voevent):
+    """
+    Fetch grouped Params from the `What` section of a voevent as an omdict.
+
+    This fetches 'grouped' Params, i.e. those enclosed in a Group element,
+    and returns them as a nested dict-like structure, keyed by
+    GroupName->ParamName->AttribName.
+
+    Note that since multiple Params may share the same ParamName, the returned
+    data-structure is actually an
+    `orderedmultidict.omdict <https://github.com/gruns/orderedmultidict>`_
+    and has extra methods such as 'getlist' to allow retrieval of all values.
+
+    Args:
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
+    Returns (orderedmultidict.omdict):
+        Mapping of ``ParamName->Attribs``.
+        Typical access like so::
+
+            foo_val = top_params['foo']['value']
+            # If there are multiple Param entries named 'foo':
+            all_foo_vals = [atts['value'] for atts in top_params.getlist('foo')]
+
+    """
+    groups_omd = OMDict()
+    w = deepcopy(voevent.What)
+    lxml.objectify.deannotate(w)
+    if w.find('Group') is not None:
+        for grp in w.Group:
+            groups_omd.add(grp.attrib.get('name'),
+                           _get_param_children_as_omdict(grp))
+    return groups_omd
+
+
+def get_toplevel_params(voevent):
+    """
+    Fetch ungrouped Params from the `What` section of a voevent as an omdict.
+
+    This fetches 'toplevel' Params, i.e. those not enclosed in a Group element,
+    and returns them as a nested dict-like structure, keyed like
+    ParamName->AttribName.
+
+    Note that since multiple Params may share the same ParamName, the returned
+    data-structure is actually an
+    `orderedmultidict.omdict <https://github.com/gruns/orderedmultidict>`_
+    and has extra methods such as 'getlist' to allow retrieval of all values.
+
+    Any Params with no defined name (technically off-spec, but not invalidated
+    by the XML schema) are returned under the dict-key ``None``.
+
+    Args:
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
+    Returns (orderedmultidict.omdict):
+        Mapping of ``ParamName->Attribs``.
+        Typical access like so::
+
+            foo_val = top_params['foo']['value']
+            # If there are multiple Param entries named 'foo':
+            all_foo_vals = [atts['value'] for atts in top_params.getlist('foo')]
+
+    """
+    result = OrderedDict()
+    w = deepcopy(voevent.What)
+    lxml.objectify.deannotate(w)
+    return _get_param_children_as_omdict(w)
+
+
+def pull_astro_coords(voevent, index=0):
+    """
+    Deprecated alias of :func:`.get_event_position`
+    """
+    import warnings
+    warnings.warn(
+        """
+        The function `get_event_position` has been renamed to
+        `get_event_position1`. This alias is preserved for backwards
+        compatibility, and may be removed in a future release.
+        """,
+        FutureWarning)
+    return get_event_position(voevent, index)
 
 
 def pull_isotime(voevent, index=0):
@@ -151,16 +241,17 @@ def pull_params(voevent):
 
     """
     result = OrderedDict()
-    w = voevent.What
+    w = deepcopy(voevent.What)
+    lxml.objectify.deannotate(w)
     if w.countchildren() == 0:
         return result
     toplevel_params = OrderedDict()
     result[None] = toplevel_params
-    if hasattr(voevent.What, 'Param'):
-        for p in voevent.What.Param:
+    if w.find('Param') is not None:
+        for p in w.Param:
             toplevel_params[p.attrib.get('name')] = p.attrib
-    if hasattr(voevent.What, 'Group'):
-        for g in voevent.What.Group:
+    if w.find('Group') is not None:
+        for g in w.Group:
             g_params = {}
             result[g.attrib.get('name')] = g_params
             if hasattr(g, 'Param'):

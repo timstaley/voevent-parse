@@ -1,3 +1,4 @@
+from __future__ import print_function
 import datetime
 from copy import copy
 from unittest import TestCase
@@ -17,20 +18,24 @@ class TestConvenienceRoutines(TestCase):
             self.gaia_noname_param_packet = vp.load(f)
         with open(datapaths.asassn_scraped_example, 'rb') as f:
             self.assasn_scraped_packet = vp.load(f)
-        self.blank = vp.Voevent(stream='voevent.soton.ac.uk/TEST',
+        self.blank = vp.Voevent(stream='voevent.foo.bar/TEST',
                                 stream_id='100',
                                 role='test')
 
-    def test_pull_astro_coords(self):
+    def test_get_event_position(self):
         known_swift_grb_posn = vp.Position2D(ra=74.741200, dec=-9.313700,
                                              err=0.05,
                                              units='deg',
                                              system='UTC-FK5-GEO')
-        p = vp.pull_astro_coords(self.swift_grb_v2_packet)
+        p = vp.get_event_position(self.swift_grb_v2_packet)
         self.assertEqual(p, known_swift_grb_posn)
         self.assertIsInstance(p.ra, float)
 
     def test_pull_params(self):
+        """
+        Basic functionality tested here, but this function is deprecated
+        due to some serious flaws. See ``test_get_toplevel_params``.
+        """
         swift_params = vp.pull_params(self.swift_grb_v2_packet)
 
         # General example, check basic functionality
@@ -61,6 +66,57 @@ class TestConvenienceRoutines(TestCase):
         # Test case where a Param is present with no name:
         params = vp.pull_params(self.gaia_noname_param_packet)
 
+    def test_get_toplevel_params(self):
+        v = self.blank
+        p_foo1 = vp.Param(name='foo',
+                          value=42,
+                          unit='bars',
+                          ac=True
+                          )
+        p_foo2 = vp.Param(name='foo',
+                          value=123,
+                          unit='bars',
+                          ac=True
+                          )
+        p_noname = vp.Param(name='delete_me', value=111)
+        param_list = [p_foo1, p_foo2, p_noname]
+        del p_noname.attrib['name']
+        v.What.extend(param_list)
+
+        # Show flaws in old routine:
+        old_style_toplevel_param_dict = vp.pull_params(v)[None]
+        # print(old_style_toplevel_param_dict)
+        vp.assert_valid_as_v2_0(v)
+        # The old 'pull_params' routine will simply drop Params with duplicate
+        # names:
+        assert len(old_style_toplevel_param_dict)==(len(param_list) - 1)
+        none_group = vp.Group([],name=None)
+        complex_group1 =vp.Group([vp.Param(name='real', value=1.),
+                                vp.Param(name='imag', value=0.5)],
+                               name='complex')
+        complex_group2 =vp.Group([vp.Param(name='real', value=1.5),
+                                vp.Param(name='imag', value=2.5)],
+                               name='complex')
+        group_list = [none_group, complex_group1, complex_group2]
+        v.What.extend(group_list)
+        vp.assert_valid_as_v2_0(v)
+        old_style_toplevel_param_dict_w_group = vp.pull_params(v)[None]
+        # An un-named group will also overshadow top-level Params.
+        # This is a total fail, even though it's actually in-spec.
+        assert len(old_style_toplevel_param_dict_w_group)==0
+
+        toplevel_params = vp.get_toplevel_params(v)
+        # .values method behaves like regular dict, one value for each key:
+        assert len(toplevel_params.values())==(len(param_list) - 1)
+        # Use .allvalues if you want to see duplicates:
+        assert len(toplevel_params.allvalues())==len(param_list)
+
+        grouped_params = vp.get_grouped_params(v)
+        assert len(grouped_params.values())==len(group_list) - 1
+        assert len(grouped_params.allvalues())==len(group_list)
+
+
+
     def test_get_event_time_as_utc(self):
         isotime = vp.get_event_time_as_utc(self.swift_grb_v2_packet)
         # check it works, and returns timezone aware datetime:
@@ -82,7 +138,8 @@ class TestConvenienceRoutines(TestCase):
         self.assertIsNotNone(asassn_time)
 
     def test_get_event_time_as_utc_from_TDB(self):
-        converted_isotime = vp.get_event_time_as_utc(self.gaia_noname_param_packet)
+        converted_isotime = vp.get_event_time_as_utc(
+            self.gaia_noname_param_packet)
         # check it works, and returns timezone aware datetime:
         self.assertIsInstance(converted_isotime, datetime.datetime)
         self.assertTrue(converted_isotime.tzinfo is not None)

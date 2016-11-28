@@ -210,7 +210,7 @@ class TestWhereWhen(TestCase):
                           obs_time=tz_aware_timestamp,
                           observatory_location=vp.definitions.observatory_location.geosurface)
         self.assertTrue(vp.valid_as_v2_0(self.v))
-        self.assertEqual(self.coords1, vp.pull_astro_coords(self.v))
+        self.assertEqual(self.coords1, vp.get_event_position(self.v))
         self.assertIsNotNone(vp.get_event_time_as_utc(self.v))
         astrocoords = self.v.xpath(
             'WhereWhen/ObsDataLocation/ObservationLocation/AstroCoords'

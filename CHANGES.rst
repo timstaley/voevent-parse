@@ -9,20 +9,33 @@ API Changes
 Some routines have been renamed, with the old aliases preserved for backwards
 compatibility for now:
 
- - ``pull_isotime`` is now deprecated in favour of the alias
-   ``get_event_time_as_utc``.
- - ``Citation`` is now deprecated in favour of the alias ``EventIvorn``.
- - ``add_where_when`` now has an extra boolean parameter,
-   'allow_tz_naive_datetime' which defaults to False - so by default you
-   must supply a **timezone-aware** datetime (this should help to avoid
-   mistakenly supplying a timezone-naive datetime which is non-UTC).
+- ``add_where_when`` now has an extra boolean parameter,
+  'allow_tz_naive_datetime' which defaults to False - so by default you
+  must supply a **timezone-aware** datetime (this should help to avoid
+  mistakenly supplying a timezone-naive datetime which is non-UTC).
+- ``Citation`` is now deprecated in favour of the alias ``EventIvorn``.
+- ``pull_isotime`` is now deprecated in favour of the alias
+  ``get_event_time_as_utc``.
+- ``pull_astro_coords`` is now deprecated in favour of the alias
+  ``get_event_position``.
+- ``pull_params`` is now deprecated in favour of the improved replacement
+  functions ``get_grouped_params`` and ``get_toplevel_params``. Separating
+  this functionality into two routines ensures return of datastructures with
+  sensible nesting-depth (i.e. ``toplevel[ParamName][AttrName]`` or
+  ``grouped[GroupName][ParamName][AttrName]``), and avoids problems with
+  GroupNames clashing with top-level ParamNames, etc. The returned
+  datastructures are of type
+  `orderedmultidict.omdict <https://github.com/gruns/orderedmultidict>`_,
+  which provides robust handling of duplicated names.
 
+Docs
+~~~~
 Documentation now includes tutorial material which was previously hosted in
 a separate GitHub repo.
 
 Fixes
 ~~~~~
-Fix a regression in 0.9.8: Switching from from iso8601 library to astropy
+Fix a regression from 0.9.8: Switching from from iso8601 library to astropy
 for ISO-format timestamp parsing introduced a failure case, as astropy does
 not parse timestamps with the '+0' timezone-signifier suffix. Timestamps of
 this style are now parsed correctly. In addition, ``add_where_when`` will
