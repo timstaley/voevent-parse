@@ -57,8 +57,7 @@ Documentation
 Reference documentation can be found at
 http://voevent-parse.readthedocs.org,
 or generated directly from the repository using Sphinx_.
-You can also find a tutorial at
-https://github.com/timstaley/voevent-parse-tutorial.
+
 
 Source, Issues, Development etc.
 --------------------------------
