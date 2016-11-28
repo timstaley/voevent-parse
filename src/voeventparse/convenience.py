@@ -12,53 +12,7 @@ import pytz
 from voeventparse.misc import (Position2D)
 
 
-def pull_astro_coords(voevent, index=0):
-    """Extracts the `AstroCoords` from a given `WhereWhen.ObsDataLocation`.
-
-    Note that a packet may include multiple 'ObsDataLocation' entries
-    under the 'WhereWhen' section, for example giving locations of an object
-    moving over time. Most packets will have only one, however, so the
-    default is to just return co-ords extracted from the first.
-
-    Args:
-        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the
-            VOEvent etree.
-        index (int): Index of the ObsDataLocation to extract AstroCoords from.
-
-    Returns:
-        Position (:py:class:`.Position2D`): The sky position defined in the
-        ObsDataLocation.
-    """
-    od = voevent.WhereWhen.ObsDataLocation[index]
-    ac = od.ObservationLocation.AstroCoords
-    ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
-    sys = ac_sys.attrib['id']
-
-    if hasattr(ac.Position2D, "Name1"):
-        assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-    posn = Position2D(ra=float(ac.Position2D.Value2.C1),
-                      dec=float(ac.Position2D.Value2.C2),
-                      err=float(ac.Position2D.Error2Radius),
-                      units=ac.Position2D.attrib['unit'],
-                      system=sys)
-    return posn
-
-
-def pull_isotime(voevent, index=0):
-    """
-    Deprecated alias of :func:`.pull_event_time_as_utc`
-    """
-    import warnings
-    warnings.warn(
-        """
-        The function `pull_isotime` has been renamed to
-        `pull_event_time_as_utc`. This alias is preserved for backwards
-        compatibility, and may be removed in a future release.
-        """,
-        FutureWarning)
-    return pull_event_time_as_utc(voevent, index)
-
-def pull_event_time_as_utc(voevent, index=0):
+def get_event_time_as_utc(voevent, index=0):
     """
     Extracts the event time from a given `WhereWhen.ObsDataLocation`.
 
@@ -105,7 +59,7 @@ def pull_event_time_as_utc(voevent, index=0):
             isotime_dtime = iso8601.parse_date(isotime_str)
             tdb_time = astropy.time.Time(isotime_dtime, scale='tdb')
             return tdb_time.utc.to_datetime().replace(tzinfo=pytz.UTC)
-        elif (timesys_identifier == 'TT' or timesys_identifier =='GPS'):
+        elif (timesys_identifier == 'TT' or timesys_identifier == 'GPS'):
             raise NotImplementedError(
                 "Conversion from time-system '{}' to UTC not yet implemented"
             )
@@ -118,6 +72,53 @@ def pull_event_time_as_utc(voevent, index=0):
 
     except AttributeError:
         return None
+
+
+def pull_astro_coords(voevent, index=0):
+    """Extracts the `AstroCoords` from a given `WhereWhen.ObsDataLocation`.
+
+    Note that a packet may include multiple 'ObsDataLocation' entries
+    under the 'WhereWhen' section, for example giving locations of an object
+    moving over time. Most packets will have only one, however, so the
+    default is to just return co-ords extracted from the first.
+
+    Args:
+        voevent (:class:`voeventparse.voevent.Voevent`): Root node of the
+            VOEvent etree.
+        index (int): Index of the ObsDataLocation to extract AstroCoords from.
+
+    Returns:
+        Position (:py:class:`.Position2D`): The sky position defined in the
+        ObsDataLocation.
+    """
+    od = voevent.WhereWhen.ObsDataLocation[index]
+    ac = od.ObservationLocation.AstroCoords
+    ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
+    sys = ac_sys.attrib['id']
+
+    if hasattr(ac.Position2D, "Name1"):
+        assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
+    posn = Position2D(ra=float(ac.Position2D.Value2.C1),
+                      dec=float(ac.Position2D.Value2.C2),
+                      err=float(ac.Position2D.Error2Radius),
+                      units=ac.Position2D.attrib['unit'],
+                      system=sys)
+    return posn
+
+
+def pull_isotime(voevent, index=0):
+    """
+    Deprecated alias of :func:`.get_event_time_as_utc`
+    """
+    import warnings
+    warnings.warn(
+        """
+        The function `pull_isotime` has been renamed to
+        `get_event_time_as_utc`. This alias is preserved for backwards
+        compatibility, and may be removed in a future release.
+        """,
+        FutureWarning)
+    return get_event_time_as_utc(voevent, index)
 
 
 def pull_params(voevent):

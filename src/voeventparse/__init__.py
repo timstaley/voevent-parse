@@ -28,7 +28,7 @@ from voeventparse.misc import (
 )
 from voeventparse.convenience import (
     pull_astro_coords,
-    pull_event_time_as_utc,
+    get_event_time_as_utc,
     pull_isotime,
     pull_params,
     prettystr,

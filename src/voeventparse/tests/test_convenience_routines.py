@@ -61,28 +61,28 @@ class TestConvenienceRoutines(TestCase):
         # Test case where a Param is present with no name:
         params = vp.pull_params(self.gaia_noname_param_packet)
 
-    def test_pull_event_time_as_utc(self):
-        isotime = vp.pull_event_time_as_utc(self.swift_grb_v2_packet)
+    def test_get_event_time_as_utc(self):
+        isotime = vp.get_event_time_as_utc(self.swift_grb_v2_packet)
         # check it works, and returns timezone aware datetime:
         self.assertIsInstance(isotime, datetime.datetime)
         self.assertTrue(isotime.tzinfo is not None)
         self.assertEqual(isotime.utcoffset(), datetime.timedelta(0))
 
-    def test_pull_event_time_as_utc_blank(self):
+    def test_get_event_time_as_utc_blank(self):
         # Running on an empty VOEvent should return None, not an exception:
-        null_result = vp.pull_event_time_as_utc(self.blank)
+        null_result = vp.get_event_time_as_utc(self.blank)
         self.assertIsNone(null_result)
 
-    def test_pull_event_time_as_utc_formatted_with_timezone_plus(self):
+    def test_get_event_time_as_utc_formatted_with_timezone_plus(self):
         # An edge case: ISOFormat can include a timezone suffix,
         # e.g. '2016-09-25T11:16:48+00:00'
         # The VOEvent UTC format means that the suffix is redundant,
         # but *that doesn't necessarily mean it won't get added anyway!*
-        asassn_time = vp.pull_event_time_as_utc(self.assasn_scraped_packet)
+        asassn_time = vp.get_event_time_as_utc(self.assasn_scraped_packet)
         self.assertIsNotNone(asassn_time)
 
-    def test_pull_event_time_as_utc_from_TDB(self):
-        converted_isotime = vp.pull_event_time_as_utc(self.gaia_noname_param_packet)
+    def test_get_event_time_as_utc_from_TDB(self):
+        converted_isotime = vp.get_event_time_as_utc(self.gaia_noname_param_packet)
         # check it works, and returns timezone aware datetime:
         self.assertIsInstance(converted_isotime, datetime.datetime)
         self.assertTrue(converted_isotime.tzinfo is not None)
