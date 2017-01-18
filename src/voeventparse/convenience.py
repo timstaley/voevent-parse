@@ -226,7 +226,7 @@ def pull_params(voevent):
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
     Returns:
-        Nested dict (dict): Mapping of ``Group->Param->Attribs``.
+        dict: Mapping of ``Group->Param->Attribs``.
         Access like so::
 
             foo_param_val = what_dict['GroupName']['ParamName']['value']
