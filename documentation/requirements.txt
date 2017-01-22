@@ -2,3 +2,4 @@ sphinx>=1.4
 sphinx_rtd_theme
 jupyter
 nbsphinx
+nbconvert==5.0.0
