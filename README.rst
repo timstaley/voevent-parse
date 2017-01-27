@@ -32,7 +32,7 @@ or in raw form `here <documentation/source/index.rst>`_.
 
 Alternatively you may want to jump right in and get started with
 the accompanying
-`tutorial notebooks <https://github.com/timstaley/voevent-parse-tutorial>`_.
+`tutorial notebooks <http://voevent-parse.rtfd.io/en/stable/tutorial>`_.
 
 If you make use of *voevent-parse* in work leading to a publication, we ask
 that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
