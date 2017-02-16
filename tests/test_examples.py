@@ -15,9 +15,7 @@ class TestExamples(TestCase):
         os.chdir(self.tempdir)
 
         repo_topdir = os.path.join(
-            os.path.dirname(__file__), #voevent-parse/src/voeventparse/tests
-            os.pardir, #voevent-parse/src/voeventparse/
-            os.pardir, #voevent-parse/src/
+            os.path.dirname(__file__), #voevent-parse/tests
             os.pardir, #voevent-parse/
         )
         self.examples_dir = os.path.join(repo_topdir, 'examples')

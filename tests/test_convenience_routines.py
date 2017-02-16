@@ -1,11 +1,12 @@
 from __future__ import print_function
+
 import datetime
-from copy import copy
 from unittest import TestCase
 
-import voeventparse as vp
-from voeventparse.tests.resources import datapaths
 import iso8601
+import voeventparse as vp
+from copy import copy
+from voeventparse.fixtures import datapaths
 
 
 class TestConvenienceRoutines(TestCase):

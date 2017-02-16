@@ -5,6 +5,7 @@ addons:
     - pandoc
 
 language: python
+
 matrix:
   include:
     - python: "2.7"
@@ -13,11 +14,24 @@ matrix:
       env: TOXENV=py34
     - python: "3.5"
       env: TOXENV=py35
+    - python: "3.6"
+      env: TOXENV=py36
+
     - python: "2.7"
       env: TOXENV=docs
 
 install: "pip install tox"
 script: tox
+
+
+before_install:
+  - pip install codecov
+
+
+after_success:
+  - tox -e coverage-report
+  - codecov
+
 
 notifications:
   email:

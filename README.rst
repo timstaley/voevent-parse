@@ -8,20 +8,10 @@ VOEvent-parse
       - |docs|
     * - tests
       - |travis|
+    * - coverage
+      - |coverage|
     * - package
       - |version|
-
-.. |docs| image:: https://readthedocs.org/projects/voevent-parse/badge/?style=flat
-    :target: https://readthedocs.org/projects/voevent-parse
-    :alt: Documentation Status
-
-.. |travis| image:: https://travis-ci.org/timstaley/voevent-parse.svg?branch=master
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.org/timstaley/voevent-parse
-
-.. |version| image:: https://img.shields.io/pypi/v/voevent-parse.svg?style=flat
-    :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/voevent-parse
 
 A lightweight library for parsing, manipulating, and generating VOEvent_  XML
 packets, build atop `lxml.objectify`_ .
@@ -39,3 +29,19 @@ that you cite the `ASCL entry <http://ascl.net/1411.003>`_.
 
 .. _VOEvent: http://voevent.readthedocs.io/
 .. _lxml.objectify: http://lxml.de/objectify.html
+
+.. |docs| image:: https://readthedocs.org/projects/voevent-parse/badge/?style=flat
+    :target: https://readthedocs.org/projects/voevent-parse
+    :alt: Documentation Status
+
+.. |travis| image:: https://travis-ci.org/timstaley/voevent-parse.svg?branch=master
+    :alt: Travis-CI Build Status
+    :target: https://travis-ci.org/timstaley/voevent-parse
+
+.. |coverage| image:: https://codecov.io/github/timstaley/voevent-parse/branch/master/graph/badge.svg
+    :alt: Test-coverage
+    :target: https://codecov.io/github/timstaley/voevent-parse
+
+.. |version| image:: https://img.shields.io/pypi/v/voevent-parse.svg?style=flat
+    :alt: PyPI Package latest release
+    :target: https://pypi.python.org/pypi/voevent-parse
