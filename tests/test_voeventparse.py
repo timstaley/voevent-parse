@@ -1,13 +1,10 @@
-import unittest
-from unittest import TestCase
-from voeventparse.tests.resources import datapaths
-from six import b
-from lxml import objectify, etree
-from copy import copy
 import datetime
-import pytz
+from unittest import TestCase
 
+import pytz
 import voeventparse as vp
+from lxml import objectify, etree
+from voeventparse.fixtures import datapaths
 
 
 class TestValidation(TestCase):

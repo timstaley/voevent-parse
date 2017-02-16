@@ -14,10 +14,12 @@ See also:
 * VOEvent schema file at http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd
 """
 from __future__ import print_function
+
+import pprint
+
 import copy
 import voeventparse
-from voeventparse.tests.resources.datapaths import swift_bat_grb_pos_v2
-import pprint
+from voeventparse.fixtures.datapaths import swift_bat_grb_pos_v2
 
 pp = pprint.PrettyPrinter()
 

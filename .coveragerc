@@ -1,0 +1,5 @@
+[run]
+branch = True
+source=src
+omit=
+    src/voeventparse/_version.py
