@@ -1,1 +1,1 @@
-./runtests.py --cov=voeventparse
+./runtests.py --cov=voeventparse $*
