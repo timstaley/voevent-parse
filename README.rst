@@ -19,6 +19,11 @@ VOEvent-parse
     :alt: Travis-CI Build Status
     :target: https://travis-ci.org/timstaley/voevent-parse
 
+.. |coverage| image:: https://coveralls.io/repos/github/timstaley/voevent-parse/badge.svg?branch=master
+    :alt: Coveralls test-coverage status
+    :target: https://coveralls.io/github/timstaley/voevent-parse?branch=master
+
+
 .. |version| image:: https://img.shields.io/pypi/v/voevent-parse.svg?style=flat
     :alt: PyPI Package latest release
     :target: https://pypi.python.org/pypi/voevent-parse
