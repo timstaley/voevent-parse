@@ -28,7 +28,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
-    package_data={'voeventparse': ['tests/fixtures/*.xml']},
+    package_data={'voeventparse': ['fixtures/*.xml']},
     description="Convenience routines for parsing and manipulation of "
                 "VOEvent XML packets.",
     author="Tim Staley",
