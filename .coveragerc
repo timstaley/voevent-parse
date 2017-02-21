@@ -2,3 +2,11 @@
 branch = True
 omit=
     src/voeventparse/_version.py
+source=
+    voeventparse
+
+[paths]
+source =
+   src/voeventparse
+   .tox/*/lib/python*/site-packages/voeventparse
+   .tox/pypy/site-packages/voeventparse

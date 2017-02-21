@@ -1,1 +1,2 @@
-./runtests.py --cov=voeventparse $*
+coverage run -m pytest $*
+coverage report
