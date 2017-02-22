@@ -14,6 +14,13 @@ from ._version import get_versions
 
 __version__ = get_versions()['version']
 
+# Combined coverage test:
+import six
+if six.PY2:
+    print("FOOOBAR BAZ PY2")
+if six.PY3:
+    print("FOOOBAR BAZ PY3")
+
 
 def Voevent(stream, stream_id, role):
     """Create a new VOEvent element tree, with specified IVORN and role.
