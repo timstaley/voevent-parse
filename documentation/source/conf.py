@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys, os
 import voeventparse
 
@@ -15,6 +16,26 @@ extensions = ['sphinx.ext.autodoc',
               'nbsphinx',
               'IPython.sphinxext.ipython_console_highlighting',
               ]
+
+RUNNING_UNDER_TOX_CI = os.environ.get('TOX_DOCS', False)
+
+nbsphinx_execute = 'always'
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
+
+if RUNNING_UNDER_TOX_CI=="TRUE":
+    suppress_warnings = ['ref.doc']
+    print("Suppressing some sphinx warnings cf"
+          "https://github.com/spatialaudio/nbsphinx/issues/130")
+else:
+    print(
+        "\n**************************************************************\n"
+        "ACHTUNG!\n"
+        "You may need to disable the 'error on warning flag' to build "
+          "docs locally, "
+          "cf https://github.com/spatialaudio/nbsphinx/issues/130\n"
+        "(See Makefile:SPHINXOPTS)"
+        "\n**************************************************************\n")
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -36,7 +57,6 @@ release = version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
