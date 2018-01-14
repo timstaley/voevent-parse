@@ -188,8 +188,8 @@ def pull_astro_coords(voevent, index=0):
     import warnings
     warnings.warn(
         """
-        The function `get_event_position` has been renamed to
-        `get_event_position1`. This alias is preserved for backwards
+        The function `pull_astro_coords` has been renamed to
+        `get_event_position`. This alias is preserved for backwards
         compatibility, and may be removed in a future release.
         """,
         FutureWarning)
