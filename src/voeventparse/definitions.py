@@ -90,8 +90,7 @@ v2_0_skeleton_str = b"""<?xml version="1.0" ?>
     xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd"
     version="2.0"
     role="test"
-    ivorn="ivo://undefined">
-</voe:VOEvent>
+    ivorn="ivo://undefined"></voe:VOEvent>
 """
 
 ####################################

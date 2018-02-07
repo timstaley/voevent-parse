@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 import versioneer
 
 install_requires = [
-    "astropy>=1.2",
+    "astropy>=1.2, <3",
     "lxml>=2.3, <4.0",
     'iso8601',
     'orderedmultidict',

@@ -106,13 +106,15 @@ def get_event_position(voevent, index=0):
                       system=sys)
     return posn
 
+
 def _get_param_children_as_omdict(subtree_element):
     elt = subtree_element
     omd = OMDict()
     if elt.find('Param') is not None:
         for p in elt.Param:
-            omd.add(p.attrib.get('name'),p.attrib)
+            omd.add(p.attrib.get('name'), p.attrib)
     return omd
+
 
 def get_grouped_params(voevent):
     """
@@ -277,4 +279,5 @@ def prettystr(subtree):
     subtree = deepcopy(subtree)
     lxml.objectify.deannotate(subtree)
     lxml.etree.cleanup_namespaces(subtree)
-    return lxml.etree.tostring(subtree, pretty_print=True)
+    return lxml.etree.tostring(subtree, pretty_print=True).decode(
+        encoding="utf-8")
