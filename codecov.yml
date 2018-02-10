@@ -1,0 +1,2 @@
+ignore:
+  - "**/voeventparse/_version.py"
