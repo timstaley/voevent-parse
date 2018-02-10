@@ -1,9 +1,9 @@
 [run]
 branch = True
-omit=
-    src/voeventparse/_version.py
 source=
     voeventparse
+omit=
+    src/voeventparse/_version.py
 
 [paths]
 source =
