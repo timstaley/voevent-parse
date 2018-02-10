@@ -1,6 +1,22 @@
 Change history
 ==============
 
+1.0.2 - 2018/02/10
+--------------------
+Fixes
+~~~~~
+Fix some minor issues with the the 'prettystr' routine:
+
+* Ensure return of a string type in Python3 (was bytes).
+* Fix printing of whole packet (#6, with thanks to @henrilouvin).
+
+1.0.1 - 2016/11/28
+--------------------
+Fixes
+~~~~~
+Minor bugfix - bring back importing of deprecated 'pull_astro_coords'
+function into the package-root namespace.
+
 
 1.0.0 - 2016/11/28
 --------------------
