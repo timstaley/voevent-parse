@@ -20,6 +20,7 @@ extensions = ['sphinx.ext.autodoc',
 RUNNING_UNDER_TOX_CI = os.environ.get('TOX_DOCS', False)
 
 nbsphinx_execute = 'always'
+# nbsphinx_execute = 'never'
 exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 if RUNNING_UNDER_TOX_CI=="TRUE":
@@ -82,6 +83,7 @@ nitpicky = True
 nitpick_ignore = [
     ("py:obj", "lxml.etree.DocumentInvalid"),
     ("py:obj", "lxml.etree"),
+    ("py:class", "bytes"),
     ("py:obj", "bytes"),
 
 ]

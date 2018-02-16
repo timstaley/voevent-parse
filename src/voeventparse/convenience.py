@@ -217,13 +217,15 @@ def pull_params(voevent):
     """
     Attempts to load the `What` section of a voevent as a nested dictionary.
 
-    .. warning:: Missing name attributes
+    .. warning:: Deprecated due to `Missing name attributes` issues.
 
         `Param` or `Group` entries which are missing the `name` attribute
         will be entered under a dictionary key of ``None``. This means that if
         there are multiple entries missing the `name` attribute then earlier
         entries will be overwritten by later entries, so you will not be able
         to use this convenience routine effectively.
+        Use :func:`get_grouped_params` and  :func:`get_toplevel_params`
+        instead.
 
     Args:
         voevent (:class:`voeventparse.voevent.Voevent`): Root node of the VOevent etree.
@@ -242,6 +244,18 @@ def pull_params(voevent):
             what_dict[None]['ParamName']['value']
 
     """
+    import warnings
+    warnings.warn(
+        """
+        The function `pull_params` has been deprecated in favour of the split
+        functions `get_toplevel_params` and `get_grouped_params`, due to 
+        possible name-shadowing issues when combining multilevel-nested-dicts
+        (see docs for details).
+        
+        This alias is preserved for backwards compatibility, and may be 
+        removed in a future release.
+        """,
+        FutureWarning)
     result = OrderedDict()
     w = deepcopy(voevent.What)
     lxml.objectify.deannotate(w)
@@ -272,9 +286,9 @@ def prettystr(subtree):
     of a VOEvent, for easier desk-checking.
 
     Args:
-        subtree(lxml.etree): A node in the VOEvent element tree.
+        subtree(:class`lxml.etree.ElementTree`): A node in the VOEvent element tree.
     Returns:
-        string: Prettyprinted string representation of the raw XML.
+        str: Prettyprinted string representation of the raw XML.
     """
     subtree = deepcopy(subtree)
     lxml.objectify.deannotate(subtree)

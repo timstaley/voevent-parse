@@ -20,7 +20,7 @@ def Voevent(stream, stream_id, role):
 
     Args:
 
-        stream (string): used to construct the IVORN like so::
+        stream (str): used to construct the IVORN like so::
 
                 ivorn = 'ivo://' + stream + '#' + stream_id
 
@@ -30,9 +30,9 @@ def Voevent(stream, stream_id, role):
                 stream='voevent.soton.ac.uk/super_exciting_events'
                 stream_id=77
 
-        stream_id (string): See above.
+        stream_id (str): See above.
 
-        role (string): role as defined in VOEvent spec.
+        role (str): role as defined in VOEvent spec.
             (See also  :py:class:`.definitions.roles`)
 
     Returns:
@@ -113,7 +113,7 @@ def load(file, check_version=True):
             v = vp.load(f)
 
     Args:
-        file (file): An open file object (binary mode preferred), see also
+        file (io.IOBase): An open file object (binary mode preferred), see also
             http://lxml.de/FAQ.html :
             "Can lxml parse from file objects opened in unicode/text mode?"
 
@@ -163,7 +163,7 @@ def dump(voevent, file, pretty_print=True, xml_declaration=True):
 
     Args:
         voevent(:class:`Voevent`): Root node of the VOevent etree.
-        file (file): An open (binary mode) file object for writing.
+        file (io.IOBase): An open (binary mode) file object for writing.
         pretty_print
         pretty_print(bool): See :func:`dumps`
         xml_declaration(bool): See :func:`dumps`
@@ -210,7 +210,7 @@ def set_who(voevent, date=None, author_ivorn=None):
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
         date(datetime.datetime): Date of authoring.
             NB Microseconds are ignored, as per the VOEvent spec.
-        author_ivorn(string): Short author identifier,
+        author_ivorn(str): Short author identifier,
             e.g. ``voevent.4pisky.org/ALARRM``.
             Note that the prefix ``ivo://`` will be prepended internally.
 
@@ -262,7 +262,7 @@ def add_where_when(voevent, coords, obs_time, observatory_location,
             either be timezone-aware, or should be carefully verified as
             representing UTC and then set parameter
             ``allow_tz_naive_datetime=True``.
-        observatory_location(string): Telescope locale, e.g. 'La Palma'.
+        observatory_location(str): Telescope locale, e.g. 'La Palma'.
             May be a generic location as listed under
             :class:`voeventparse.definitions.observatory_location`.
         allow_tz_naive_datetime (bool): (Default False). Accept timezone-naive
@@ -307,7 +307,7 @@ def add_how(voevent, descriptions=None, references=None):
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-        descriptions(string): Description string, or list of description
+        descriptions(str): Description string, or list of description
             strings.
         references(:py:class:`voeventparse.misc.Reference`): A reference element
             (or list thereof).

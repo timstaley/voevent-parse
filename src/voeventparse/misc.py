@@ -43,7 +43,7 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
     NB ``name`` is not mandated by schema, but *is* mandated in full spec.
 
     Args:
-        value(string): String representing parameter value.
+        value(str): String representing parameter value.
             Or, if ``ac`` is true, then 'autoconversion' is attempted, in which case
             ``value`` can also be an instance of one of the following:
 
@@ -57,15 +57,15 @@ def Param(name, value=None, unit=None, ucd=None, dataType=None, utype=None,
             string, etc.
             NB the value is always *stored* as a string representation,
             as per VO spec.
-        unit(string): Units of value. See :class:`.definitions.units`
-        ucd(string): `unified content descriptor <http://arxiv.org/abs/1110.0525>`_.
+        unit(str): Units of value. See :class:`.definitions.units`
+        ucd(str): `unified content descriptor <http://arxiv.org/abs/1110.0525>`_.
             For a list of valid UCDs, see:
             http://vocabularies.referata.com/wiki/Category:IVOA_UCD.
-        dataType(string): Denotes type of ``value``; restricted to 3 options:
+        dataType(str): Denotes type of ``value``; restricted to 3 options:
             ``string`` (default), ``int`` , or ``float``.
             (NB *not* to be confused with standard XML Datatypes, which have many
             more possible values.)
-        utype(string): See http://wiki.ivoa.net/twiki/bin/view/IVOA/Utypes
+        utype(str): See http://wiki.ivoa.net/twiki/bin/view/IVOA/Utypes
         ac(bool): Attempt automatic conversion of passed ``value`` to string,
             and set ``dataType`` accordingly (only attempted if ``dataType``
             is the default, i.e. ``None``).
@@ -97,9 +97,9 @@ def Group(params, name=None, type=None):
 
     Args:
         params(list of :func:`Param`): Parameter elements to go in this group.
-        name(string): Group name. NB ``None`` is valid, since the group may be
+        name(str): Group name. NB ``None`` is valid, since the group may be
             best identified by its type.
-        type(string): Type of group, e.g. 'complex' (for real and imaginary).
+        type(str): Type of group, e.g. 'complex' (for real and imaginary).
     """
     atts = {}
     if name:
@@ -117,8 +117,8 @@ def Reference(uri, meaning=None):
     Represents external information, typically original obs data and metadata.
 
     Args:
-        uri(string): Uniform resource identifier for external data, e.g. FITS file.
-        meaning(string): The nature of the document referenced, e.g. what
+        uri(str): Uniform resource identifier for external data, e.g. FITS file.
+        meaning(str): The nature of the document referenced, e.g. what
             instrument and filter was used to create the data?
     """
     attrib = {'uri': uri}
@@ -132,9 +132,9 @@ def Inference(probability=None, relation=None, name=None, concept=None):
 
     Args:
         probability(float): Value 0.0 to 1.0.
-        relation(string): e.g. 'associated' or 'identified' (see Voevent spec)
-        name(string): e.g. name of identified progenitor.
-        concept(string): One of a 'formal UCD-like vocabulary of astronomical
+        relation(str): e.g. 'associated' or 'identified' (see Voevent spec)
+        name(str): e.g. name of identified progenitor.
+        concept(str): One of a 'formal UCD-like vocabulary of astronomical
             concepts', e.g. http://ivoat.ivoa.net/stars.supernova.Ia - see
             VOEvent spec.
     """
@@ -158,7 +158,7 @@ def EventIvorn(ivorn, cite_type):
     Use in conjunction with :func:`.add_citations`
 
     Args:
-        ivorn(string): It is assumed this will be copied verbatim from elsewhere,
+        ivorn(str): It is assumed this will be copied verbatim from elsewhere,
             and so these should have any prefix (e.g. 'ivo://','http://')
             already in place - the function will not alter the value.
         cite_type (:class:`.definitions.cite_types`): String conforming to one
