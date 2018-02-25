@@ -82,7 +82,7 @@ def loads(s, check_version=True):
     Returns:
         :py:class:`Voevent`: Root-node of the  etree.
     Raises:
-        exceptions.ValueError: If passed a VOEvent of wrong schema version
+        ValueError: If passed a VOEvent of wrong schema version
             (i.e. schema 1.1)
 
     """
