@@ -1,11 +1,14 @@
 from __future__ import print_function
 
 import datetime
+import warnings
+from copy import copy
 from unittest import TestCase
 
 import iso8601
+import pytest
+
 import voeventparse as vp
-from copy import copy
 from voeventparse.fixtures import datapaths
 
 
@@ -37,35 +40,37 @@ class TestConvenienceRoutines(TestCase):
         Basic functionality tested here, but this function is deprecated
         due to some serious flaws. See ``test_get_toplevel_params``.
         """
-        swift_params = vp.pull_params(self.swift_grb_v2_packet)
+        with pytest.warns(FutureWarning):
+            swift_params = vp.pull_params(self.swift_grb_v2_packet)
 
-        # General example, check basic functionality
-        self.assertEqual(swift_params[None]['Packet_Type']['value'], '61')
-        self.assertEqual(
-            swift_params['Misc_Flags']['Values_Out_of_Range']['value'],
-            'false')
+            # General example, check basic functionality
+            self.assertEqual(swift_params[None]['Packet_Type']['value'], '61')
+            self.assertEqual(
+                swift_params['Misc_Flags']['Values_Out_of_Range']['value'],
+                'false')
 
-        # Check ordering is preserved
-        self.assertEqual(list(swift_params[None].keys())[:3],
-                         ['Packet_Type', 'Pkt_Ser_Num', 'TrigID'])
+            # Check ordering is preserved
+            self.assertEqual(list(swift_params[None].keys())[:3],
+                             ['Packet_Type', 'Pkt_Ser_Num', 'TrigID'])
 
-        # Test empty What section
-        params = vp.pull_params(self.blank)
-        self.assertEqual(params, {})
+        with pytest.warns(FutureWarning):
+            # Test empty What section
+            params = vp.pull_params(self.blank)
+            self.assertEqual(params, {})
 
-        # Test known (generated) example
-        single_par = copy(self.blank)
-        single_par.What.append(vp.Param(name="test_param", value=123))
-        params = vp.pull_params(single_par)
-        self.assertEqual(len(params), 1)
-        self.assertEqual(list(params[None].keys()), ['test_param'])
+            # Test known (generated) example
+            single_par = copy(self.blank)
+            single_par.What.append(vp.Param(name="test_param", value=123))
+            params = vp.pull_params(single_par)
+            self.assertEqual(len(params), 1)
+            self.assertEqual(list(params[None].keys()), ['test_param'])
 
-        # Test case where a What Group is present, but empty:
-        params = vp.pull_params(self.moa_packet)
-        self.assertEqual(params['Misc_Flags'], {})
+            # Test case where a What Group is present, but empty:
+            params = vp.pull_params(self.moa_packet)
+            self.assertEqual(params['Misc_Flags'], {})
 
-        # Test case where a Param is present with no name:
-        params = vp.pull_params(self.gaia_noname_param_packet)
+            # Test case where a Param is present with no name:
+            params = vp.pull_params(self.gaia_noname_param_packet)
 
     def test_get_toplevel_params(self):
         v = self.blank
@@ -85,26 +90,27 @@ class TestConvenienceRoutines(TestCase):
         v.What.extend(param_list)
 
         # Show flaws in old routine:
-        old_style_toplevel_param_dict = vp.pull_params(v)[None]
-        # print(old_style_toplevel_param_dict)
-        vp.assert_valid_as_v2_0(v)
-        # The old 'pull_params' routine will simply drop Params with duplicate
-        # names:
-        assert len(old_style_toplevel_param_dict)==(len(param_list) - 1)
-        none_group = vp.Group([],name=None)
-        complex_group1 =vp.Group([vp.Param(name='real', value=1.),
-                                vp.Param(name='imag', value=0.5)],
-                               name='complex')
-        complex_group2 =vp.Group([vp.Param(name='real', value=1.5),
-                                vp.Param(name='imag', value=2.5)],
-                               name='complex')
-        group_list = [none_group, complex_group1, complex_group2]
-        v.What.extend(group_list)
-        vp.assert_valid_as_v2_0(v)
-        old_style_toplevel_param_dict_w_group = vp.pull_params(v)[None]
-        # An un-named group will also overshadow top-level Params.
-        # This is a total fail, even though it's actually in-spec.
-        assert len(old_style_toplevel_param_dict_w_group)==0
+        with pytest.warns(FutureWarning):
+            old_style_toplevel_param_dict = vp.pull_params(v)[None]
+            # print(old_style_toplevel_param_dict)
+            vp.assert_valid_as_v2_0(v)
+            # The old 'pull_params' routine will simply drop Params with duplicate
+            # names:
+            assert len(old_style_toplevel_param_dict)==(len(param_list) - 1)
+            none_group = vp.Group([],name=None)
+            complex_group1 =vp.Group([vp.Param(name='real', value=1.),
+                                    vp.Param(name='imag', value=0.5)],
+                                   name='complex')
+            complex_group2 =vp.Group([vp.Param(name='real', value=1.5),
+                                    vp.Param(name='imag', value=2.5)],
+                                   name='complex')
+            group_list = [none_group, complex_group1, complex_group2]
+            v.What.extend(group_list)
+            vp.assert_valid_as_v2_0(v)
+            old_style_toplevel_param_dict_w_group = vp.pull_params(v)[None]
+            # An un-named group will also overshadow top-level Params.
+            # This is a total fail, even though it's actually in-spec.
+            assert len(old_style_toplevel_param_dict_w_group)==0
 
         toplevel_params = vp.get_toplevel_params(v)
         # .values method behaves like regular dict, one value for each key:
