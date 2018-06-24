@@ -22,6 +22,14 @@ extras_require = {
     'all': test_requires,
 }
 
+
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.6",
+    "Intended Audience :: Science/Research",
+]
+
 setup(
     name="voevent-parse",
     version=versioneer.get_version(),
@@ -36,4 +44,5 @@ setup(
     url="https://github.com/timstaley/voevent-parse",
     install_requires=install_requires,
     extras_require=extras_require,
+    classifiers=classifiers
 )
