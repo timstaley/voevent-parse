@@ -1,10 +1,14 @@
 """Routines for handling etrees representing VOEvent packets."""
 from __future__ import absolute_import
 from __future__ import unicode_literals
-from six import string_types
-from lxml import objectify, etree
+
+import copy
 import collections
+
 import pytz
+from lxml import objectify, etree
+from six import string_types
+
 import voeventparse.definitions
 
 voevent_v2_0_schema = etree.XMLSchema(
@@ -145,11 +149,11 @@ def dumps(voevent, pretty_print=False, xml_declaration=True, encoding='UTF-8'):
         bytes: Bytestring containing raw XML representation of VOEvent.
 
     """
-    _return_to_standard_xml(voevent)
-    s = etree.tostring(voevent, pretty_print=pretty_print,
+    vcopy = copy.deepcopy(voevent)
+    _return_to_standard_xml(vcopy)
+    s = etree.tostring(vcopy, pretty_print=pretty_print,
                        xml_declaration=xml_declaration,
                        encoding=encoding)
-    _remove_root_tag_prefix(voevent)
     return s
 
 

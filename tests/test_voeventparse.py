@@ -1,4 +1,5 @@
 import datetime
+import tempfile
 from unittest import TestCase
 
 import pytz
@@ -113,6 +114,14 @@ class TestIO(TestCase):
                              encoding='UTF-8')
         processed = vp.dumps(swift_grb_v2_voeparsed)
         self.assertEqual(raw, processed)
+
+    def test_dump(self):
+        """Check that writing to a file actually works as expected"""
+        with open(datapaths.swift_bat_grb_pos_v2, 'rb') as f:
+            packet = vp.load(f)
+
+        with tempfile.TemporaryFile(mode='w+b') as f:
+            vp.dump(packet, f)
 
 
 class TestMinimalVOEvent(TestCase):
