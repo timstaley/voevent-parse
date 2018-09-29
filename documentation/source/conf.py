@@ -23,19 +23,19 @@ nbsphinx_execute = 'always'
 # nbsphinx_execute = 'never'
 exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
-if RUNNING_UNDER_TOX_CI=="TRUE":
-    suppress_warnings = ['ref.doc']
-    print("Suppressing some sphinx warnings cf"
-          "https://github.com/spatialaudio/nbsphinx/issues/130")
-else:
-    print(
-        "\n**************************************************************\n"
-        "ACHTUNG!\n"
-        "You may need to disable the 'error on warning flag' to build "
-          "docs locally, "
-          "cf https://github.com/spatialaudio/nbsphinx/issues/130\n"
-        "(See Makefile:SPHINXOPTS)"
-        "\n**************************************************************\n")
+# if RUNNING_UNDER_TOX_CI=="TRUE":
+#     suppress_warnings = ['ref.doc']
+#     print("Suppressing some sphinx warnings cf"
+#           "https://github.com/spatialaudio/nbsphinx/issues/130")
+# else:
+#     print(
+#         "\n**************************************************************\n"
+#         "ACHTUNG!\n"
+#         "You may need to disable the 'error on warning flag' to build "
+#           "docs locally, "
+#           "cf https://github.com/spatialaudio/nbsphinx/issues/130\n"
+#         "(See Makefile:SPHINXOPTS)"
+#         "\n**************************************************************\n")
 
 
 # Add any paths that contain templates here, relative to this directory.
