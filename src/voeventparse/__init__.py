@@ -8,6 +8,7 @@ from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
+import voeventparse.definitions
 from voeventparse.voevent import (
     Voevent,
     voevent_v2_0_schema,
@@ -16,7 +17,6 @@ from voeventparse.voevent import (
     set_who, set_author, add_where_when,
     add_how, add_why, add_citations
 )
-import voeventparse.definitions as definitions
 from voeventparse.misc import (
     Citation,
     EventIvorn,
