@@ -7,18 +7,13 @@ from setuptools import find_packages, setup
 import versioneer
 
 install_requires = [
+    "astropy>=2",
     "lxml>=2.3",
     'iso8601',
     'orderedmultidict',
     'pytz',
     'six',
 ]
-
-
-if sys.version_info >= (3,):
-    install_requires.append("astropy")
-else:
-    install_requires.append("astropy==2.0.10")
 
 test_requires = [
     'pytest>3',
