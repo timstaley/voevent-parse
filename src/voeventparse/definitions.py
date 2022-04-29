@@ -45,12 +45,12 @@ class sky_coord_system:
     utc_icrs_topo = 'UTC-ICRS-TOPO'
 
 
-
-
 class observatory_location(object):
     """Common generic values for the WhereWhen.ObservatoryLocation attribute."""
     geosurface = 'GEOSURFACE'
     geolunar = 'GEOLUN'
+
+    utc_geod_topo = 'UTC-GEOD-TOPO'
 
 
 class units:
@@ -74,6 +74,7 @@ class units:
     jansky = 'Jy'
     magnitude = 'mag'
 
+    metre = 'm'
 
 
 class cite_types:

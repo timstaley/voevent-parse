@@ -24,6 +24,7 @@ from voeventparse.misc import (
     Inference,
     Param,
     Position2D,
+    Position3D,
     Reference,
 )
 from voeventparse.convenience import (

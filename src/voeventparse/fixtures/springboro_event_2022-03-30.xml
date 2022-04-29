@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="test" ivorn="ivo://refitt.org/voevent/#1">
+  <Who>
+    <Description>VOEvent created with voevent-parse, version 1.0.3+4.g58fc1eb.dirty. See https://github.com/timstaley/voevent-parse for details.</Description>
+    <AuthorIVORN>ivo://refitt.org</AuthorIVORN>
+    <Date>2022-03-30T14:02:59</Date>
+    <Author>
+      <shortName>REFITT</shortName>
+      <contactName>Mark Linvill</contactName>
+      <contactEmail>mlinvill@purdue.edu</contactEmail>
+    </Author>
+  </Who>
+  <What>
+    <Group name="Facility Data">
+      <Param name="name" value="springboro" ucd="meta.id"/>
+      <Param name="limiting_mag" value="18.5" ucd="phot.mag"/>
+      <Param name="lat" value="40.585" unit="deg" ucd="pos.earth.lat"/>
+      <Param name="lon" value="-86.781" unit="deg" ucd="pos.earth.lon"/>
+      <Param name="altitude" value="200.0" unit="m" ucd="pos.earth.altitude"/>
+    </Group>
+    <Group name="Image 1">
+      <Param name="JD" value="2459657.6652777777" unit="days" ucd="time.epoch"/>
+      <Param name="Exposure" value="600" unit="sec" ucd="obs.exposure" dataType="int"/>
+      <Param name="Binning" value="3" ucd="instr.binning" dataType="int"/>
+      <Param name="Airmass" value="1.31" ucd="obs.airMass" dataType="float"/>
+      <Param name="PlateRA" value="146.528445" unit="deg" ucd="pos.eq.ra"/>
+      <Param name="PlateDec" value="0.780635" unit="deg" ucd="pos.eq.dec"/>
+      <Param name="Filter" value="r" ucd="instr.filter"/>
+      <Param name="priority" value="83" ucd="stat.rank" dataType="int"/>
+      <Param name="pred_mag" value="18.49" ucd="phot.mag" dataType="float"/>
+      <Param name="pred_mag_err" value="0.08" ucd="stat.error" dataType="float"/>
+    </Group>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="springboro"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-GEOD-TOPO"/>
+        <AstroCoords coord_system_id="UTC-GEOD-TOPO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2022-03-19T03:58:00</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position3D unit="deg">
+            <Name1>LONG</Name1>
+            <Name2>LAT</Name2>
+            <Name3>ELEV</Name3>
+            <Value3>
+              <C1>40.585</C1>
+              <C2>-86.781</C2>
+              <C3>200.0</C3>
+            </Value3>
+          </Position3D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <Description>REFITT requests follow-up observation. Airmass values are estimated.</Description>
+  <How>
+    <Description>ZTF22aaacnmh</Description>
+    <Reference uri="https://refitt.org"/>
+  </How>
+  <Why>
+    <Description>REFITT recommends follow-up observation to further constrain the lightcurve.</Description>
+  </Why>
+</voe:VOEvent>

@@ -10,6 +10,7 @@ from lxml import objectify, etree
 from six import string_types
 
 import voeventparse.definitions
+from voeventparse.misc import (Position2D, Position3D)
 
 voevent_v2_0_schema = etree.XMLSchema(
     etree.fromstring(voeventparse.definitions.v2_0_schema_str))
@@ -261,7 +262,8 @@ def add_where_when(voevent, coords, obs_time, observatory_location,
 
     Args:
         voevent(:class:`Voevent`): Root node of a VOEvent etree.
-        coords(:class:`.Position2D`): Sky co-ordinates of event.
+        coords(:class:`.Position2D` or `.Position3D`): Sky co-ordinates of
+                event OR Geo co-ordinates of observatory.
         obs_time(datetime.datetime): Nominal DateTime of the observation. Must
             either be timezone-aware, or should be carefully verified as
             representing UTC and then set parameter
@@ -297,13 +299,23 @@ def add_where_when(voevent, coords, obs_time, observatory_location,
     instant.ISOTime = utc_naive_obs_time.isoformat()
     # iso_time = etree.SubElement(instant, 'ISOTime') = obs_time.isoformat()
 
-    pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
-    pos2d.Name1 = 'RA'
-    pos2d.Name2 = 'Dec'
-    pos2d_val = etree.SubElement(pos2d, 'Value2')
-    pos2d_val.C1 = coords.ra
-    pos2d_val.C2 = coords.dec
-    pos2d.Error2Radius = coords.err
+    if isinstance(coords, Position2D):
+        pos2d = etree.SubElement(ac, 'Position2D', unit=coords.units)
+        pos2d.Name1 = 'RA'
+        pos2d.Name2 = 'Dec'
+        pos2d_val = etree.SubElement(pos2d, 'Value2')
+        pos2d_val.C1 = coords.ra
+        pos2d_val.C2 = coords.dec
+        pos2d.Error2Radius = coords.err
+    elif isinstance(coords, Position3D):
+        pos3d = etree.SubElement(ac, 'Position3D', unit=coords.units)
+        pos3d.Name1 = "LONG"
+        pos3d.Name2 = "LAT"
+        pos3d.Name3 = "ELEV"
+        pos3d_val = etree.SubElement(pos3d, 'Value3')
+        pos3d_val.C1 = coords.lat
+        pos3d_val.C2 = coords.long
+        pos3d_val.C3 = coords.elev
 
 
 def add_how(voevent, descriptions=None, references=None):

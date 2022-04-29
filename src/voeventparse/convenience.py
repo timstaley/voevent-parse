@@ -97,13 +97,25 @@ def get_event_position(voevent, index=0):
     ac_sys = voevent.WhereWhen.ObsDataLocation.ObservationLocation.AstroCoordSystem
     sys = ac_sys.attrib['id']
 
-    if hasattr(ac.Position2D, "Name1"):
+    if( hasattr(ac.Position2D, "Name1") and
+        ac.Position2D.Name1 == 'RA' ):
         assert ac.Position2D.Name1 == 'RA' and ac.Position2D.Name2 == 'Dec'
-    posn = Position2D(ra=float(ac.Position2D.Value2.C1),
+        posn = Position2D(ra=float(ac.Position2D.Value2.C1),
                       dec=float(ac.Position2D.Value2.C2),
                       err=float(ac.Position2D.Error2Radius),
                       units=ac.Position2D.attrib['unit'],
                       system=sys)
+    elif( hasattr(ac.Position3D, "Name1") and
+        ac.Position3D.Name1 == "LONG" ):
+        assert ac.Position3D.Name1 == 'LONG' and \
+               ac.Position3D.Name2 == 'LAT' and \
+               ac.Position3D.Name3 == 'ELEV'
+        posn = Position3D(long=float(ac.Position3D.Value1.C1),
+                          lat=float(ac.Position3D.Value2.C2),
+                          elev=float(ac.Position3D.Value3.C3),
+                          units=ac.Position3D.attrib['unit'],
+                          system=sys)
+
     return posn
 
 
@@ -248,11 +260,11 @@ def pull_params(voevent):
     warnings.warn(
         """
         The function `pull_params` has been deprecated in favour of the split
-        functions `get_toplevel_params` and `get_grouped_params`, due to 
+        functions `get_toplevel_params` and `get_grouped_params`, due to
         possible name-shadowing issues when combining multilevel-nested-dicts
         (see docs for details).
-        
-        This alias is preserved for backwards compatibility, and may be 
+
+        This alias is preserved for backwards compatibility, and may be
         removed in a future release.
         """,
         FutureWarning)

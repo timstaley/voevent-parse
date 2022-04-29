@@ -25,6 +25,23 @@ class Position2D(namedtuple('Position2D', 'ra dec err units system')):
     pass  # Just wrapping a namedtuple so we can assign a docstring.
 
 
+class Position3D(namedtuple('Position3D', 'long lat elev units system')):
+    """A namedtuple for simple representation of a 3D position as described
+    by the VOEvent spec.
+
+    Args:
+        long (float): Longitude.
+        lat (float): Latitude.
+        elev (float): Elevation (units above sea level).
+        units (str): Coordinate units, cf :class:`.definitions.units`
+            e.g. degrees, metres.
+        system (str): Co-ordinate system, e.g. UTC-GEOD-TOPO
+            cf :class:`.definitions.observatory_location`
+
+    """
+    pass  # Wrapping a namedtuple so we can assign a docstring.
+
+
 _datatypes_autoconversion = {
     bool: ('string', lambda b: str(b)),
     int: ('int', lambda i: str(i)),

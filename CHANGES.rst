@@ -1,5 +1,10 @@
 Change history
 ==============
+2022/04/01
+--------------------
+Enhancements
+~~~~~~~~~~~~
+Add Position3D coords capability to wherewhen.
 
 1.0.2 - 2018/02/10
 --------------------

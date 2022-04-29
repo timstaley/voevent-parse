@@ -15,3 +15,5 @@ gaia_alert_16aac_direct = os.path.join(data_dir, 'Gaia16aac.xml')
 
 asassn_scraped_example = os.path.join(
     data_dir, 'ASASSN#2016-09-25.47_2016fvf_PTSS-16nqb_PS16ejf.xml')
+
+springboro_pos3d = os.path.join(data_dir, 'springboro_event_2022-03-30.xml')
