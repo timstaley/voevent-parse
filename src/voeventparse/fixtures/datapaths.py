@@ -9,7 +9,7 @@ swift_xrt_pos_v1 = os.path.join(data_dir,
 no_namespace_test_packet = os.path.join(data_dir, 'no_namespace_packet.xml')
 
 moa_lensing_event_path = os.path.join(data_dir,
-                                      'MOA_Lensing_Event_2015-07-10T14:50:54.00.xml')
+                                      'MOA_Lensing_Event_2015-07-10T14_50_54.00.xml')
 
 gaia_alert_16aac_direct = os.path.join(data_dir, 'Gaia16aac.xml')
 
