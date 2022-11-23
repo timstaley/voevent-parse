@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import copy
-import collections
+from typing import Iterable
 
 import pytz
 from lxml import objectify, etree
@@ -431,7 +431,7 @@ def _listify(x):
     """Ensure x is iterable; if not then enclose it in a list and return it."""
     if isinstance(x, string_types):
         return [x]
-    elif isinstance(x, collections.Iterable):
+    elif isinstance(x, Iterable):
         return x
     else:
         return [x]
